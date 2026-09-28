@@ -244,3 +244,112 @@ code{background:#0b0d10;border:1px solid var(--line);padding:2px 6px;border-radi
 .stream-overlay-results{
   align-content:start;
 }
+
+/* =========================================================
+   LIVE HLASOVÁNÍ + KRONIKA
+   ZALAMOVÁNÍ DLOUHÝCH OTÁZEK A MOŽNOSTÍ
+   ========================================================= */
+
+/*
+  Panely a jejich vnitřní obsah se nesmí roztáhnout
+  podle dlouhého textu bez mezer.
+*/
+.live-panel,
+.live-vote-panel,
+.live-options,
+.live-results,
+.live-history,
+.live-history-item,
+.live-history-manage,
+.live-result-row,
+.live-result-content{
+  min-width:0!important;
+  max-width:100%!important;
+}
+
+/*
+  Aktuální hlasování na veřejné LIVE stránce.
+*/
+#question{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+}
+
+/*
+  Aktuální hlasování v DM panelu.
+*/
+#activeQuestion{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+}
+
+/*
+  Otázky uložené v Kronice na veřejné stránce i v DM panelu.
+*/
+.live-history-item strong{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+}
+
+/*
+  DM Kronika používá flexbox.
+  Textová část musí mít min-width:0, jinak ji dlouhé slovo
+  může roztáhnout mimo panel.
+*/
+.live-history-manage > div:first-child{
+  flex:1 1 0!important;
+  min-width:0!important;
+  max-width:100%!important;
+}
+
+/*
+  Ovládací tlačítka v Kronice si drží vlastní šířku.
+*/
+.live-history-manage .live-mini-actions{
+  flex:0 0 auto!important;
+}
+
+/*
+  Dlouhé názvy možností a výsledků se také zalamují uvnitř panelu.
+*/
+.live-option,
+.live-option span,
+.live-option small,
+.live-result-content strong,
+.live-result-content span{
+  min-width:0!important;
+  max-width:100%!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+}
+
+/*
+  Flex řádek výsledku musí dovolit textu zmenšit se
+  a zalomit se místo přetečení doprava.
+*/
+.live-result-content strong{
+  flex:1 1 auto!important;
+}
+
+/*
+  Číselná část výsledku se naopak nemá lámat.
+*/
+.live-result-content > :last-child{
+  flex:0 0 auto!important;
+  white-space:nowrap!important;
+}
+
