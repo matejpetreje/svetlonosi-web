@@ -533,6 +533,115 @@
 
 
 
+  function accountBadgeMarkup(
+    badge
+  ) {
+
+    if (!badge) {
+      return "";
+    }
+
+    if (
+      badge.preview_static_url
+    ) {
+
+      return `
+        <span
+          class="profile-badge-overlay profile-badge-overlay-account"
+          title="${badge.variant_name || "Odznak"}"
+        >
+          <img
+            class="profile-badge-image"
+            src="${badge.preview_static_url}"
+            alt=""
+          >
+        </span>
+      `;
+
+    }
+
+    return `
+      <span
+        class="profile-badge-overlay profile-badge-overlay-account"
+        title="${badge.variant_name || "Odznak"}"
+      >
+        <span class="profile-badge-glyph spark-accent-${badge.accent_key || "gold"}">
+          ${badge.preview_glyph || "✦"}
+        </span>
+      </span>
+    `;
+
+  }
+
+
+  async function refreshAccountBadge() {
+
+    const avatar =
+      document.getElementById(
+        "accountAvatar"
+      );
+
+    if (!avatar) {
+      return;
+    }
+
+    avatar
+      .querySelector(
+        ".profile-badge-overlay"
+      )
+      ?.remove();
+
+    if (
+      !currentSession?.user
+      ||
+      !currentProfile?.kick_username
+    ) {
+      return;
+    }
+
+    const {
+      data,
+      error
+    } =
+      await db.rpc(
+        "spark_profile_equipped",
+        {
+          p_username:
+            currentProfile.kick_username
+        }
+      );
+
+    if (error) {
+      console.warn(
+        "Aktivní odznak účtu se nepodařilo načíst:",
+        error.message
+      );
+      return;
+    }
+
+    const badge =
+      (data || [])
+        .find(
+          item =>
+            item.slot_type ===
+            "badge"
+        );
+
+    if (!badge) {
+      return;
+    }
+
+    avatar.insertAdjacentHTML(
+      "beforeend",
+      accountBadgeMarkup(
+        badge
+      )
+    );
+
+  }
+
+
+
   /* =========================================================
      REFRESH ACCOUNT UI
      ========================================================= */
@@ -746,6 +855,10 @@
         .toUpperCase();
 
     }
+
+
+
+    refreshAccountBadge();
 
 
 

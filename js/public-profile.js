@@ -162,13 +162,13 @@
           class="public-profile-avatar ${frame ? "has-frame" : ""} spark-accent-${esc(frame?.accent_key || "gold")}"
         >
           ${avatar}
+          ${badge ? `<span class="profile-badge-overlay profile-badge-overlay-public" title="${esc(badge.variant_name || "Odznak")}">${badgeMarkup(badge)}</span>` : ""}
         </div>
 
         <div class="public-profile-identity">
           <div class="live-kicker">Veřejný profil</div>
 
           <div class="public-profile-name-row">
-            ${badgeMarkup(badge)}
             <h1>${esc(name)}</h1>
           </div>
 

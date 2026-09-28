@@ -497,6 +497,112 @@
   }
 
 
+  function walletBadgeMarkup(
+    badge
+  ) {
+
+    if (!badge) {
+      return "";
+    }
+
+    if (
+      badge.preview_static_url
+    ) {
+
+      return `
+        <span
+          class="profile-badge-overlay profile-badge-overlay-wallet"
+          title="${esc(badge.variant_name || "Odznak")}"
+        >
+          <img
+            class="profile-badge-image"
+            src="${esc(badge.preview_static_url)}"
+            alt="${esc(badge.variant_name || "Odznak")}"
+          >
+        </span>
+      `;
+
+    }
+
+    return `
+      <span
+        class="profile-badge-overlay profile-badge-overlay-wallet"
+        title="${esc(badge.variant_name || "Odznak")}"
+      >
+        <span class="profile-badge-glyph spark-accent-${esc(badge.accent_key || "gold")}">
+          ${esc(badge.preview_glyph || "✦")}
+        </span>
+      </span>
+    `;
+
+  }
+
+
+  async function renderWalletBadge(
+    profile
+  ) {
+
+    const avatar =
+      $("sparkWalletAvatar");
+
+    if (!avatar) {
+      return;
+    }
+
+    avatar
+      .querySelector(
+        ".profile-badge-overlay"
+      )
+      ?.remove();
+
+    if (
+      !profile?.kick_username
+    ) {
+      return;
+    }
+
+    const {
+      data,
+      error
+    } =
+      await db.rpc(
+        "spark_profile_equipped",
+        {
+          p_username:
+            profile.kick_username
+        }
+      );
+
+    if (error) {
+      console.warn(
+        "Aktivní odznak peněženky se nepodařilo načíst:",
+        error.message
+      );
+      return;
+    }
+
+    const badge =
+      (data || [])
+        .find(
+          item =>
+            item.slot_type ===
+            "badge"
+        );
+
+    if (!badge) {
+      return;
+    }
+
+    avatar.insertAdjacentHTML(
+      "beforeend",
+      walletBadgeMarkup(
+        badge
+      )
+    );
+
+  }
+
+
   function renderWallet(
     profile
   ) {
@@ -537,6 +643,10 @@
 
       renderWalletAvatar(
         null,
+        null
+      );
+
+      renderWalletBadge(
         null
       );
 
@@ -609,6 +719,10 @@
     renderWalletAvatar(
       profile,
       name
+    );
+
+    renderWalletBadge(
+      profile
     );
 
   }

@@ -2015,3 +2015,149 @@ body:not(.stream-overlay-page) > footer{
     text-align:left;
   }
 }
+
+
+/* =========================================================
+   BADGE OVERLAY V1
+   Aktivní odznak je vždy připnutý vlevo dole k avataru.
+   ========================================================= */
+
+.account-avatar,
+.hall-avatar,
+.public-profile-avatar,
+#sparkWalletAvatar{
+  position:relative;
+  overflow:visible!important;
+}
+
+.account-avatar > img,
+.hall-avatar > img,
+.public-profile-avatar > img,
+#sparkWalletAvatar > img{
+  border-radius:inherit;
+  overflow:hidden;
+}
+
+.profile-badge-overlay{
+  position:absolute;
+  z-index:6;
+  display:grid;
+  place-items:center;
+  padding:0;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    linear-gradient(145deg,#20242c,#0b0e13);
+  box-shadow:
+    0 4px 12px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.045);
+  pointer-events:auto;
+}
+
+.profile-badge-overlay-public{
+  left:-9px;
+  bottom:-8px;
+  width:38px;
+  height:38px;
+  border-radius:11px;
+}
+
+.profile-badge-overlay-wallet{
+  left:-7px;
+  bottom:-7px;
+  width:28px;
+  height:28px;
+  border-radius:9px;
+}
+
+.profile-badge-overlay-account{
+  left:-6px;
+  bottom:-6px;
+  width:23px;
+  height:23px;
+  border-radius:7px;
+}
+
+.profile-badge-overlay-hall{
+  left:-5px;
+  bottom:-5px;
+  width:20px;
+  height:20px;
+  border-radius:6px;
+}
+
+.profile-badge-image{
+  display:block;
+  width:78%!important;
+  height:78%!important;
+  object-fit:contain!important;
+  border-radius:0!important;
+}
+
+.profile-badge-glyph{
+  display:grid;
+  place-items:center;
+  width:100%;
+  height:100%;
+  line-height:1;
+  font-weight:900;
+  filter:drop-shadow(0 0 7px currentColor);
+}
+
+.profile-badge-overlay-public .profile-badge-glyph{
+  font-size:1.25rem;
+}
+
+.profile-badge-overlay-wallet .profile-badge-glyph{
+  font-size:.95rem;
+}
+
+.profile-badge-overlay-account .profile-badge-glyph{
+  font-size:.78rem;
+}
+
+.profile-badge-overlay-hall .profile-badge-glyph{
+  font-size:.68rem;
+}
+
+/* Původní badge u nicku už nepoužíváme. */
+.public-profile-name-row{
+  gap:0;
+}
+
+.public-profile-active-badge,
+.public-profile-active-badge-image{
+  /* ponecháno kvůli zpětné kompatibilitě badgeMarkup(), ale renderuje se v overlayi */
+}
+
+/* Malý avatar v Síni slávy potřebuje prostor pro přesah badge. */
+.hall-user{
+  padding-left:2px;
+}
+
+/* Hover: jen lehké zvýraznění, bez výrazné animace. */
+.profile-badge-overlay{
+  transition:
+    filter .15s ease,
+    border-color .15s ease,
+    transform .15s ease;
+}
+
+.profile-badge-overlay:hover{
+  filter:brightness(1.14);
+  border-color:rgba(231,185,92,.24);
+  transform:translateY(-1px);
+}
+
+@media(max-width:760px){
+  .profile-badge-overlay-public{
+    left:-7px;
+    bottom:-7px;
+    width:32px;
+    height:32px;
+    border-radius:10px;
+  }
+
+  .profile-badge-overlay-public .profile-badge-glyph{
+    font-size:1.05rem;
+  }
+}

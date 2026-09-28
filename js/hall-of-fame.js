@@ -25,6 +25,7 @@
 
   let session = null;
   let allRows = [];
+  let badgeMap = new Map();
   let currentPage = 1;
   let pageSize = 20;
   let currentSearch = "";
@@ -116,6 +117,72 @@
     }
   }
 
+  function badgeMarkup(badge) {
+    if (!badge) {
+      return "";
+    }
+
+    if (badge.preview_static_url) {
+      return `
+        <img
+          class="profile-badge-image"
+          src="${esc(badge.preview_static_url)}"
+          alt="${esc(badge.variant_name || "Odznak")}"
+        >
+      `;
+    }
+
+    return `
+      <span class="profile-badge-glyph spark-accent-${esc(badge.accent_key || "gold")}">
+        ${esc(badge.preview_glyph || "✦")}
+      </span>
+    `;
+  }
+
+  async function loadBadges(rows) {
+    badgeMap = new Map();
+
+    const usernames =
+      [...new Set(
+        (rows || [])
+          .map(row => row.kick_username)
+          .filter(Boolean)
+      )];
+
+    if (!usernames.length) {
+      return;
+    }
+
+    const chunkSize = 100;
+
+    for (let offset = 0; offset < usernames.length; offset += chunkSize) {
+      const chunk = usernames.slice(offset, offset + chunkSize);
+
+      const { data, error } =
+        await db.rpc(
+          "spark_badges_for_usernames",
+          {
+            p_usernames: chunk
+          }
+        );
+
+      if (error) {
+        console.warn(
+          "Aktivní odznaky pro Síň slávy se nepodařilo načíst:",
+          error.message
+        );
+        continue;
+      }
+
+      for (const badge of data || []) {
+        badgeMap.set(
+          String(badge.kick_username || "").toLowerCase(),
+          badge
+        );
+      }
+    }
+  }
+
   function avatarMarkup(row) {
     const name =
       row.kick_display_name ||
@@ -172,7 +239,14 @@
             </div>
 
             <div class="hall-user">
-              <div class="hall-avatar">${avatarMarkup(row)}</div>
+              <div class="hall-avatar">
+                ${avatarMarkup(row)}
+                ${
+                  badgeMap.get(String(row.kick_username || "").toLowerCase())
+                    ? `<span class="profile-badge-overlay profile-badge-overlay-hall" title="${esc(badgeMap.get(String(row.kick_username || "").toLowerCase()).variant_name || "Odznak")}">${badgeMarkup(badgeMap.get(String(row.kick_username || "").toLowerCase()))}</span>`
+                    : ""
+                }
+              </div>
 
               <div class="hall-user-copy">
                 <strong>${esc(name)}</strong>
@@ -372,6 +446,7 @@
 
     try {
       allRows = await fetchAllHallRows(currentSearch);
+      await loadBadges(allRows);
       renderCurrentPage();
     } catch (error) {
       console.error(error);
