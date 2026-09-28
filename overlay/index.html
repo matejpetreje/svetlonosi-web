@@ -3,78 +3,169 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+
   <title>Světlonoši OBS Overlay</title>
 
   <link rel="stylesheet" href="../styles.css">
 
   <style>
     /*
-      OBS OVERLAY — UKOTVENÍ OD HORNÍ HRANY
+      ============================================================
+      OBS OVERLAY
+      ============================================================
 
-      Žádné fixed/absolute pozicování.
-      Karta je první prvek dokumentu, takže její horní hrana
-      je vždy horní hrana Browser Source a při větší výšce
-      roste pouze směrem dolů.
+      DŮLEŽITÉ:
+      karta je natvrdo přichycená k TOP: 0 Browser Source.
+
+      Výška Browser Source tedy vůbec neurčuje vertikální pozici
+      karty.
+
+      Když karta roste:
+      -> horní hrana zůstává na místě
+      -> obsah roste pouze směrem DOLŮ
     */
 
-    html,
-    body.stream-overlay-page {
+    html {
       margin: 0 !important;
       padding: 0 !important;
+
       width: 100% !important;
-      min-height: 100% !important;
+      height: 100% !important;
+
       background: transparent !important;
       overflow: hidden !important;
     }
 
     body.stream-overlay-page {
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: flex-start !important;
-      align-items: center !important;
+      margin: 0 !important;
+      padding: 0 !important;
+
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 0 !important;
+
+      background: transparent !important;
+      overflow: hidden !important;
+
+      display: block !important;
     }
 
-    .stream-overlay-card {
-      position: relative !important;
 
-      top: auto !important;
-      right: auto !important;
+    /* ============================================================
+       HLAVNÍ KARTA
+       ============================================================ */
+
+    .stream-overlay-card {
+      position: fixed !important;
+
+      /*
+        TOHLE JE HLAVNÍ ZMĚNA.
+
+        Horní hrana overlaye je vždy přesně na Y = 0
+        Browser Source.
+      */
+      top: 0 !important;
+
       bottom: auto !important;
-      left: auto !important;
+
+      left: 50% !important;
+      right: auto !important;
+
       inset: auto !important;
 
-      transform: none !important;
+      /*
+        Pouze horizontální centrování.
+        ŽÁDNÝ vertikální translate.
+      */
+      transform: translateX(-50%) !important;
       transform-origin: top center !important;
 
+      /*
+        Šířka overlaye.
+      */
       width: min(940px, 94%) !important;
+
+      /*
+        Výška se řídí pouze obsahem.
+      */
       height: auto !important;
       min-height: 0 !important;
       max-height: none !important;
 
-      margin: 0 auto !important;
+      /*
+        Žádný margin, který by mohl kartu odsouvat dolů.
+      */
+      margin: 0 !important;
+
+      /*
+        Vnitřní vzhled.
+      */
+      padding: 22px 26px !important;
 
       display: block !important;
+
       overflow: visible !important;
-      flex: 0 0 auto !important;
+
+      border-radius: 18px !important;
+
+      background: rgba(10, 12, 16, 0.94) !important;
+
+      border:
+        1px solid rgba(197, 139, 36, 0.5) !important;
+
+      box-shadow:
+        0 18px 60px rgba(0, 0, 0, 0.55) !important;
+
+      transition:
+        opacity 0.25s ease,
+        transform 0.25s ease !important;
+
+      box-sizing: border-box !important;
     }
+
+
+    /* ============================================================
+       SKRYTÍ
+       ============================================================ */
 
     .stream-overlay-card.stream-overlay-hidden,
     .stream-overlay-hidden {
       opacity: 0 !important;
-      transform: translateY(-18px) !important;
+
+      /*
+        Při schování se karta nepatrně vysune NAHORU.
+
+        -50 % je horizontální centrování.
+        -18 px je pouze animace nahoru.
+      */
+      transform:
+        translateX(-50%)
+        translateY(-18px) !important;
+
       pointer-events: none !important;
     }
 
+
+    /* ============================================================
+       TEXT OTÁZKY
+       ============================================================ */
+
     .stream-overlay-question {
-      overflow-wrap: anywhere;
-      word-break: normal;
+      overflow-wrap: anywhere !important;
+      word-break: normal !important;
     }
 
+
+    /* ============================================================
+       VÝSLEDKY
+       ============================================================ */
+
     .stream-overlay-results {
-      align-content: start;
+      align-content: start !important;
     }
   </style>
 </head>
+
 
 <body class="stream-overlay-page">
 
@@ -82,6 +173,7 @@
     id="overlayCard"
     class="stream-overlay-card stream-overlay-hidden"
   >
+
     <div
       id="overlayTitle"
       class="stream-overlay-kicker"
@@ -89,33 +181,43 @@
       HLAS SBORU SVĚTLONOŠŮ
     </div>
 
+
     <div
       id="overlayQuestion"
       class="stream-overlay-question"
     ></div>
+
 
     <div
       id="overlayTimer"
       class="stream-overlay-timer"
     ></div>
 
+
     <div
       id="overlayResults"
       class="stream-overlay-results"
     ></div>
+
 
     <div
       id="overlayWinner"
       class="stream-overlay-winner"
     ></div>
 
+
     <div
       id="overlaySub"
       class="stream-overlay-sub"
     ></div>
+
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+  </script>
+
   <script src="../js/supabase-config.js"></script>
   <script src="../js/overlay.js"></script>
 
