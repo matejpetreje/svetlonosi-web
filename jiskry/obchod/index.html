@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Obchod Jisker — Světlonoši</title>
+
+  <meta
+    name="description"
+    content="Obchod Jisker Světlonošů — kosmetika, rámečky, pozadí, efekty a odznaky."
+  >
+
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body>
+
+<header>
+  <div class="container nav">
+    <a class="brand" href="../../index.html">
+      <img class="brand-logo" src="../../assets/logo_svetlonosi.png" alt="Světlonoši">
+      <span class="brand-wordmark">SVĚTLO<span>NOŠI</span></span>
+    </a>
+
+    <nav>
+      <a href="../../index.html">Domů</a>
+      <a href="../../live/">Hlasování</a>
+      <a href="../">Jiskry</a>
+      <a href="./" class="nav-active">Obchod</a>
+      <a href="../inventar/">Inventář</a>
+      <a href="../sin-slavy/">Síň slávy</a>
+    </nav>
+  </div>
+</header>
+
+<main class="spark-store-page">
+
+  <section class="spark-store-hero">
+    <div class="container spark-store-shell">
+
+      <div class="spark-store-heading">
+        <div>
+          <div class="live-kicker">Obchod Jisker</div>
+          <h1>Uprav si svůj profil.</h1>
+          <p>
+            Každý produkt má vlastní varianty. Najetím na animovaný náhled
+            se animace spustí a po odjetí kurzoru se vrátí statický náhled.
+          </p>
+        </div>
+
+        <aside class="spark-store-wallet">
+          <span>Peněženka</span>
+          <strong id="shopWalletBalance">— ✦</strong>
+          <a href="../">Moje Jiskry</a>
+        </aside>
+      </div>
+
+      <div id="shopAuthGate"></div>
+
+    </div>
+  </section>
+
+  <section class="section spark-store-section">
+    <div class="container spark-store-shell">
+
+      <div class="spark-store-toolbar">
+
+        <div
+          class="spark-store-filters"
+          id="shopCategoryFilters"
+        ></div>
+
+        <label class="spark-store-select">
+          <span>Zobrazit</span>
+          <select id="shopOwnershipFilter">
+            <option value="all">Vše</option>
+            <option value="available">Nevlastněné</option>
+            <option value="owned">Vlastněné</option>
+          </select>
+        </label>
+
+      </div>
+
+      <div
+        class="spark-store-grid"
+        id="shopGrid"
+      >
+        <div class="hall-loading">
+          Načítám obchod…
+        </div>
+      </div>
+
+      <div
+        class="live-message"
+        id="shopMessage"
+      ></div>
+
+    </div>
+  </section>
+
+</main>
+
+<div
+  class="spark-product-modal-backdrop"
+  id="shopProductModal"
+  hidden
+>
+  <div
+    class="spark-product-modal"
+    role="dialog"
+    aria-modal="true"
+  >
+    <button
+      class="account-close"
+      type="button"
+      id="shopModalClose"
+      aria-label="Zavřít"
+    >
+      ×
+    </button>
+
+    <div id="shopModalContent"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="container footer">
+    <div>© 2026 Světlonoši</div>
+
+    <div>
+      <a href="../../privacy.html">Privacy Policy</a>
+      <a href="../../terms.html">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../js/supabase-config.js"></script>
+<script src="../../js/account.js"></script>
+<script src="../../js/shop.js"></script>
+
+</body>
+</html>

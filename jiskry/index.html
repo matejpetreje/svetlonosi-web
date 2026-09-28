@@ -40,7 +40,7 @@
 
         <div class="sparks-hero-actions">
           <button class="btn primary" data-account-open>Přihlásit se</button>
-          <a class="btn" href="#odmeny">Prohlédnout odměny</a>
+          <a class="btn" href="./obchod/">Otevřít obchod</a>
         </div>
 
         <div class="sparks-trust-row">
@@ -136,10 +136,13 @@
       <div class="spark-level-track">
         <div><span>0 ✦</span><strong>Zbloudilá jiskra</strong></div>
         <div><span>100 ✦</span><strong>Jiskra</strong></div>
+        <div><span>300 ✦</span><strong>Plamínek</strong></div>
         <div><span>750 ✦</span><strong>Pochodeň</strong></div>
         <div><span>1 500 ✦</span><strong>Světlonoš</strong></div>
-        <div><span>3 000 ✦</span><strong>Strážce světla</strong></div>
+        <div><span>3 000 ✦</span><strong>Strážce plamene</strong></div>
+        <div><span>6 000 ✦</span><strong>Nositel světla</strong></div>
         <div><span>10 000 ✦</span><strong>Věčný plamen</strong></div>
+        <div><span>20 000 ✦</span><strong>Maják Světlonošů</strong></div>
       </div>
     </div>
   </section>
@@ -148,23 +151,36 @@
     <div class="container">
       <div class="sparks-section-head">
         <div>
-          <div class="live-kicker">Tabulka odměn</div>
-          <h2>Proměň Jiskry v něco, co má smysl.</h2>
+          <div class="live-kicker">Kosmetika a kolekce</div>
+          <h2>Obchod Jisker a tvůj inventář.</h2>
         </div>
 
         <p>
-          Odměny spravuje tým Světlonošů.
-          Nabídka i ceny se mohou časem měnit podle toho,
-          jak bude ekonomika fungovat v praxi.
+          Nakupuj varianty rámečků, pozadí, efektů a kosmetických odznaků.
+          Hodnostní odznaky se nekupují — odemykají se automaticky postupem.
         </p>
       </div>
 
-      <div class="spark-reward-filter" id="sparkRewardFilter"></div>
+      <div class="spark-hub-grid">
+        <a class="spark-hub-card spark-hub-store" href="./obchod/">
+          <span class="spark-hub-label">Obchod</span>
+          <strong>Procházet Obchod Jisker</strong>
+          <p>
+            Steamový styl katalogu, varianty v čtvercových slotech,
+            náhledy a nákup přímo z peněženky.
+          </p>
+          <span class="spark-hub-link">Otevřít obchod →</span>
+        </a>
 
-      <div id="sparkRewardsPublic" class="spark-rewards-grid">
-        <div class="spark-reward-card">
-          <div class="muted">Načítám odměny…</div>
-        </div>
+        <a class="spark-hub-card spark-hub-inventory" href="./inventar/">
+          <span class="spark-hub-label">Inventář</span>
+          <strong>Vybrat aktivní kosmetiku</strong>
+          <p>
+            Klikni na získaný odznak, rámeček nebo efekt.
+            Aktivní slot je pouze decentně světlejší — bez fajfky.
+          </p>
+          <span class="spark-hub-link">Otevřít inventář →</span>
+        </a>
       </div>
     </div>
   </section>

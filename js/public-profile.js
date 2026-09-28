@@ -30,8 +30,8 @@
       [300, "Plamínek"],
       [750, "Pochodeň"],
       [1500, "Světlonoš"],
-      [3000, "Strážce světla"],
-      [6000, "Nositel plamene"],
+      [3000, "Strážce plamene"],
+      [6000, "Nositel světla"],
       [10000, "Věčný plamen"],
       [20000, "Maják Světlonošů"]
     ];
@@ -39,20 +39,15 @@
     let current = levels[0][1];
 
     for (const [threshold, name] of levels) {
-      if (lifetime >= threshold) {
-        current = name;
-      } else {
-        break;
-      }
+      if (lifetime >= threshold) current = name;
+      else break;
     }
 
     return current;
   }
 
   function formatDate(value) {
-    if (!value) {
-      return "—";
-    }
+    if (!value) return "—";
 
     const date = new Date(value);
 
@@ -67,39 +62,130 @@
     });
   }
 
-  function renderProfile(profile) {
+  function showLocked() {
+    $("publicProfileMessage").textContent = "";
+
+    $("publicProfileCard").innerHTML = `
+      <div class="spark-login-gate hall-login-gate">
+        <div class="spark-login-gate-icon">✦</div>
+
+        <div>
+          <strong>Profily jsou dostupné po přihlášení.</strong>
+          <span>
+            Přihlas se přes KICK, aby zůstala Síň slávy
+            a profily uvnitř komunity.
+          </span>
+        </div>
+
+        <button
+          class="btn primary"
+          type="button"
+          data-account-open
+        >
+          Přihlásit se přes KICK
+        </button>
+      </div>
+    `;
+
+    window.SVETLONOSI_ACCOUNT?.bindOpenButtons?.();
+  }
+
+  function cosmeticMap(rows) {
+    const map = {};
+
+    for (const row of rows || []) {
+      map[row.slot_type] = row;
+    }
+
+    return map;
+  }
+
+  function badgeMarkup(badge) {
+    if (!badge) {
+      return "";
+    }
+
+    if (badge.preview_static_url) {
+      return `
+        <img
+          class="public-profile-active-badge-image"
+          src="${esc(badge.preview_static_url)}"
+          alt="${esc(badge.variant_name)}"
+        >
+      `;
+    }
+
+    return `
+      <span class="public-profile-active-badge spark-accent-${esc(badge.accent_key || "gold")}">
+        ${esc(badge.preview_glyph || "✦")}
+      </span>
+    `;
+  }
+
+  function renderProfile(profile, equippedRows) {
     const card = $("publicProfileCard");
-    const name = profile.kick_display_name || profile.kick_username || "Světlonoš";
-    const lifetime = Number(profile.lifetime_earned || 0);
+    const cosmetics = cosmeticMap(equippedRows);
+
+    const name =
+      profile.kick_display_name ||
+      profile.kick_username ||
+      "Světlonoš";
+
+    const lifetime =
+      Number(profile.lifetime_earned || 0);
+
     const level = levelFor(lifetime);
 
-    const avatar = profile.kick_avatar_url
-      ? `
+    const avatar =
+      profile.kick_avatar_url
+        ? `
           <img
             src="${esc(profile.kick_avatar_url)}"
             alt="${esc(name)}"
             referrerpolicy="no-referrer"
           >
         `
-      : `<span>${esc(name.trim().charAt(0).toUpperCase() || "✦")}</span>`;
+        : `<span>${esc(name.trim().charAt(0).toUpperCase() || "✦")}</span>`;
+
+    const badge = cosmetics.badge;
+    const frame = cosmetics.frame;
+    const background = cosmetics.background;
+    const effect = cosmetics.effect;
+
+    card.className =
+      `public-profile-card spark-profile-theme spark-accent-${esc(background?.accent_key || effect?.accent_key || "gold")}`;
 
     card.innerHTML = `
       <div class="public-profile-top">
-        <div class="public-profile-avatar ${profile.active_frame ? "has-frame" : ""}">
+
+        <div
+          class="public-profile-avatar ${frame ? "has-frame" : ""} spark-accent-${esc(frame?.accent_key || "gold")}"
+        >
           ${avatar}
         </div>
 
         <div class="public-profile-identity">
           <div class="live-kicker">Veřejný profil</div>
-          <h1>${esc(name)}</h1>
-          <div class="public-profile-handle">@${esc(profile.kick_username || name)}</div>
-          <div class="public-profile-title">${esc(profile.profile_title || level)}</div>
+
+          <div class="public-profile-name-row">
+            ${badgeMarkup(badge)}
+            <h1>${esc(name)}</h1>
+          </div>
+
+          <div class="public-profile-handle">
+            @${esc(profile.kick_username || name)}
+          </div>
+
+          <div class="public-profile-title">
+            ${esc(profile.profile_title || level)}
+          </div>
         </div>
 
         <div class="public-profile-rank">
           <span>Pořadí</span>
           <strong>#${format(profile.rank)}</strong>
         </div>
+
       </div>
 
       <div class="public-profile-stats">
@@ -121,69 +207,122 @@
 
       <div class="public-profile-cosmetics">
         <div class="public-profile-cosmetic">
-          <span>Aktivní titul</span>
-          <strong>${esc(profile.profile_title || "Zatím žádný")}</strong>
-        </div>
-
-        <div class="public-profile-cosmetic">
           <span>Odznak</span>
-          <strong>${esc(profile.active_badge || "Zatím žádný")}</strong>
+          <strong>${esc(badge?.variant_name || "Zatím žádný")}</strong>
         </div>
 
         <div class="public-profile-cosmetic">
           <span>Rámeček</span>
-          <strong>${esc(profile.active_frame || "Základní")}</strong>
+          <strong>${esc(frame?.variant_name || "Základní")}</strong>
+        </div>
+
+        <div class="public-profile-cosmetic">
+          <span>Efekt</span>
+          <strong>${esc(effect?.variant_name || "Žádný")}</strong>
+        </div>
+
+        <div class="public-profile-cosmetic">
+          <span>Pozadí</span>
+          <strong>${esc(background?.variant_name || "Základní")}</strong>
         </div>
       </div>
     `;
 
-    document.title = `${name} — Síň slávy Světlonošů`;
+    document.title =
+      `${name} — Síň slávy Světlonošů`;
   }
 
   async function loadProfile() {
-    const message = $("publicProfileMessage");
-    const card = $("publicProfileCard");
-    const params = new URLSearchParams(window.location.search);
-    const username = (params.get("u") || "").trim();
+    const { data: sessionData } =
+      await db.auth.getSession();
+
+    if (!sessionData.session?.user) {
+      showLocked();
+      return;
+    }
+
+    const params =
+      new URLSearchParams(window.location.search);
+
+    const username =
+      (params.get("u") || "").trim();
 
     if (!username) {
-      card.innerHTML = "";
-      message.textContent = "V odkazu chybí KICK přezdívka.";
+      $("publicProfileCard").innerHTML = "";
+      $("publicProfileMessage").textContent =
+        "V odkazu chybí KICK přezdívka.";
       return;
     }
 
-    const { data, error } = await db.rpc(
-      "spark_public_profile",
-      {
-        p_username: username
-      }
-    );
+    const [
+      profileResult,
+      cosmeticsResult
+    ] =
+      await Promise.all([
+        db.rpc(
+          "spark_public_profile",
+          {
+            p_username: username
+          }
+        ),
 
-    if (error) {
-      console.error(error);
-      card.innerHTML = "";
-      message.textContent = `Profil se nepodařilo načíst: ${error.message}`;
+        db.rpc(
+          "spark_profile_equipped",
+          {
+            p_username: username
+          }
+        )
+      ]);
+
+    if (profileResult.error) {
+      console.error(profileResult.error);
+      $("publicProfileCard").innerHTML = "";
+      $("publicProfileMessage").textContent =
+        "Profil se nepodařilo načíst: " +
+        profileResult.error.message;
       return;
     }
 
-    const profile = Array.isArray(data)
-      ? data[0]
-      : data;
+    const profile =
+      Array.isArray(profileResult.data)
+        ? profileResult.data[0]
+        : profileResult.data;
 
     if (!profile) {
-      card.innerHTML = `
+      $("publicProfileCard").innerHTML = `
         <div class="public-profile-not-found">
           <div class="spark-emblem spark-emblem-sm"><span>✦</span></div>
           <h1>Profil nebyl nalezen</h1>
-          <p>Tenhle Světlonoš zatím nemá veřejný profil nebo zadaná přezdívka neexistuje.</p>
+          <p>
+            Tenhle Světlonoš zatím nemá veřejný profil
+            nebo zadaná přezdívka neexistuje.
+          </p>
           <a class="btn" href="../sin-slavy/">Zpět do Síně slávy</a>
         </div>
       `;
       return;
     }
 
-    renderProfile(profile);
+    renderProfile(
+      profile,
+      cosmeticsResult.error
+        ? []
+        : cosmeticsResult.data
+    );
   }
 
+  window.addEventListener(
+    "svetlonosi-account-changed",
+    event => {
+      if (!event.detail?.session?.user) {
+        showLocked();
+        return;
+      }
+
+      loadProfile();
+    }
+  );
+
   loadProfile();
+
 })();

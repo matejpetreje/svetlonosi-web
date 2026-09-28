@@ -23,6 +23,7 @@
   const format = value =>
     Number(value ?? 0).toLocaleString("cs-CZ");
 
+  let session = null;
   let allRows = [];
   let currentPage = 1;
   let pageSize = 20;
@@ -35,8 +36,8 @@
       [300, "Plamínek"],
       [750, "Pochodeň"],
       [1500, "Světlonoš"],
-      [3000, "Strážce světla"],
-      [6000, "Nositel plamene"],
+      [3000, "Strážce plamene"],
+      [6000, "Nositel světla"],
       [10000, "Věčný plamen"],
       [20000, "Maják Světlonošů"]
     ];
@@ -52,6 +53,67 @@
     }
 
     return current;
+  }
+
+  function showLockedState() {
+    $("hallMyRank").innerHTML = "";
+    $("hallListSummary").textContent = "";
+    $("hallPagination").innerHTML = "";
+    $("hallMessage").textContent = "";
+
+    $("hallBoard").innerHTML = `
+      <div class="spark-login-gate hall-login-gate">
+        <div class="spark-login-gate-icon">✦</div>
+
+        <div>
+          <strong>Síň slávy je dostupná po přihlášení.</strong>
+          <span>
+            KICK přezdívky, pořadí a veřejné profily vidí jen
+            přihlášení členové komunity.
+          </span>
+        </div>
+
+        <button
+          class="btn primary"
+          type="button"
+          data-account-open
+        >
+          Přihlásit se přes KICK
+        </button>
+      </div>
+    `;
+
+    const toolbar =
+      document.querySelector(".hall-list-toolbar");
+
+    if (toolbar) {
+      toolbar.hidden = true;
+    }
+
+    const search =
+      document.querySelector(".hall-search-row");
+
+    if (search) {
+      search.hidden = true;
+    }
+
+    window.SVETLONOSI_ACCOUNT?.bindOpenButtons?.();
+  }
+
+  function showUnlockedState() {
+    const toolbar =
+      document.querySelector(".hall-list-toolbar");
+
+    if (toolbar) {
+      toolbar.hidden = false;
+    }
+
+    const search =
+      document.querySelector(".hall-search-row");
+
+    if (search) {
+      search.hidden = false;
+    }
   }
 
   function avatarMarkup(row) {
@@ -70,18 +132,12 @@
       `;
     }
 
-    return `
-      <span>
-        ${esc(name.trim().charAt(0).toUpperCase() || "✦")}
-      </span>
-    `;
+    return `<span>${esc(name.trim().charAt(0).toUpperCase() || "✦")}</span>`;
   }
 
   function renderRows(rows) {
-    const board = $("hallBoard");
-
     if (!rows?.length) {
-      board.innerHTML = `
+      $("hallBoard").innerHTML = `
         <div class="hall-empty">
           Nikdo s touto přezdívkou zatím v Síni slávy není.
         </div>
@@ -89,7 +145,7 @@
       return;
     }
 
-    board.innerHTML = `
+    $("hallBoard").innerHTML = `
       <div class="hall-board-head">
         <span>#</span>
         <span>Světlonoš</span>
@@ -111,18 +167,12 @@
 
         return `
           <a class="hall-row" href="${profileUrl}">
-            <div class="hall-rank hall-rank-${
-              Number(row.rank) <= 3
-                ? Number(row.rank)
-                : "other"
-            }">
+            <div class="hall-rank hall-rank-${Number(row.rank) <= 3 ? Number(row.rank) : "other"}">
               ${format(row.rank)}
             </div>
 
             <div class="hall-user">
-              <div class="hall-avatar">
-                ${avatarMarkup(row)}
-              </div>
+              <div class="hall-avatar">${avatarMarkup(row)}</div>
 
               <div class="hall-user-copy">
                 <strong>${esc(name)}</strong>
@@ -131,7 +181,7 @@
             </div>
 
             <div class="hall-level">
-              ${esc(row.profile_title || levelFor(lifetime))}
+              ${esc(levelFor(lifetime))}
             </div>
 
             <div class="hall-lifetime">
@@ -145,21 +195,15 @@
   }
 
   function pageCount() {
-    return Math.max(
-      1,
-      Math.ceil(allRows.length / pageSize)
-    );
+    return Math.max(1, Math.ceil(allRows.length / pageSize));
   }
 
   function pageNumbers(totalPages, page) {
     if (totalPages <= 7) {
-      return Array.from(
-        { length: totalPages },
-        (_, index) => index + 1
-      );
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    const items = new Set([
+    const set = new Set([
       1,
       totalPages,
       page - 2,
@@ -169,35 +213,31 @@
       page + 2
     ]);
 
-    const numbers = [...items]
-      .filter(value => value >= 1 && value <= totalPages)
-      .sort((a, b) => a - b);
+    const nums =
+      [...set]
+        .filter(n => n >= 1 && n <= totalPages)
+        .sort((a, b) => a - b);
 
-    const output = [];
+    const out = [];
 
-    numbers.forEach((number, index) => {
-      const previous = numbers[index - 1];
-
-      if (index > 0 && number - previous > 1) {
-        output.push("…");
+    nums.forEach((n, index) => {
+      if (index && n - nums[index - 1] > 1) {
+        out.push("…");
       }
 
-      output.push(number);
+      out.push(n);
     });
 
-    return output;
+    return out;
   }
 
   function renderPagination() {
     const pagination = $("hallPagination");
     const summary = $("hallListSummary");
-
     const total = allRows.length;
-    const totalPages = pageCount();
+    const pages = pageCount();
 
-    if (currentPage > totalPages) {
-      currentPage = totalPages;
-    }
+    currentPage = Math.min(currentPage, pages);
 
     if (!total) {
       summary.textContent =
@@ -209,24 +249,16 @@
       return;
     }
 
-    const start =
-      (currentPage - 1) * pageSize;
-
-    const end =
-      Math.min(start + pageSize, total);
+    const start = (currentPage - 1) * pageSize;
+    const end = Math.min(start + pageSize, total);
 
     summary.textContent =
-      currentSearch
-        ? `Nalezeno ${format(total)} · zobrazeno ${format(start + 1)}–${format(end)}`
-        : `Celkem ${format(total)} Světlonošů · zobrazeno ${format(start + 1)}–${format(end)}`;
+      `Celkem ${format(total)} Světlonošů · zobrazeno ${format(start + 1)}–${format(end)}`;
 
-    if (totalPages <= 1) {
+    if (pages <= 1) {
       pagination.innerHTML = "";
       return;
     }
-
-    const numbers =
-      pageNumbers(totalPages, currentPage);
 
     pagination.innerHTML = `
       <button
@@ -239,31 +271,26 @@
       </button>
 
       <div class="hall-page-numbers">
-        ${numbers.map(item => {
-          if (item === "…") {
-            return `
-              <span class="hall-page-ellipsis">…</span>
-            `;
-          }
-
-          return `
-            <button
-              class="hall-page-button ${item === currentPage ? "is-active" : ""}"
-              type="button"
-              data-page="${item}"
-              ${item === currentPage ? 'aria-current="page"' : ""}
-            >
-              ${item}
-            </button>
-          `;
-        }).join("")}
+        ${pageNumbers(pages, currentPage).map(item =>
+          item === "…"
+            ? `<span class="hall-page-ellipsis">…</span>`
+            : `
+              <button
+                class="hall-page-button ${item === currentPage ? "is-active" : ""}"
+                type="button"
+                data-page="${item}"
+              >
+                ${item}
+              </button>
+            `
+        ).join("")}
       </div>
 
       <button
         class="hall-page-button hall-page-nav"
         type="button"
         data-page="${currentPage + 1}"
-        ${currentPage >= totalPages ? "disabled" : ""}
+        ${currentPage >= pages ? "disabled" : ""}
       >
         Další →
       </button>
@@ -273,53 +300,26 @@
       .querySelectorAll("[data-page]")
       .forEach(button => {
         button.onclick = () => {
-          if (button.disabled) {
-            return;
-          }
+          if (button.disabled) return;
 
-          const nextPage =
-            Number(button.dataset.page);
-
-          if (!Number.isFinite(nextPage)) {
-            return;
-          }
-
-          currentPage =
-            Math.max(
-              1,
-              Math.min(totalPages, nextPage)
-            );
-
+          currentPage = Number(button.dataset.page);
           renderCurrentPage();
 
-          $("hallBoard")
-            ?.scrollIntoView({
-              behavior: "smooth",
-              block: "start"
-            });
+          $("hallBoard")?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
         };
       });
   }
 
   function renderCurrentPage() {
-    const totalPages = pageCount();
+    const start = (currentPage - 1) * pageSize;
 
-    currentPage =
-      Math.max(
-        1,
-        Math.min(currentPage, totalPages)
-      );
+    renderRows(
+      allRows.slice(start, start + pageSize)
+    );
 
-    const start =
-      (currentPage - 1) * pageSize;
-
-    const rows =
-      allRows.slice(
-        start,
-        start + pageSize
-      );
-
-    renderRows(rows);
     renderPagination();
   }
 
@@ -333,84 +333,61 @@
         await db.rpc(
           "spark_hall_of_fame",
           {
-            p_search:
-              search.trim() || null,
-            p_limit:
-              chunkSize,
-            p_offset:
-              offset
+            p_search: search.trim() || null,
+            p_limit: chunkSize,
+            p_offset: offset
           }
         );
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
-      const chunk =
-        data || [];
-
+      const chunk = data || [];
       rows.push(...chunk);
 
-      if (chunk.length < chunkSize) {
-        break;
-      }
+      if (chunk.length < chunkSize) break;
 
       offset += chunkSize;
 
-      if (offset >= 10000) {
-        break;
-      }
+      if (offset >= 10000) break;
     }
 
     return rows;
   }
 
   async function loadHall(search = "") {
-    const message = $("hallMessage");
-    const board = $("hallBoard");
-    const summary = $("hallListSummary");
-    const pagination = $("hallPagination");
+    if (!session?.user) {
+      showLockedState();
+      return;
+    }
+
+    showUnlockedState();
 
     currentSearch = search.trim();
     currentPage = 1;
 
-    message.textContent = "";
-    summary.textContent = "Načítám pořadí…";
-    pagination.innerHTML = "";
-
-    board.innerHTML = `
-      <div class="hall-loading">
-        Načítám Síň slávy…
-      </div>
-    `;
+    $("hallMessage").textContent = "";
+    $("hallListSummary").textContent = "Načítám pořadí…";
+    $("hallPagination").innerHTML = "";
+    $("hallBoard").innerHTML = `<div class="hall-loading">Načítám Síň slávy…</div>`;
 
     try {
-      allRows =
-        await fetchAllHallRows(currentSearch);
-
+      allRows = await fetchAllHallRows(currentSearch);
       renderCurrentPage();
     } catch (error) {
       console.error(error);
-
       allRows = [];
-      board.innerHTML = "";
-      summary.textContent = "";
-      pagination.innerHTML = "";
-
-      message.textContent =
-        `Síň slávy se nepodařilo načíst: ${
-          error?.message || String(error)
-        }`;
+      $("hallBoard").innerHTML = "";
+      $("hallListSummary").textContent = "";
+      $("hallPagination").innerHTML = "";
+      $("hallMessage").textContent =
+        "Síň slávy se nepodařilo načíst: " + error.message;
     }
   }
 
   async function renderMyRank(profile) {
     const wrap = $("hallMyRank");
 
-    if (
-      !profile?.kick_user_id ||
-      !profile?.kick_username
-    ) {
+    if (!session?.user || !profile?.kick_username) {
       wrap.innerHTML = "";
       return;
     }
@@ -419,22 +396,13 @@
       await db.rpc(
         "spark_hall_of_fame",
         {
-          p_search:
-            profile.kick_username,
-          p_limit:
-            20,
-          p_offset:
-            0
+          p_search: profile.kick_username,
+          p_limit: 20,
+          p_offset: 0
         }
       );
 
-    if (error) {
-      console.warn(
-        "Moje umístění se nepodařilo načíst:",
-        error.message
-      );
-      return;
-    }
+    if (error) return;
 
     const exact =
       (data || []).find(
@@ -451,28 +419,15 @@
     const lifetime =
       Number(exact.lifetime_earned || 0);
 
-    const name =
-      exact.kick_display_name ||
-      exact.kick_username ||
-      "Světlonoš";
-
     wrap.innerHTML = `
       <a
         class="hall-my-rank"
         href="../profil/?u=${encodeURIComponent(exact.kick_username)}"
       >
         <div>
-          <div class="live-kicker">
-            Tvoje umístění
-          </div>
-
-          <strong>
-            #${format(exact.rank)} · ${esc(name)}
-          </strong>
-
-          <span>
-            ${esc(levelFor(lifetime))}
-          </span>
+          <div class="live-kicker">Tvoje umístění</div>
+          <strong>#${format(exact.rank)} · ${esc(exact.kick_display_name || exact.kick_username)}</strong>
+          <span>${esc(levelFor(lifetime))}</span>
         </div>
 
         <div class="hall-my-rank-points">
@@ -483,66 +438,68 @@
     `;
   }
 
-  function bindUi() {
-    const input = $("hallSearchInput");
-    const pageSizeSelect = $("hallPageSize");
+  $("hallSearchButton").onclick =
+    () => loadHall($("hallSearchInput").value);
 
-    $("hallSearchButton").onclick =
-      () => {
-        loadHall(input.value);
-      };
+  $("hallResetButton").onclick =
+    () => {
+      $("hallSearchInput").value = "";
+      loadHall("");
+    };
 
-    $("hallResetButton").onclick =
-      () => {
-        input.value = "";
-        loadHall("");
-      };
-
-    input.addEventListener(
-      "keydown",
-      event => {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          loadHall(input.value);
-        }
-      }
-    );
-
-    pageSizeSelect.addEventListener(
-      "change",
-      () => {
-        const selected =
-          Number(pageSizeSelect.value);
-
-        pageSize =
-          [20, 50, 100].includes(selected)
-            ? selected
-            : 20;
-
-        currentPage = 1;
-        renderCurrentPage();
-      }
-    );
-  }
-
-  window.addEventListener(
-    "svetlonosi-account-changed",
+  $("hallSearchInput").addEventListener(
+    "keydown",
     event => {
-      renderMyRank(
-        event.detail?.profile ?? null
-      );
+      if (event.key === "Enter") {
+        event.preventDefault();
+        loadHall($("hallSearchInput").value);
+      }
     }
   );
 
-  bindUi();
-  loadHall("");
+  $("hallPageSize").addEventListener(
+    "change",
+    event => {
+      const value = Number(event.target.value);
 
-  renderMyRank(
-    window
-      .SVETLONOSI_ACCOUNT
-      ?.getProfile?.()
-    ??
-    null
+      pageSize =
+        [20, 50, 100].includes(value)
+          ? value
+          : 20;
+
+      currentPage = 1;
+      renderCurrentPage();
+    }
   );
+
+  window.addEventListener(
+    "svetlonosi-account-changed",
+    async event => {
+      session = event.detail?.session ?? null;
+
+      if (!session?.user) {
+        showLockedState();
+        return;
+      }
+
+      await loadHall("");
+      await renderMyRank(event.detail?.profile ?? null);
+    }
+  );
+
+  (async () => {
+    const { data } = await db.auth.getSession();
+    session = data.session ?? null;
+
+    if (!session?.user) {
+      showLockedState();
+      return;
+    }
+
+    await loadHall("");
+    await renderMyRank(
+      window.SVETLONOSI_ACCOUNT?.getProfile?.() ?? null
+    );
+  })();
 
 })();

@@ -62,11 +62,12 @@
             "";
 
           button.innerHTML = `
-            <span class="nav-account-spark">
-              ✦
+            <span class="nav-wallet-chip" data-account-wallet hidden>
+              <span class="nav-account-spark">✦</span>
+              <strong data-account-wallet-balance>0</strong>
             </span>
 
-            <span data-account-label>
+            <span class="nav-account-name" data-account-label>
               Zapojit se
             </span>
           `;
@@ -103,11 +104,12 @@
             "";
 
           mobile.innerHTML = `
-            <span class="nav-account-spark">
-              ✦
+            <span class="nav-wallet-chip" data-account-wallet hidden>
+              <span class="nav-account-spark">✦</span>
+              <strong data-account-wallet-balance>0</strong>
             </span>
 
-            <span data-account-label>
+            <span class="nav-account-name" data-account-label>
               Zapojit se
             </span>
           `;
@@ -331,6 +333,19 @@
                 Moje Jiskry
               </a>
 
+              <a
+                class="btn"
+                href="/jiskry/obchod/"
+              >
+                Obchod
+              </a>
+
+              <a
+                class="btn"
+                href="/jiskry/inventar/"
+              >
+                Inventář
+              </a>
 
               <button
                 class="btn live-danger-outline"
@@ -455,62 +470,62 @@
 
   function updateNavigationAccountLabel() {
 
+    const loggedIn =
+      !!(
+        currentSession?.user
+        &&
+        currentProfile?.kick_user_id
+      );
+
+    const displayName =
+      currentProfile?.kick_display_name
+      ||
+      currentProfile?.kick_username
+      ||
+      "Světlonoš";
+
+    const balance =
+      Number(
+        currentProfile?.balance
+        ??
+        0
+      )
+      .toLocaleString(
+        "cs-CZ"
+      );
+
     document
       .querySelectorAll(
         "[data-account-label]"
       )
       .forEach(label => {
 
-
-        /*
-          NEPŘIHLÁŠENÝ
-        */
-
-        if (
-          !currentSession?.user
-          ||
-          !currentProfile?.kick_user_id
-        ) {
-
-          label.textContent =
-            "Zapojit se";
-
-          return;
-        }
-
-
-        /*
-          PŘIHLÁŠENÝ
-        */
-
-        const displayName =
-
-          currentProfile
-            .kick_display_name
-
-          ||
-
-          currentProfile
-            .kick_username
-
-          ||
-
-          "Světlonoš";
-
-
-        const balance =
-
-          Number(
-            currentProfile.balance ??
-            0
-          )
-          .toLocaleString(
-            "cs-CZ"
-          );
-
-
         label.textContent =
-          `${balance} ${displayName}`;
+          loggedIn
+            ? displayName
+            : "Zapojit se";
+
+      });
+
+    document
+      .querySelectorAll(
+        "[data-account-wallet]"
+      )
+      .forEach(wallet => {
+
+        wallet.hidden =
+          !loggedIn;
+
+      });
+
+    document
+      .querySelectorAll(
+        "[data-account-wallet-balance]"
+      )
+      .forEach(value => {
+
+        value.textContent =
+          balance;
 
       });
 
