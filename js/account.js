@@ -17,14 +17,6 @@
   );
 
 
-  const esc = value => String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-
-
   let currentSession = null;
   let currentProfile = null;
 
@@ -37,10 +29,11 @@
   function injectAccountButton() {
 
     document
-      .querySelectorAll('header .nav')
+      .querySelectorAll("header .nav")
       .forEach(navWrap => {
 
-        const nav = navWrap.querySelector('nav');
+        const nav =
+          navWrap.querySelector("nav");
 
 
         /*
@@ -49,17 +42,26 @@
 
         if (
           nav &&
-          !nav.querySelector('[data-account-open]')
+          !nav.querySelector(
+            "[data-account-open]"
+          )
         ) {
 
-          const btn = document.createElement('button');
+          const button =
+            document.createElement(
+              "button"
+            );
 
-          btn.type = 'button';
-          btn.className = 'nav-account-button';
+          button.type =
+            "button";
 
-          btn.dataset.accountOpen = '';
+          button.className =
+            "nav-account-button";
 
-          btn.innerHTML = `
+          button.dataset.accountOpen =
+            "";
+
+          button.innerHTML = `
             <span class="nav-account-spark">
               ✦
             </span>
@@ -69,7 +71,10 @@
             </span>
           `;
 
-          nav.appendChild(btn);
+          nav.appendChild(
+            button
+          );
+
         }
 
 
@@ -78,17 +83,24 @@
         */
 
         if (
-          !navWrap.querySelector('.nav-account-mobile')
+          !navWrap.querySelector(
+            ".nav-account-mobile"
+          )
         ) {
 
-          const mobile = document.createElement('button');
+          const mobile =
+            document.createElement(
+              "button"
+            );
 
-          mobile.type = 'button';
+          mobile.type =
+            "button";
 
           mobile.className =
-            'nav-account-button nav-account-mobile';
+            "nav-account-button nav-account-mobile";
 
-          mobile.dataset.accountOpen = '';
+          mobile.dataset.accountOpen =
+            "";
 
           mobile.innerHTML = `
             <span class="nav-account-spark">
@@ -100,7 +112,10 @@
             </span>
           `;
 
-          navWrap.appendChild(mobile);
+          navWrap.appendChild(
+            mobile
+          );
+
         }
 
       });
@@ -116,14 +131,16 @@
   function injectModal() {
 
     if (
-      document.getElementById('accountModal')
+      document.getElementById(
+        "accountModal"
+      )
     ) {
       return;
     }
 
 
     document.body.insertAdjacentHTML(
-      'beforeend',
+      "beforeend",
       `
 
       <div
@@ -138,7 +155,6 @@
           aria-modal="true"
           aria-labelledby="accountModalTitle"
         >
-
 
           <button
             class="account-close"
@@ -183,7 +199,7 @@
 
 
           <!-- =========================
-               SIGNED OUT
+               NEPŘIHLÁŠENÝ
                ========================= -->
 
           <div id="accountSignedOut">
@@ -191,134 +207,21 @@
 
             <p class="muted">
 
-              Přihlas se nebo si vytvoř účet.
+              Přihlas se pomocí svého KICK účtu.
 
-              Pro sbírání Jisker je potřeba následně
-              propojit svůj KICK účet.
+              Přezdívku a identitu převezmeme přímo
+              z KICKu a Jiskry budou navázané na tento účet.
 
             </p>
 
 
-            <div class="account-tabs">
-
-              <button
-                type="button"
-                class="account-tab is-active"
-                data-account-tab="login"
-              >
-                Přihlášení
-              </button>
-
-
-              <button
-                type="button"
-                class="account-tab"
-                data-account-tab="register"
-              >
-                Registrace
-              </button>
-
-            </div>
-
-
-
-            <!-- LOGIN -->
-
-            <div
-              class="account-tab-panel"
-              data-account-panel="login"
+            <button
+              class="btn primary account-full-button"
+              type="button"
+              id="accountKickLoginButton"
             >
-
-              <label class="live-field">
-
-                <span>
-                  E-mail
-                </span>
-
-                <input
-                  type="email"
-                  id="accountLoginEmail"
-                  autocomplete="email"
-                >
-
-              </label>
-
-
-              <label class="live-field">
-
-                <span>
-                  Heslo
-                </span>
-
-                <input
-                  type="password"
-                  id="accountLoginPassword"
-                  autocomplete="current-password"
-                >
-
-              </label>
-
-
-              <button
-                class="btn primary account-full-button"
-                type="button"
-                id="accountLoginButton"
-              >
-                Přihlásit se
-              </button>
-
-            </div>
-
-
-
-            <!-- REGISTER -->
-
-            <div
-              class="account-tab-panel"
-              data-account-panel="register"
-              hidden
-            >
-
-              <label class="live-field">
-
-                <span>
-                  E-mail
-                </span>
-
-                <input
-                  type="email"
-                  id="accountRegisterEmail"
-                  autocomplete="email"
-                >
-
-              </label>
-
-
-              <label class="live-field">
-
-                <span>
-                  Heslo
-                </span>
-
-                <input
-                  type="password"
-                  id="accountRegisterPassword"
-                  autocomplete="new-password"
-                  minlength="6"
-                >
-
-              </label>
-
-
-              <button
-                class="btn primary account-full-button"
-                type="button"
-                id="accountRegisterButton"
-              >
-                Vytvořit účet
-              </button>
-
-            </div>
+              Přihlásit se přes KICK
+            </button>
 
 
             <div
@@ -326,12 +229,13 @@
               class="live-message"
             ></div>
 
+
           </div>
 
 
 
           <!-- =========================
-               SIGNED IN
+               PŘIHLÁŠENÝ
                ========================= -->
 
           <div
@@ -340,7 +244,7 @@
           >
 
 
-            <!-- PROFILE -->
+            <!-- PROFIL -->
 
             <div class="account-profile-card">
 
@@ -355,12 +259,14 @@
 
               <div class="account-profile-copy">
 
-                <strong id="accountDisplayName">
+                <strong
+                  id="accountDisplayName"
+                >
                   Světlonoš
                 </strong>
 
                 <span
-                  id="accountEmail"
+                  id="accountKickName"
                   class="muted"
                 ></span>
 
@@ -369,7 +275,9 @@
 
               <div class="account-balance">
 
-                <strong id="accountBalance">
+                <strong
+                  id="accountBalance"
+                >
                   0
                 </strong>
 
@@ -379,42 +287,6 @@
 
               </div>
 
-            </div>
-
-
-
-            <!-- KICK NOT CONNECTED -->
-
-            <div
-              id="accountKickMissing"
-              class="account-kick-card"
-            >
-
-              <div>
-
-                <strong>
-                  Propoj KICK účet
-                </strong>
-
-                <p class="muted">
-
-                  KICK účet je povinný pro aktivaci Jisker.
-
-                  Tvoje veřejná přezdívka bude převzatá
-                  přímo z KICKu.
-
-                </p>
-
-              </div>
-
-
-              <button
-                class="btn primary"
-                type="button"
-                id="accountKickConnectButton"
-              >
-                Propojit KICK
-              </button>
 
             </div>
 
@@ -423,9 +295,7 @@
             <!-- KICK CONNECTED -->
 
             <div
-              id="accountKickConnected"
               class="account-kick-card is-connected"
-              hidden
             >
 
               <div>
@@ -434,10 +304,10 @@
                   KICK propojen
                 </strong>
 
-                <p
-                  id="accountKickName"
-                  class="muted"
-                ></p>
+                <p class="muted">
+                  Tvoje přezdívka a účet Jisker
+                  jsou navázané na KICK.
+                </p>
 
               </div>
 
@@ -481,6 +351,7 @@
 
           </div>
 
+
         </div>
 
       </div>
@@ -493,59 +364,35 @@
 
 
   /* =========================================================
-     TABS
-     ========================================================= */
-
-  function setTab(name) {
-
-    document
-      .querySelectorAll('[data-account-tab]')
-      .forEach(button => {
-
-        button.classList.toggle(
-          'is-active',
-          button.dataset.accountTab === name
-        );
-
-      });
-
-
-    document
-      .querySelectorAll('[data-account-panel]')
-      .forEach(panel => {
-
-        panel.hidden =
-          panel.dataset.accountPanel !== name;
-
-      });
-
-  }
-
-
-
-  /* =========================================================
      MODAL
      ========================================================= */
 
   function openModal() {
 
     const modal =
-      document.getElementById('accountModal');
+      document.getElementById(
+        "accountModal"
+      );
 
     if (modal) {
-      modal.hidden = false;
+      modal.hidden =
+        false;
     }
 
   }
 
 
+
   function closeModal() {
 
     const modal =
-      document.getElementById('accountModal');
+      document.getElementById(
+        "accountModal"
+      );
 
     if (modal) {
-      modal.hidden = true;
+      modal.hidden =
+        true;
     }
 
   }
@@ -553,33 +400,42 @@
 
 
   /* =========================================================
-     PROFILE
+     LOAD PROFILE
      ========================================================= */
 
-  async function ensureProfile(user) {
+  async function loadProfile(
+    user
+  ) {
 
     if (!user) {
       return null;
     }
 
 
-    let {
+    const {
       data,
       error
-    } = await db
-      .from('spark_profiles')
-      .select('*')
-      .eq('user_id', user.id)
-      .maybeSingle();
+    } =
+      await db
+
+        .from(
+          "spark_profiles"
+        )
+
+        .select("*")
+
+        .eq(
+          "user_id",
+          user.id
+        )
+
+        .maybeSingle();
 
 
-    if (
-      error &&
-      error.code !== 'PGRST116'
-    ) {
+    if (error) {
 
       console.warn(
-        'spark_profiles není zatím připravené:',
+        "Profil Jisker nelze načíst:",
         error.message
       );
 
@@ -587,37 +443,8 @@
     }
 
 
-    /*
-      PROFIL ZATÍM NEEXISTUJE
-    */
+    return data || null;
 
-    if (!data) {
-
-      const inserted = await db
-        .from('spark_profiles')
-        .insert({
-          user_id: user.id
-        })
-        .select('*')
-        .maybeSingle();
-
-
-      if (inserted.error) {
-
-        console.warn(
-          'Profil Jisker nebylo možné vytvořit:',
-          inserted.error.message
-        );
-
-        return null;
-      }
-
-
-      data = inserted.data;
-    }
-
-
-    return data;
   }
 
 
@@ -629,7 +456,9 @@
   function updateNavigationAccountLabel() {
 
     document
-      .querySelectorAll('[data-account-label]')
+      .querySelectorAll(
+        "[data-account-label]"
+      )
       .forEach(label => {
 
 
@@ -637,53 +466,47 @@
           NEPŘIHLÁŠENÝ
         */
 
-        if (!currentSession?.user) {
+        if (
+          !currentSession?.user
+          ||
+          !currentProfile?.kick_user_id
+        ) {
 
           label.textContent =
-            'Zapojit se';
+            "Zapojit se";
 
           return;
         }
 
 
         /*
-          PŘIHLÁŠENÝ,
-          ALE KICK NENÍ PROPOJENÝ
-        */
-
-        const kickConnected =
-          !!currentProfile?.kick_user_id;
-
-
-        if (!kickConnected) {
-
-          label.textContent =
-            'Propojit KICK';
-
-          return;
-        }
-
-
-        /*
-          PLNĚ AKTIVNÍ ÚČET
-
-          Výsledek:
-          ✦ 845 MedvedCZ
-
-          Samotná ✦ už je samostatný span
-          v navigačním tlačítku.
+          PŘIHLÁŠENÝ
         */
 
         const displayName =
-          currentProfile?.kick_display_name ||
-          currentProfile?.kick_username ||
-          'Světlonoš';
+
+          currentProfile
+            .kick_display_name
+
+          ||
+
+          currentProfile
+            .kick_username
+
+          ||
+
+          "Světlonoš";
 
 
         const balance =
+
           Number(
-            currentProfile?.balance ?? 0
-          ).toLocaleString('cs-CZ');
+            currentProfile.balance ??
+            0
+          )
+          .toLocaleString(
+            "cs-CZ"
+          );
 
 
         label.textContent =
@@ -696,39 +519,59 @@
 
 
   /* =========================================================
-     REFRESH UI
+     REFRESH ACCOUNT UI
      ========================================================= */
 
-  async function refreshAccountUi(session) {
+  async function refreshAccountUi(
+    session
+  ) {
 
     currentSession =
       session ?? null;
 
 
     currentProfile =
+
       currentSession?.user
-        ? await ensureProfile(
+
+        ? await loadProfile(
             currentSession.user
           )
+
         : null;
 
 
+
     /*
-      NAVIGACE
+      Účet považujeme za aktivní jen pokud:
+
+      - existuje Supabase session
+      - profil má KICK user ID
     */
+
+    const activeKickAccount =
+
+      !!currentSession?.user
+
+      &&
+
+      !!currentProfile?.kick_user_id;
+
+
 
     updateNavigationAccountLabel();
 
 
+
     const signedOut =
       document.getElementById(
-        'accountSignedOut'
+        "accountSignedOut"
       );
 
 
     const signedIn =
       document.getElementById(
-        'accountSignedIn'
+        "accountSignedIn"
       );
 
 
@@ -741,138 +584,179 @@
     }
 
 
+
     signedOut.hidden =
-      !!currentSession?.user;
+      activeKickAccount;
 
 
     signedIn.hidden =
-      !currentSession?.user;
+      !activeKickAccount;
 
 
 
-    /*
-      NEPŘIHLÁŠENÝ
-    */
+    /* =====================================================
+       NEPŘIHLÁŠENÝ
+       ===================================================== */
 
-    if (!currentSession?.user) {
+    if (
+      !activeKickAccount
+    ) {
 
       window.dispatchEvent(
+
         new CustomEvent(
-          'svetlonosi-account-changed',
+          "svetlonosi-account-changed",
           {
+
             detail: {
-              session: null,
-              profile: null
+
+              session:
+                currentSession,
+
+              profile:
+                currentProfile
+
             }
+
           }
         )
+
       );
 
+
       return;
+
     }
 
 
 
-    /*
-      PŘIHLÁŠENÝ
-    */
+    /* =====================================================
+       PŘIHLÁŠENÝ
+       ===================================================== */
 
-    const user =
-      currentSession.user;
+    const displayName =
 
+      currentProfile
+        .kick_display_name
 
-    const display =
-      currentProfile?.kick_display_name ||
-      currentProfile?.kick_username ||
-      'Účet čeká na propojení KICK';
+      ||
 
+      currentProfile
+        .kick_username
 
-    document
-      .getElementById('accountDisplayName')
-      .textContent =
-        display;
+      ||
 
+      "Světlonoš";
 
-    document
-      .getElementById('accountEmail')
-      .textContent =
-        user.email ?? '';
 
 
     document
-      .getElementById('accountBalance')
+      .getElementById(
+        "accountDisplayName"
+      )
       .textContent =
+        displayName;
+
+
+
+    document
+      .getElementById(
+        "accountKickName"
+      )
+      .textContent =
+
+        `@${
+          currentProfile.kick_username
+          ||
+          displayName
+        }`;
+
+
+
+    document
+      .getElementById(
+        "accountBalance"
+      )
+      .textContent =
+
         Number(
-          currentProfile?.balance ?? 0
-        ).toLocaleString('cs-CZ');
+          currentProfile.balance ??
+          0
+        )
+        .toLocaleString(
+          "cs-CZ"
+        );
 
 
-    document
-      .getElementById('accountAvatar')
-      .textContent =
+
+    /* =====================================================
+       AVATAR
+       ===================================================== */
+
+    const avatar =
+      document.getElementById(
+        "accountAvatar"
+      );
+
+
+    if (
+      currentProfile
+        .kick_avatar_url
+    ) {
+
+      avatar.innerHTML = `
+
+        <img
+          src="${currentProfile.kick_avatar_url}"
+          alt=""
+          referrerpolicy="no-referrer"
+        >
+
+      `;
+
+    }
+
+    else {
+
+      avatar.textContent =
+
         (
-          display.trim()[0] ||
-          '✦'
-        ).toUpperCase();
+          displayName
+            .trim()[0]
+
+          ||
+
+          "✦"
+        )
+        .toUpperCase();
+
+    }
 
 
 
-    /*
-      KICK STAV
-    */
-
-    const connected =
-      !!currentProfile?.kick_user_id;
-
-
-    document
-      .getElementById(
-        'accountKickMissing'
-      )
-      .hidden =
-        connected;
-
-
-    document
-      .getElementById(
-        'accountKickConnected'
-      )
-      .hidden =
-        !connected;
-
-
-    document
-      .getElementById(
-        'accountKickName'
-      )
-      .textContent =
-        connected
-          ? `@${
-              currentProfile.kick_username ||
-              currentProfile.kick_display_name ||
-              'KICK'
-            }`
-          : '';
-
-
-
-    /*
-      EVENT PRO OSTATNÍ ČÁSTI WEBU
-    */
+    /* =====================================================
+       EVENT
+       ===================================================== */
 
     window.dispatchEvent(
+
       new CustomEvent(
-        'svetlonosi-account-changed',
+        "svetlonosi-account-changed",
         {
+
           detail: {
+
             session:
               currentSession,
 
             profile:
               currentProfile
+
           }
+
         }
       )
+
     );
 
   }
@@ -880,203 +764,61 @@
 
 
   /* =========================================================
-     LOGIN
+     START KICK LOGIN
      ========================================================= */
 
-  async function login() {
+  async function startKickLogin() {
 
-    const msg =
+    const message =
       document.getElementById(
-        'accountAuthMessage'
+        "accountAuthMessage"
       );
 
 
-    msg.textContent =
-      'Přihlašuji…';
+    if (message) {
 
-
-    const email =
-      document
-        .getElementById(
-          'accountLoginEmail'
-        )
-        .value
-        .trim();
-
-
-    const password =
-      document
-        .getElementById(
-          'accountLoginPassword'
-        )
-        .value;
-
-
-    const {
-      data,
-      error
-    } = await db.auth.signInWithPassword({
-      email,
-      password
-    });
-
-
-    if (error) {
-
-      msg.textContent =
-        'Přihlášení se nepodařilo: ' +
-        error.message;
-
-      return;
-    }
-
-
-    msg.textContent = '';
-
-
-    await refreshAccountUi(
-      data.session
-    );
-
-  }
-
-
-
-  /* =========================================================
-     REGISTER
-     ========================================================= */
-
-  async function register() {
-
-    const msg =
-      document.getElementById(
-        'accountAuthMessage'
-      );
-
-
-    msg.textContent =
-      'Zakládám účet…';
-
-
-    const email =
-      document
-        .getElementById(
-          'accountRegisterEmail'
-        )
-        .value
-        .trim();
-
-
-    const password =
-      document
-        .getElementById(
-          'accountRegisterPassword'
-        )
-        .value;
-
-
-    const {
-      data,
-      error
-    } = await db.auth.signUp({
-
-      email,
-      password,
-
-      options: {
-
-        emailRedirectTo:
-          location.origin +
-          '/jiskry/'
-
-      }
-
-    });
-
-
-    if (error) {
-
-      msg.textContent =
-        'Registrace se nepodařila: ' +
-        error.message;
-
-      return;
-    }
-
-
-    /*
-      EMAIL CONFIRMATION VYPNUTÉ
-      -> session vznikne okamžitě
-    */
-
-    if (data.session) {
-
-      msg.textContent = '';
-
-      await refreshAccountUi(
-        data.session
-      );
+      message.textContent =
+        "Přesměrovávám na KICK…";
 
     }
-
-    /*
-      EMAIL CONFIRMATION ZAPNUTÉ
-    */
-
-    else {
-
-      msg.textContent =
-        'Účet je vytvořený. ' +
-        'Zkontroluj e-mail a potvrď registraci.';
-
-    }
-
-  }
-
-
-
-  /* =========================================================
-     KICK CONNECT
-     ========================================================= */
-
-  async function connectKick() {
-
-    const msg =
-      document.getElementById(
-        'accountProfileMessage'
-      );
-
-
-    msg.textContent =
-      'Připravuji propojení s KICKem…';
 
 
     try {
 
+
       const {
         data,
         error
-      } = await db.functions.invoke(
-        'kick-user',
-        {
+      } =
 
-          body: {
+        await db.functions.invoke(
 
-            action:
-              'start_oauth',
+          "kick-user",
 
-            return_to:
-              location.href
+          {
+
+            body: {
+
+              action:
+                "start_login",
+
+              return_to:
+                window.location.href
+
+            }
 
           }
 
-        }
-      );
+        );
+
 
 
       if (error) {
+
         throw error;
+
       }
+
 
 
       if (
@@ -1084,30 +826,47 @@
       ) {
 
         throw new Error(
-          'Služba KICK propojení ' +
-          'nevrátila autorizační adresu.'
+          "KICK přihlášení nevrátilo autorizační adresu."
         );
 
       }
 
 
+
       /*
-        PŘESMĚROVÁNÍ NA KICK
+        REDIRECT NA KICK
       */
 
-      location.href =
+      window.location.href =
         data.authorization_url;
 
     }
 
-    catch (error) {
+    catch (
+      error
+    ) {
 
-      console.error(error);
+
+      console.error(
+        error
+      );
 
 
-      msg.textContent =
-        'KICK propojení není dostupné: ' +
-        error.message;
+      if (message) {
+
+        message.textContent =
+
+          "KICK přihlášení se nepodařilo: "
+
+          +
+
+          (
+            error?.message
+            ||
+            String(error)
+          );
+
+      }
 
     }
 
@@ -1123,6 +882,20 @@
 
     await db.auth.signOut();
 
+
+    currentSession =
+      null;
+
+
+    currentProfile =
+      null;
+
+
+    await refreshAccountUi(
+      null
+    );
+
+
     closeModal();
 
   }
@@ -1137,17 +910,20 @@
 
 
     document.addEventListener(
-      'click',
+
+      "click",
+
       event => {
 
 
         /*
-          OTEVŘENÍ ÚČTU
+          OPEN ACCOUNT
         */
 
         const trigger =
+
           event.target.closest(
-            '[data-account-open]'
+            "[data-account-open]"
           );
 
 
@@ -1160,13 +936,14 @@
         }
 
 
+
         /*
-          KLIK MIMO MODAL
+          CLICK BACKDROP
         */
 
         if (
           event.target.id ===
-          'accountModal'
+          "accountModal"
         ) {
 
           closeModal();
@@ -1174,118 +951,41 @@
         }
 
       }
+
     );
 
 
 
+    /* CLOSE */
+
     document
       .getElementById(
-        'accountCloseButton'
+        "accountCloseButton"
       )
       .onclick =
         closeModal;
 
 
 
-    document
-      .querySelectorAll(
-        '[data-account-tab]'
-      )
-      .forEach(button => {
-
-        button.onclick =
-          () =>
-            setTab(
-              button.dataset.accountTab
-            );
-
-      });
-
-
+    /* KICK LOGIN */
 
     document
       .getElementById(
-        'accountLoginButton'
+        "accountKickLoginButton"
       )
       .onclick =
-        login;
+        startKickLogin;
 
 
 
-    document
-      .getElementById(
-        'accountRegisterButton'
-      )
-      .onclick =
-        register;
-
-
+    /* LOGOUT */
 
     document
       .getElementById(
-        'accountKickConnectButton'
-      )
-      .onclick =
-        connectKick;
-
-
-
-    document
-      .getElementById(
-        'accountLogoutButton'
+        "accountLogoutButton"
       )
       .onclick =
         logout;
-
-
-
-    /*
-      ENTER = LOGIN
-    */
-
-    document
-      .getElementById(
-        'accountLoginPassword'
-      )
-      .addEventListener(
-        'keydown',
-        event => {
-
-          if (
-            event.key === 'Enter'
-          ) {
-
-            login();
-
-          }
-
-        }
-      );
-
-
-
-    /*
-      ENTER = REGISTER
-    */
-
-    document
-      .getElementById(
-        'accountRegisterPassword'
-      )
-      .addEventListener(
-        'keydown',
-        event => {
-
-          if (
-            event.key === 'Enter'
-          ) {
-
-            register();
-
-          }
-
-        }
-      );
 
   }
 
@@ -1297,16 +997,26 @@
 
   async function init() {
 
+
     injectAccountButton();
 
+
     injectModal();
+
 
     bindUi();
 
 
+
+    /* =====================================================
+       CURRENT SESSION
+       ===================================================== */
+
     const {
       data
-    } = await db.auth.getSession();
+    } =
+      await db.auth
+        .getSession();
 
 
     await refreshAccountUi(
@@ -1315,11 +1025,12 @@
 
 
 
-    /*
-      SUPABASE AUTH CHANGE
-    */
+    /* =====================================================
+       SESSION CHANGE
+       ===================================================== */
 
     db.auth.onAuthStateChange(
+
       async (
         _event,
         session
@@ -1330,7 +1041,48 @@
         );
 
       }
+
     );
+
+
+
+    /* =====================================================
+       CLEAN CALLBACK URL
+       ===================================================== */
+
+    const url =
+      new URL(
+        window.location.href
+      );
+
+
+    if (
+      url.searchParams.get(
+        "kick"
+      ) ===
+      "connected"
+    ) {
+
+      url.searchParams.delete(
+        "kick"
+      );
+
+
+      window.history.replaceState(
+
+        {},
+
+        "",
+
+        url.pathname
+        +
+        url.search
+        +
+        url.hash
+
+      );
+
+    }
 
   }
 
@@ -1341,6 +1093,7 @@
      ========================================================= */
 
   window.SVETLONOSI_ACCOUNT = {
+
 
     open:
       openModal,
@@ -1362,14 +1115,19 @@
         const {
           data
         } =
-          await db.auth.getSession();
+          await db.auth
+            .getSession();
 
 
         return refreshAccountUi(
           data.session
         );
 
-      }
+      },
+
+
+    loginWithKick:
+      startKickLogin
 
   };
 
