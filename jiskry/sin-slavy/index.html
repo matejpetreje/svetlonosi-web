@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Síň slávy — Jiskry Světlonošů</title>
+  <meta name="description" content="Síň slávy komunity Světlonošů. Najdi své umístění, vyhledej další Světlonoše a otevři jejich veřejný profil.">
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+<header>
+  <div class="container nav">
+    <a class="brand" href="../../index.html">
+      <img class="brand-logo" src="../../assets/logo_svetlonosi.png" alt="Světlonoši">
+      <span class="brand-wordmark">SVĚTLO<span>NOŠI</span></span>
+    </a>
+
+    <nav>
+      <a href="../../index.html">Domů</a>
+      <a href="../../live/">Hlasování</a>
+      <a href="../">Jiskry</a>
+      <a href="./" class="nav-active">Síň slávy</a>
+    </nav>
+  </div>
+</header>
+
+<main class="hall-page">
+  <section class="hall-hero">
+    <div class="container hall-shell">
+      <div class="live-kicker">Jiskry Světlonošů</div>
+      <h1>Síň slávy</h1>
+      <p>Pořadí se počítá podle všech Jisker, které jsi kdy získal. Utracené Jiskry tvoje umístění nesnižují.</p>
+
+      <div class="hall-search-row">
+        <label class="hall-search-field">
+          <span>Vyhledat Světlonoše</span>
+          <input id="hallSearchInput" type="search" placeholder="KICK přezdívka…" autocomplete="off">
+        </label>
+        <button class="btn primary" type="button" id="hallSearchButton">Hledat</button>
+        <button class="btn" type="button" id="hallResetButton">Zobrazit vše</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section hall-section">
+    <div class="container hall-shell">
+      <div id="hallMyRank"></div>
+
+      <div class="hall-board" id="hallBoard">
+        <div class="hall-loading">Načítám Síň slávy…</div>
+      </div>
+
+      <div id="hallMessage" class="live-message"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container footer">
+    <div>© 2026 Světlonoši</div>
+    <div>
+      <a href="../../privacy.html">Privacy Policy</a>
+      <a href="../../terms.html">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../js/supabase-config.js"></script>
+<script src="../../js/account.js"></script>
+<script src="../../js/hall-of-fame.js"></script>
+</body>
+</html>
