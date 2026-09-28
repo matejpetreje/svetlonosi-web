@@ -681,3 +681,67 @@ code{background:#0b0d10;border:1px solid var(--line);padding:2px 6px;border-radi
   .public-profile-stats,.public-profile-cosmetics{grid-template-columns:1fr}
   .public-profile-avatar{width:82px;height:82px;border-radius:22px}
 }
+
+
+/* =========================================================
+   SJEDNOCENÉ DUNGEON POZADÍ + JEMNÝ BLUR PŘECHOD
+   ========================================================= */
+
+.hero,
+.live-hero,
+.sparks-hero,
+.hall-hero,
+.public-profile-hero{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  background:
+    radial-gradient(circle at 72% 28%,rgba(197,139,36,.16),transparent 28%),
+    radial-gradient(circle at 22% 68%,rgba(56,113,164,.08),transparent 26%),
+    linear-gradient(180deg,rgba(8,9,12,.16) 0%,rgba(8,9,12,.34) 52%,rgba(15,17,21,.76) 82%,rgba(15,17,21,.98) 100%),
+    url("assets/pozadi_dungeon.png") center/cover no-repeat;
+}
+
+.hero::after,
+.live-hero::after,
+.sparks-hero::after,
+.hall-hero::after,
+.public-profile-hero::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-1px;
+  height:190px;
+  z-index:0;
+  pointer-events:none;
+  background:linear-gradient(
+    180deg,
+    rgba(15,17,21,0) 0%,
+    rgba(15,17,21,.20) 24%,
+    rgba(15,17,21,.58) 56%,
+    rgba(15,17,21,.88) 80%,
+    #0f1115 100%
+  );
+  -webkit-backdrop-filter:blur(8px);
+  backdrop-filter:blur(8px);
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.38) 28%,#000 58%,#000 100%);
+  mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.38) 28%,#000 58%,#000 100%);
+}
+
+.hero .container,
+.live-hero .container,
+.sparks-hero .container,
+.hall-hero .container,
+.public-profile-hero .container{
+  position:relative;
+  z-index:1;
+}
+
+/* Spodní obsah navazuje na stejnou tmavou barvu jako blur přechod. */
+.live-main,
+.sparks-page,
+.hall-page,
+.public-profile-page{
+  background:#0f1115;
+}
