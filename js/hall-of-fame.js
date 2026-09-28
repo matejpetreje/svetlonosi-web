@@ -153,33 +153,159 @@
       return;
     }
 
-    const chunkSize = 100;
+    /*
+      Nejprve zkusíme hromadnou RPC funkci.
+      Pokud nebyla nasazená nebo vrátí chybu,
+      použijeme jako fallback už existující spark_profile_equipped.
+    */
+    let batchWorked = false;
 
-    for (let offset = 0; offset < usernames.length; offset += chunkSize) {
-      const chunk = usernames.slice(offset, offset + chunkSize);
+    try {
+      const chunkSize = 100;
 
-      const { data, error } =
-        await db.rpc(
-          "spark_badges_for_usernames",
-          {
-            p_usernames: chunk
+      for (
+        let offset = 0;
+        offset < usernames.length;
+        offset += chunkSize
+      ) {
+        const chunk =
+          usernames.slice(
+            offset,
+            offset + chunkSize
+          );
+
+        const {
+          data,
+          error
+        } =
+          await db.rpc(
+            "spark_badges_for_usernames",
+            {
+              p_usernames: chunk
+            }
+          );
+
+        if (error) {
+          throw error;
+        }
+
+        for (const badge of data || []) {
+          badgeMap.set(
+            String(
+              badge.kick_username || ""
+            ).toLowerCase(),
+            badge
+          );
+        }
+      }
+
+      batchWorked = true;
+    }
+    catch (error) {
+      console.warn(
+        "Hromadné načtení badge selhalo, používám fallback:",
+        error?.message || error
+      );
+    }
+
+    /*
+      I když batch proběhl, doplníme případně chybějící badge
+      přes spark_profile_equipped. Tím je Síň slávy odolná i vůči
+      rozdílům ve velikosti písmen nebo starší SQL verzi.
+    */
+    const missingUsernames =
+      usernames.filter(
+        username =>
+          !badgeMap.has(
+            String(username).toLowerCase()
+          )
+      );
+
+    if (!missingUsernames.length) {
+      return;
+    }
+
+    const results =
+      await Promise.allSettled(
+        missingUsernames.map(
+          async username => {
+            const {
+              data,
+              error
+            } =
+              await db.rpc(
+                "spark_profile_equipped",
+                {
+                  p_username: username
+                }
+              );
+
+            if (error) {
+              throw error;
+            }
+
+            const badge =
+              (data || [])
+                .find(
+                  item =>
+                    item.slot_type ===
+                    "badge"
+                );
+
+            return {
+              username,
+              badge
+            };
           }
-        );
+        )
+      );
 
-      if (error) {
-        console.warn(
-          "Aktivní odznaky pro Síň slávy se nepodařilo načíst:",
-          error.message
-        );
+    for (const result of results) {
+      if (
+        result.status !==
+        "fulfilled"
+      ) {
         continue;
       }
 
-      for (const badge of data || []) {
-        badgeMap.set(
-          String(badge.kick_username || "").toLowerCase(),
-          badge
-        );
+      const {
+        username,
+        badge
+      } =
+        result.value;
+
+      if (!badge) {
+        continue;
       }
+
+      badgeMap.set(
+        String(username).toLowerCase(),
+        {
+          kick_username:
+            username,
+
+          variant_id:
+            badge.variant_id,
+
+          variant_name:
+            badge.variant_name,
+
+          preview_glyph:
+            badge.preview_glyph,
+
+          preview_static_url:
+            badge.preview_static_url,
+
+          preview_animated_url:
+            badge.preview_animated_url,
+
+          accent_key:
+            badge.accent_key,
+
+          rarity:
+            badge.rarity
+        }
+      );
     }
   }
 
