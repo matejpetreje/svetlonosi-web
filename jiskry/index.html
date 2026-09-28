@@ -10,8 +10,16 @@
 <body>
 <header>
   <div class="container nav">
-    <a class="brand" href="../index.html"><img class="brand-logo" src="../assets/logo_svetlonosi.png" alt="Světlonoši"><span class="brand-wordmark">SVĚTLO<span>NOŠI</span></span></a>
-    <nav><a href="../index.html">Domů</a><a href="../live/">Sbor Světlonošů</a><a href="./" class="nav-active">Jiskry</a></nav>
+    <a class="brand" href="../index.html">
+      <img class="brand-logo" src="../assets/logo_svetlonosi.png" alt="Světlonoši">
+      <span class="brand-wordmark">SVĚTLO<span>NOŠI</span></span>
+    </a>
+
+    <nav>
+      <a href="../index.html">Domů</a>
+      <a href="../live/">Sbor Světlonošů</a>
+      <a href="./" class="nav-active">Jiskry</a>
+    </nav>
   </div>
 </header>
 
@@ -20,39 +28,110 @@
     <div class="container sparks-hero-grid">
       <div class="sparks-hero-copy">
         <div class="live-kicker">Věrnostní systém Světlonošů</div>
+
         <h1>Každá účast zažehne další Jiskru.</h1>
-        <p>Propoj svůj Světlonošský účet s KICKem. Hlasuj, buď s námi na streamu, zapojuj se do komunity a sbírej Jiskry, které můžeš směnit za odměny.</p>
+
+        <p>
+          Propoj svůj Světlonošský účet s KICKem.
+          Hlasuj, buď s námi na streamu, zapojuj se do komunity
+          a sbírej Jiskry, které můžeš směnit za odměny.
+        </p>
+
         <div class="sparks-hero-actions">
           <button class="btn primary" data-account-open>Přihlásit se</button>
           <a class="btn" href="#odmeny">Prohlédnout odměny</a>
         </div>
+
         <div class="sparks-trust-row">
-          <span>✓ KICK identita</span><span>✓ historie bodů</span><span>✓ žádné body za spam</span>
+          <span>✓ KICK identita</span>
+          <span>✓ historie bodů</span>
+          <span>✓ žádné body za spam</span>
         </div>
       </div>
+
       <aside class="spark-wallet-card">
         <div class="spark-wallet-top">
-          <span class="spark-emblem spark-emblem-lg"><span>✦</span></span>
-          <div><div class="spark-wallet-label">Tvoje Jiskra</div><strong id="sparkWalletName">Nepřihlášený poutník</strong></div>
+          <div
+            class="account-avatar"
+            id="sparkWalletAvatar"
+            style="
+              width:72px;
+              height:72px;
+              min-width:72px;
+              border-radius:22px;
+              font-size:1.45rem;
+              overflow:hidden;
+              flex:0 0 72px;
+            "
+          >
+            ✦
+          </div>
+
+          <div>
+            <div class="spark-wallet-label">Tvoje Jiskra</div>
+            <strong id="sparkWalletName">Nepřihlášený poutník</strong>
+          </div>
         </div>
-        <div class="spark-wallet-balance"><span id="sparkBalance">—</span><span class="spark-unit">✦</span></div>
-        <div class="spark-wallet-caption" id="sparkWalletCaption">Přihlas se a propoj KICK, aby se Jiskry začaly počítat.</div>
-        <div class="spark-wallet-progress"><div id="sparkLevelProgress" style="width:0%"></div></div>
-        <div class="spark-wallet-meta"><span id="sparkLevelName">Jiskra čeká na zažehnutí</span><span id="sparkLifetime">0 celkem</span></div>
+
+        <div class="spark-wallet-balance">
+          <span id="sparkBalance">—</span>
+          <span class="spark-unit">✦</span>
+        </div>
+
+        <div class="spark-wallet-caption" id="sparkWalletCaption">
+          Přihlas se a propoj KICK, aby se Jiskry začaly počítat.
+        </div>
+
+        <div class="spark-wallet-progress">
+          <div id="sparkLevelProgress" style="width:0%"></div>
+        </div>
+
+        <div class="spark-wallet-meta">
+          <span id="sparkLevelName">Jiskra čeká na zažehnutí</span>
+          <span id="sparkLifetime">0 celkem</span>
+        </div>
       </aside>
     </div>
   </section>
 
   <section class="section sparks-how">
     <div class="container">
-      <div class="sparks-section-head"><div><div class="live-kicker">Jak to funguje</div><h2>Jiskry získáváš tím, že jsi součástí dění.</h2></div><p>Nechceme odměňovat bezmyšlenkovitý spam. Jiskry jsou navázané na ověřenou účast a smysluplnou interakci.</p></div>
-      <div id="sparkEarnGrid" class="spark-earn-grid"><div class="spark-feature-card"><div class="spark-feature-icon">⌛</div><h3>Načítám pravidla</h3><p>Chvilku vydrž…</p></div></div>
+      <div class="sparks-section-head">
+        <div>
+          <div class="live-kicker">Jak to funguje</div>
+          <h2>Jiskry získáváš tím, že jsi součástí dění.</h2>
+        </div>
+
+        <p>
+          Nechceme odměňovat bezmyšlenkovitý spam.
+          Jiskry jsou navázané na ověřenou účast a smysluplnou interakci.
+        </p>
+      </div>
+
+      <div id="sparkEarnGrid" class="spark-earn-grid">
+        <div class="spark-feature-card">
+          <div class="spark-feature-icon">⌛</div>
+          <h3>Načítám pravidla</h3>
+          <p>Chvilku vydrž…</p>
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="section sparks-levels">
     <div class="container">
-      <div class="sparks-section-head"><div><div class="live-kicker">Postup</div><h2>Jiskry neutrácejí tvůj postup.</h2></div><p>Hodnost se počítá podle všech Jisker, které jsi kdy získal. Utracené Jiskry snižují jen aktuální zůstatek.</p></div>
+      <div class="sparks-section-head">
+        <div>
+          <div class="live-kicker">Postup</div>
+          <h2>Jiskry neutrácejí tvůj postup.</h2>
+        </div>
+
+        <p>
+          Hodnost se počítá podle všech Jisker, které jsi kdy získal.
+          Utracené Jiskry snižují jen aktuální zůstatek.
+        </p>
+      </div>
+
       <div class="spark-level-track">
         <div><span>0 ✦</span><strong>Zbloudilá jiskra</strong></div>
         <div><span>100 ✦</span><strong>Jiskra</strong></div>
@@ -66,21 +145,65 @@
 
   <section class="section sparks-rewards-section" id="odmeny">
     <div class="container">
-      <div class="sparks-section-head"><div><div class="live-kicker">Tabulka odměn</div><h2>Proměň Jiskry v něco, co má smysl.</h2></div><p>Odměny spravuje tým Světlonošů. Nabídka i ceny se mohou časem měnit podle toho, jak bude ekonomika fungovat v praxi.</p></div>
+      <div class="sparks-section-head">
+        <div>
+          <div class="live-kicker">Tabulka odměn</div>
+          <h2>Proměň Jiskry v něco, co má smysl.</h2>
+        </div>
+
+        <p>
+          Odměny spravuje tým Světlonošů.
+          Nabídka i ceny se mohou časem měnit podle toho,
+          jak bude ekonomika fungovat v praxi.
+        </p>
+      </div>
+
       <div class="spark-reward-filter" id="sparkRewardFilter"></div>
-      <div id="sparkRewardsPublic" class="spark-rewards-grid"><div class="spark-reward-card"><div class="muted">Načítám odměny…</div></div></div>
+
+      <div id="sparkRewardsPublic" class="spark-rewards-grid">
+        <div class="spark-reward-card">
+          <div class="muted">Načítám odměny…</div>
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="section sparks-rules">
     <div class="container sparks-rules-grid">
-      <div class="live-panel"><div class="live-kicker">Důležité</div><h2>KICK je součást identity.</h2><p class="muted">Pro aktivaci Jisker je potřeba propojit KICK účet. Díky tomu používáme skutečnou KICK přezdívku a můžeme ověřovat aktivity související se streamem.</p></div>
-      <div class="live-panel"><div class="live-kicker">Férovost</div><h2>Jiskry nejsou měna.</h2><p class="muted">Jde o komunitní věrnostní body bez peněžní hodnoty. Automatické systémy mají limity, aby spam nebo opakované klikání nevytvářely neférovou výhodu.</p></div>
+      <div class="live-panel">
+        <div class="live-kicker">Důležité</div>
+        <h2>KICK je součást identity.</h2>
+        <p class="muted">
+          Pro aktivaci Jisker je potřeba propojit KICK účet.
+          Díky tomu používáme skutečnou KICK přezdívku
+          a můžeme ověřovat aktivity související se streamem.
+        </p>
+      </div>
+
+      <div class="live-panel">
+        <div class="live-kicker">Férovost</div>
+        <h2>Jiskry nejsou měna.</h2>
+        <p class="muted">
+          Jde o komunitní věrnostní body bez peněžní hodnoty.
+          Automatické systémy mají limity, aby spam nebo opakované klikání
+          nevytvářely neférovou výhodu.
+        </p>
+      </div>
     </div>
   </section>
 </main>
 
-<footer><div class="container footer"><div>© 2026 Světlonoši</div><div><a href="../privacy.html">Privacy Policy</a><a href="../terms.html">Terms of Service</a></div></div></footer>
+<footer>
+  <div class="container footer">
+    <div>© 2026 Světlonoši</div>
+
+    <div>
+      <a href="../privacy.html">Privacy Policy</a>
+      <a href="../terms.html">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../js/supabase-config.js"></script>
 <script src="../js/account.js"></script>
