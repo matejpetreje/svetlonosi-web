@@ -3,7 +3,92 @@
   const db = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
-  let activePoll=null, activeOptions=[], timerHandle=null, editingId=null, currentUser=null;
+  let activePoll=null, activeOptions=[], timerHandle=null, editingId=null, currentUser=null, kickConnected=false;
+
+
+  async function kickInvoke(action, extra={}) {
+    const { data, error } = await db.functions.invoke('kick-chat', {
+      body: { action, ...extra }
+    });
+    if (error) throw error;
+    if (data?.error) throw new Error(data.error);
+    return data ?? {};
+  }
+
+  async function loadKickStatus() {
+    if (!currentUser) return;
+    try {
+      const data = await kickInvoke('status');
+      kickConnected = !!data.connected;
+
+      $('kickStatusTitle').textContent =
+        kickConnected ? 'KICK je propojený' : 'KICK není propojený';
+
+      $('kickStatusDetail').textContent =
+        kickConnected
+          ? (data.kick_name ? `Přihlášený účet: ${data.kick_name}` : 'Připojený KICK účet')
+          : 'Pro automatické zprávy je potřeba jednorázově autorizovat KICK účet.';
+
+      $('kickConnectButton').hidden = kickConnected;
+      $('kickTestButton').disabled = !kickConnected;
+      $('kickDisconnectButton').disabled = !kickConnected;
+    } catch (err) {
+      console.error(err);
+      kickConnected = false;
+      $('kickStatusTitle').textContent = 'KICK integrace není připravená';
+      $('kickStatusDetail').textContent =
+        'Zkontroluj nasazení Edge Function a její KICK secrets.';
+      $('kickConnectButton').hidden = false;
+      $('kickTestButton').disabled = true;
+      $('kickDisconnectButton').disabled = true;
+    }
+  }
+
+  async function connectKick() {
+    $('kickMessage').textContent = 'Připravuji přihlášení na KICK…';
+    try {
+      const data = await kickInvoke('start_oauth', {
+        return_to: 'https://svetlonosi.cz/dm/?kick=connected'
+      });
+      if (!data.authorization_url) throw new Error('Chybí autorizační URL.');
+      window.location.href = data.authorization_url;
+    } catch (err) {
+      console.error(err);
+      $('kickMessage').textContent = 'KICK propojení se nepodařilo: ' + err.message;
+    }
+  }
+
+  async function disconnectKick() {
+    if (!confirm('Opravdu odpojit KICK účet?')) return;
+    $('kickMessage').textContent = 'Odpojuji KICK…';
+    try {
+      await kickInvoke('disconnect');
+      $('kickMessage').textContent = 'KICK byl odpojen.';
+      await loadKickStatus();
+    } catch (err) {
+      console.error(err);
+      $('kickMessage').textContent = 'Odpojení se nepodařilo: ' + err.message;
+    }
+  }
+
+  async function sendKickMessage(content) {
+    if (!kickConnected) return { skipped: true, reason: 'not_connected' };
+    return await kickInvoke('send', { content });
+  }
+
+  async function sendKickTest() {
+    $('kickMessage').textContent = 'Posílám testovací zprávu…';
+    try {
+      await sendKickMessage(
+        '🕯️ Sbor Světlonošů je propojený. Test hlasování: https://svetlonosi.cz/live/'
+      );
+      $('kickMessage').textContent = 'Testovací zpráva byla odeslána do KICK chatu.';
+    } catch (err) {
+      console.error(err);
+      $('kickMessage').textContent = 'KICK zprávu se nepodařilo odeslat: ' + err.message;
+      await loadKickStatus();
+    }
+  }
 
   function addOption(value=''){
     const n=$('optionInputs').querySelectorAll('input').length;
@@ -29,7 +114,7 @@
       await db.auth.signOut(); $('loginPanel').hidden=false; $('dmContent').hidden=true; return;
     }
     $('loginPanel').hidden=true; $('dmContent').hidden=false; $('dmIdentity').textContent=currentUser.email ?? 'DM';
-    await loadActive(); await loadHistory();
+    await loadActive(); await loadHistory(); await loadKickStatus();
   }
 
   async function login(){
@@ -84,7 +169,23 @@
     const {error}=await db.rpc('create_poll_v2',{p_question:q,p_options:opts,p_duration_seconds:Number($('timerSelect').value),p_show_results:$('showResults').checked,p_show_overlay:$('showOverlay').checked});
     $('startVoteButton').disabled=false;
     if(error){console.error(error);$('formMessage').textContent='Chyba: '+error.message;return;}
-    $('questionInput').value='';$('optionInputs').innerHTML='';addOption();addOption();addOption();$('formMessage').textContent='Hlasování spuštěno.';await loadActive();
+    $('questionInput').value='';$('optionInputs').innerHTML='';addOption();addOption();addOption();
+    $('formMessage').textContent='Hlasování spuštěno.';
+
+    if ($('kickAutoPost').checked && kickConnected) {
+      try {
+        await sendKickMessage(
+          `🗳️ Hlasování je otevřené! ${q} Hlasuj tady: https://svetlonosi.cz/live/`
+        );
+        $('formMessage').textContent='Hlasování spuštěno a odkaz odeslán do KICK chatu.';
+      } catch (kickErr) {
+        console.error(kickErr);
+        $('formMessage').textContent=
+          'Hlasování spuštěno, ale KICK zpráva se nepodařila: ' + kickErr.message;
+      }
+    }
+
+    await loadActive();
   }
 
   async function closePoll(fromTimer=false){
@@ -105,6 +206,9 @@
 
   async function saveEdit(){const q=$('editQuestion').value.trim(),w=$('editWinner').value.trim();if(!q){alert('Otázka nesmí být prázdná.');return;}const {error}=await db.rpc('update_history_entry',{p_poll_id:editingId,p_question:q,p_winner_label:w});if(error){alert(error.message);return;}$('editModal').hidden=true;editingId=null;await loadHistory();}
 
+  $('kickConnectButton').onclick=connectKick;
+  $('kickTestButton').onclick=sendKickTest;
+  $('kickDisconnectButton').onclick=disconnectKick;
   $('loginButton').onclick=login; $('dmPassword').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
   $('logoutButton').onclick=async()=>{await db.auth.signOut();location.reload();};
   $('addOptionButton').onclick=()=>addOption(); $('startVoteButton').onclick=createPoll; $('closeVoteButton').onclick=()=>closePoll(false); $('cancelVoteButton').onclick=cancelPoll; $('hideOverlayButton').onclick=hideOverlay; $('saveEditButton').onclick=saveEdit; $('cancelEditButton').onclick=()=>{$('editModal').hidden=true;editingId=null;};
