@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sbor Světlonošů — živé hlasování</title>
+  <meta name="description" content="Zapoj se živě do hry Světlonošů a hlasuj o dění v příběhu.">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<header>
+  <div class="container nav">
+    <a class="brand" href="../index.html"><img class="brand-logo" src="../assets/logo_svetlonosi.png" alt="Světlonoši"><span class="brand-wordmark">SVĚTLO<span>NOŠI</span></span></a>
+    <nav><a href="../index.html">Domů</a><a href="./" class="nav-active">Sbor Světlonošů</a></nav>
+  </div>
+</header>
+<main class="live-main">
+  <section class="live-hero">
+    <div class="container live-shell">
+      <div class="live-kicker">Sbor Světlonošů</div>
+      <h1>Tvůj hlas může pohnout příběhem.</h1>
+      <p>Pokud Pán hry otevře hlasování, objeví se tady. Vyber možnost a sleduj, co Sbor způsobí.</p>
+      <div id="connectionState" class="live-status">Připojuji…</div>
+    </div>
+  </section>
+
+  <section class="section live-section">
+    <div class="container live-shell">
+      <div class="live-panel live-vote-panel">
+        <div class="live-kicker">Aktuální hlasování</div>
+        <h2 id="question">Čekáme na další rozhodnutí osudu…</h2>
+        <div id="timerDisplay" class="live-timer"></div>
+        <p id="voteHint" class="muted">Jakmile Pán hry otevře hlasování, objeví se zde.</p>
+        <div id="options" class="live-options"></div>
+        <div id="resultMessage" class="live-message"></div>
+      </div>
+
+      <div class="live-panel">
+        <div class="live-kicker">Kronika</div>
+        <h2>Poslední rozhodnutí Sboru</h2>
+        <div id="history" class="live-history"><div class="muted">Načítám Kroniku…</div></div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer><div class="container footer"><div>© 2026 Světlonoši</div><div><a href="../privacy.html">Privacy Policy</a><a href="../terms.html">Terms of Service</a></div></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase-config.js"></script>
+<script src="../js/live.js"></script>
+</body>
+</html>

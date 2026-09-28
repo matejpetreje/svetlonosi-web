@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DM panel — Světlonoši</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<header><div class="container nav"><a class="brand" href="../index.html"><img class="brand-logo" src="../assets/logo_svetlonosi.png" alt="Světlonoši"><span class="brand-wordmark">SVĚTLO<span>NOŠI</span></span></a><nav><a href="../index.html">Web</a><a href="../live/">Divácká stránka</a></nav></div></header>
+<main class="live-main">
+  <section class="section live-section">
+    <div class="container live-shell">
+      <div class="live-topline"><div><div class="live-kicker">Světlonoši</div><h1 class="dm-title">DM panel</h1></div><div id="connectionState" class="live-status">Připojuji…</div></div>
+
+      <section class="live-panel" id="loginPanel">
+        <div class="live-kicker">Zabezpečený přístup</div><h2>Přihlášení Pána hry</h2>
+        <div class="live-form-grid">
+          <label class="live-field"><span>E-mail</span><input type="email" id="dmEmail" autocomplete="email" placeholder="pj@svetlonosi.cz"></label>
+          <label class="live-field"><span>Heslo</span><input type="password" id="dmPassword" autocomplete="current-password"></label>
+        </div>
+        <div class="live-actions"><button class="btn primary" id="loginButton">Přihlásit</button></div>
+        <div id="loginMessage" class="live-message"></div>
+      </section>
+
+      <div id="dmContent" hidden>
+        <div class="live-userbar"><span id="dmIdentity" class="muted"></span><button class="btn" id="logoutButton">Odhlásit</button></div>
+        <section class="live-panel">
+          <div class="live-kicker">Nové hlasování</div>
+          <label class="live-field"><span>Otázka</span><input id="questionInput" maxlength="180" placeholder="Co družina najde za dveřmi?"></label>
+          <div id="optionInputs" class="live-option-inputs"></div>
+          <div class="live-form-grid">
+            <label class="live-field"><span>Časový limit</span><select id="timerSelect"><option value="0">Bez limitu</option><option value="30">30 sekund</option><option value="60" selected>60 sekund</option><option value="120">120 sekund</option><option value="180">3 minuty</option></select></label>
+            <div class="live-checks">
+              <label><input type="checkbox" id="showResults" checked> Diváci vidí průběžná procenta</label>
+              <label><input type="checkbox" id="showOverlay" checked> Zobrazit hlasování v OBS</label>
+            </div>
+          </div>
+          <div class="live-actions"><button class="btn" id="addOptionButton">+ Přidat možnost</button><button class="btn primary" id="startVoteButton">Spustit hlasování</button></div>
+          <div id="formMessage" class="live-message"></div>
+        </section>
+
+        <section class="live-panel">
+          <div class="live-kicker">Aktuální stav</div><h2 id="activeQuestion">Žádné aktivní hlasování</h2>
+          <div id="timerDisplay" class="live-timer"></div><div id="activeResults" class="live-results"></div>
+          <div class="live-actions"><button class="btn live-danger" id="closeVoteButton" disabled>Ukončit a zapsat</button><button class="btn live-danger-outline" id="cancelVoteButton" disabled>Zrušit bez zápisu</button><button class="btn" id="hideOverlayButton" disabled>Skrýt overlay</button></div>
+        </section>
+
+        <section class="live-panel"><div class="live-kicker">Kronika</div><h2>Správa Kroniky</h2><div id="dmHistory" class="live-history"></div></section>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="live-modal-backdrop" id="editModal" hidden><div class="live-modal"><div class="live-kicker">Upravit Kroniku</div><h2>Opravit záznam</h2><label class="live-field"><span>Otázka</span><input id="editQuestion"></label><label class="live-field"><span>Výsledek</span><input id="editWinner"></label><div class="live-actions"><button class="btn primary" id="saveEditButton">Uložit změny</button><button class="btn" id="cancelEditButton">Zavřít</button></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../js/supabase-config.js"></script><script src="../js/dm.js"></script>
+</body></html>
