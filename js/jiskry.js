@@ -1,614 +1,775 @@
+(() => {
 
-:root{
-  --bg:#0f1115;
-  --panel:#171a20;
-  --panel2:#1d2129;
-  --text:#f4f0e8;
-  --muted:#aaa59b;
-  --accent:#c58b24;
-  --accent2:#8f5f12;
-  --line:#2d323c;
-  --danger:#d85c5c;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  font-family:Inter,Segoe UI,Arial,sans-serif;
-  background:
-    radial-gradient(circle at 20% 0%, rgba(197,139,36,.12), transparent 35%),
-    linear-gradient(180deg,#0d0f13 0%,#11141a 100%);
-  color:var(--text);
-  line-height:1.6;
-}
-a{color:inherit}
-.container{width:min(1120px,92%);margin:auto}
-header{
-  position:sticky;top:0;z-index:50;
-  backdrop-filter:blur(14px);
-  background:rgba(13,15,19,.86);
-  border-bottom:1px solid var(--line);
-}
-.nav{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:68px}
-.brand{font-weight:800;letter-spacing:.06em;font-size:1.05rem;text-decoration:none}
-.brand span{color:var(--accent)}
-nav{display:flex;gap:22px;flex-wrap:wrap}
-nav a{text-decoration:none;color:var(--muted);font-size:.94rem}
-nav a:hover{color:var(--text)}
-.hero{padding:100px 0 70px;text-align:center}
-.eyebrow{color:var(--accent);text-transform:uppercase;letter-spacing:.18em;font-size:.78rem;font-weight:700}
-h1{font-size:clamp(2.5rem,7vw,5.8rem);line-height:.96;margin:18px auto;max-width:900px}
-.hero p{max-width:760px;margin:22px auto 34px;color:var(--muted);font-size:1.08rem}
-.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.btn{
-  display:inline-block;text-decoration:none;padding:12px 18px;border-radius:9px;
-  border:1px solid var(--line);background:var(--panel);font-weight:700
-}
-.btn.primary{background:var(--accent);color:#17120a;border-color:var(--accent)}
-.section{padding:72px 0;border-top:1px solid rgba(255,255,255,.04)}
-.section h2{font-size:2rem;margin:0 0 12px}
-.lead{color:var(--muted);max-width:760px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
-.card{
-  background:linear-gradient(180deg,var(--panel2),var(--panel));
-  border:1px solid var(--line);border-radius:14px;padding:24px;
-  box-shadow:0 12px 30px rgba(0,0,0,.14)
-}
-.card h3{margin-top:0}
-.badge{
-  display:inline-block;padding:4px 9px;border-radius:999px;
-  color:#1d1608;background:var(--accent);font-size:.72rem;font-weight:800;
-  letter-spacing:.05em;text-transform:uppercase
-}
-.schedule{
-  display:flex;justify-content:space-between;gap:16px;align-items:center;
-  padding:24px;border:1px solid var(--line);border-radius:14px;background:var(--panel)
-}
-.muted{color:var(--muted)}
-footer{border-top:1px solid var(--line);padding:34px 0;color:var(--muted);font-size:.9rem}
-.footer{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.footer a{color:var(--muted);text-decoration:none;margin-right:14px}
-.footer a:hover{color:var(--text)}
-.legal{padding:70px 0}
-.legal article{max-width:860px}
-.legal h1{font-size:2.6rem;max-width:none;text-align:left}
-.legal h2{margin-top:36px}
-.legal p,.legal li{color:#d4d0c8}
-.app{
-  display:grid;grid-template-columns:150px 1fr;gap:28px;align-items:center
-}
-.app img{width:150px;height:150px;object-fit:cover;border-radius:24px;border:1px solid var(--line);background:#000}
-code{background:#0b0d10;border:1px solid var(--line);padding:2px 6px;border-radius:5px}
-@media(max-width:760px){
-  nav{display:none}
-  .grid{grid-template-columns:1fr}
-  .hero{padding-top:70px}
-  .schedule{align-items:flex-start;flex-direction:column}
-  .app{grid-template-columns:1fr}
-  .app img{width:120px;height:120px}
-}
+  const cfg = window.SVETLONOSI_CONFIG;
+
+  if (!cfg || !window.supabase) {
+    return;
+  }
 
 
-/* --- Světlonoši branded visuals V2 --- */
-.hero{
-  position:relative;
-  min-height:660px;
-  display:flex;
-  align-items:center;
-  overflow:hidden;
-  background:
-    linear-gradient(180deg, rgba(8,9,12,.28) 0%, rgba(8,9,12,.55) 55%, rgba(15,17,21,.98) 100%),
-    url("assets/pozadi_dungeon.png") center/cover no-repeat;
-}
-.hero::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at 50% 38%, rgba(255,173,60,.12), transparent 38%);
-  pointer-events:none;
-}
-.hero .container{position:relative;z-index:1}
-.hero-logo{
-  display:block;
-  width:min(680px,86vw);
-  max-height:280px;
-  object-fit:contain;
-  margin:0 auto 20px;
-  filter:drop-shadow(0 16px 24px rgba(0,0,0,.45));
-}
-.hero h1{
-  font-size:clamp(2rem,5vw,4.5rem);
-  max-width:900px;
-  text-shadow:0 4px 24px rgba(0,0,0,.75);
-}
-.hero p{
-  color:#e7dfd2;
-  text-shadow:0 2px 14px rgba(0,0,0,.8);
-}
-.brand-logo{
-  height:42px;
-  width:auto;
-  display:block;
-}
-.brand{display:flex;align-items:center;gap:10px}
-.brand-wordmark{font-weight:800;letter-spacing:.06em}
-.section.dark-card{
-  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
-}
-
-/* =========================
-   SBOR SVĚTLONOŠŮ / LIVE
-   ========================= */
-.nav-active{color:var(--text)!important}
-.live-main{min-height:70vh}
-.live-hero{
-  padding:82px 0 48px;
-  text-align:center;
-  background:
-    linear-gradient(180deg,rgba(8,9,12,.18),rgba(15,17,21,.98)),
-    url("assets/pozadi_dungeon.png") center/cover no-repeat;
-}
-.live-shell{max-width:980px}
-.live-hero h1{font-size:clamp(2.4rem,6vw,4.8rem);margin:12px auto 18px}
-.live-hero p{max-width:720px;margin:0 auto 20px;color:#e3dccf}
-.live-kicker{color:var(--accent);text-transform:uppercase;letter-spacing:.18em;font-size:.78rem;font-weight:800}
-.live-status{display:inline-block;margin-top:12px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:rgba(13,15,19,.72)}
-.live-section{padding-top:42px}
-.live-panel{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 18px 38px rgba(0,0,0,.16)}
-.live-panel h2{margin:8px 0 14px;font-size:clamp(1.5rem,3vw,2.2rem)}
-.live-options,.live-results,.live-history,.live-option-inputs{display:grid;gap:10px;margin-top:16px}
-.live-option{width:100%;text-align:left;padding:15px 16px;border:1px solid var(--line);border-radius:12px;background:#11141a;color:var(--text);cursor:pointer;font-size:1rem}
-.live-option:hover:not(:disabled){border-color:var(--accent)}
-.live-option:disabled{cursor:default;opacity:.82}
-.live-option span{display:block;font-weight:800}
-.live-option small{display:block;color:var(--muted);margin-top:3px}
-.live-message{min-height:24px;margin-top:12px;color:#e7b95c}
-.live-timer{font-size:2rem;font-weight:900;color:#e7b95c;margin:4px 0}
-.live-timer.is-warning{color:#ef7777}
-.live-history-item{padding:14px 0;border-top:1px solid var(--line)}
-.live-history-item:first-child{border-top:0;padding-top:4px}
-.live-history-item strong{display:block;margin-bottom:4px}
-.live-history-manage{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
-.live-mini-actions,.live-actions{display:flex;gap:10px;flex-wrap:wrap}
-.live-actions{margin-top:16px}
-.live-mini-actions .btn{padding:8px 11px;font-size:.82rem}
-.live-topline{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:18px}
-.dm-title{font-size:clamp(2.5rem,5vw,4.5rem);margin:8px 0 0;max-width:none}
-.live-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.live-field{display:grid;gap:7px;margin:12px 0}
-.live-field span{color:var(--muted);font-size:.9rem}
-.live-field input,.live-field select{
-  width:100%;padding:13px 14px;border-radius:10px;border:1px solid var(--line);background:#0f1217;color:var(--text);font:inherit;outline:none
-}
-.live-field input:focus,.live-field select:focus{border-color:var(--accent)}
-.live-checks{display:grid;align-content:center;gap:10px;padding-top:14px}
-.live-checks label{display:flex;align-items:center;gap:8px}
-.live-userbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
-.live-danger{background:var(--danger)!important;color:#fff!important;border-color:var(--danger)!important}
-.live-danger-outline{background:transparent!important;color:#ffaaaa!important;border-color:#743f45!important}
-.live-result-row{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#11141a}
-.live-result-fill{position:absolute;inset:0 auto 0 0;background:rgba(197,139,36,.16)}
-.live-result-content{position:relative;z-index:1;display:flex;justify-content:space-between;gap:14px;padding:12px 14px}
-.live-modal-backdrop{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.72);display:grid;place-items:center;padding:20px}
-.live-modal{width:min(620px,100%);background:#171a20;border:1px solid var(--line);border-radius:16px;padding:24px}
-[hidden]{display:none!important}
-
-/* OBS transparent overlay */
-.stream-overlay-page{margin:0;background:transparent!important;overflow:hidden;color:var(--text)}
-.stream-overlay-card{position:fixed!important;inset:6vh auto auto 50%!important;left:50%!important;top:6vh!important;right:auto!important;bottom:auto!important;transform:translateX(-50%);transform-origin:top center;width:min(940px,90vw);height:auto!important;max-height:none!important;padding:22px 26px;border-radius:18px;background:rgba(10,12,16,.94);border:1px solid rgba(197,139,36,.5);box-shadow:0 18px 60px rgba(0,0,0,.55);transition:.25s ease}
-.stream-overlay-hidden{opacity:0;transform:translate(-50%,-24px);pointer-events:none}
-.stream-overlay-kicker{color:#e7b95c;text-transform:uppercase;letter-spacing:.18em;font-weight:900;font-size:.8rem}
-.stream-overlay-question{font-size:clamp(1.7rem,3vw,2.8rem);font-weight:900;margin:7px 0 14px}
-.stream-overlay-timer{font-size:1.8rem;font-weight:900;color:#e7b95c;margin-bottom:10px}
-.stream-overlay-results{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.stream-overlay-result{padding:11px 13px;border:1px solid rgba(255,255,255,.09);border-radius:11px;background:rgba(255,255,255,.04)}
-.stream-overlay-result strong{display:flex;justify-content:space-between;gap:14px}
-.stream-overlay-bar{height:6px;margin-top:7px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
-.stream-overlay-bar>div{height:100%;background:var(--accent)}
-.stream-overlay-winner{font-size:clamp(2rem,4vw,3.5rem);font-weight:900;color:#e7b95c;margin-top:10px}
-.stream-overlay-sub{color:var(--muted);margin-top:4px}
-
-@media(max-width:760px){
-  .live-form-grid,.stream-overlay-results{grid-template-columns:1fr}
-  .live-topline,.live-history-manage{flex-direction:column}
-  .live-hero{padding-top:64px}
-}
+  const db = supabase.createClient(
+    cfg.SUPABASE_URL,
+    cfg.SUPABASE_ANON_KEY
+  );
 
 
-/* KICK integrace */
-.live-kick-status{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:18px;
-  padding:16px;
-  border:1px solid var(--line);
-  border-radius:12px;
-  background:#11141a;
-}
-.live-actions-tight{margin-top:0}
-@media(max-width:760px){
-  .live-kick-status{flex-direction:column;align-items:flex-start}
-}
-
-/* FORCE TOP-ANCHORED OBS OVERLAY */
-
-.stream-overlay-card{
-  display:block!important;
-  overflow:visible!important;
-}
-.stream-overlay-question{
-  overflow-wrap:anywhere;
-  word-break:normal;
-}
-.stream-overlay-results{
-  align-content:start;
-}
-
-/* =========================================================
-   LIVE HLASOVÁNÍ + KRONIKA
-   ZALAMOVÁNÍ DLOUHÝCH OTÁZEK A MOŽNOSTÍ
-   ========================================================= */
-
-/*
-  Panely a jejich vnitřní obsah se nesmí roztáhnout
-  podle dlouhého textu bez mezer.
-*/
-.live-panel,
-.live-vote-panel,
-.live-options,
-.live-results,
-.live-history,
-.live-history-item,
-.live-history-manage,
-.live-result-row,
-.live-result-content{
-  min-width:0!important;
-  max-width:100%!important;
-}
-
-/*
-  Aktuální hlasování na veřejné LIVE stránce.
-*/
-#question{
-  width:100%!important;
-  max-width:100%!important;
-  min-width:0!important;
-  white-space:normal!important;
-  overflow-wrap:anywhere!important;
-  word-break:break-word!important;
-}
-
-/*
-  Aktuální hlasování v DM panelu.
-*/
-#activeQuestion{
-  width:100%!important;
-  max-width:100%!important;
-  min-width:0!important;
-  white-space:normal!important;
-  overflow-wrap:anywhere!important;
-  word-break:break-word!important;
-}
-
-/*
-  Otázky uložené v Kronice na veřejné stránce i v DM panelu.
-*/
-.live-history-item strong{
-  display:block!important;
-  width:100%!important;
-  max-width:100%!important;
-  min-width:0!important;
-  white-space:normal!important;
-  overflow-wrap:anywhere!important;
-  word-break:break-word!important;
-}
-
-/*
-  DM Kronika používá flexbox.
-  Textová část musí mít min-width:0, jinak ji dlouhé slovo
-  může roztáhnout mimo panel.
-*/
-.live-history-manage > div:first-child{
-  flex:1 1 0!important;
-  min-width:0!important;
-  max-width:100%!important;
-}
-
-/*
-  Ovládací tlačítka v Kronice si drží vlastní šířku.
-*/
-.live-history-manage .live-mini-actions{
-  flex:0 0 auto!important;
-}
-
-/*
-  Dlouhé názvy možností a výsledků se také zalamují uvnitř panelu.
-*/
-.live-option,
-.live-option span,
-.live-option small,
-.live-result-content strong,
-.live-result-content span{
-  min-width:0!important;
-  max-width:100%!important;
-  white-space:normal!important;
-  overflow-wrap:anywhere!important;
-  word-break:break-word!important;
-}
-
-/*
-  Flex řádek výsledku musí dovolit textu zmenšit se
-  a zalomit se místo přetečení doprava.
-*/
-.live-result-content strong{
-  flex:1 1 auto!important;
-}
-
-/*
-  Číselná část výsledku se naopak nemá lámat.
-*/
-.live-result-content > :last-child{
-  flex:0 0 auto!important;
-  white-space:nowrap!important;
-}
+  const $ = id =>
+    document.getElementById(id);
 
 
-/* =========================================================
-   JISKRY V1
-   ========================================================= */
+  const esc = value =>
+    String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
 
-.nav-account-button{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  padding:0;
-  border:0;
-  background:transparent;
-  color:var(--muted);
-  font:inherit;
-  font-size:.94rem;
-  cursor:pointer;
-}
-.nav-account-button:hover{color:var(--text)}
-.nav-account-spark{color:#e7b95c;text-shadow:0 0 14px rgba(231,185,92,.48)}
 
-.spark-emblem{
-  position:relative;
-  display:grid;
-  place-items:center;
-  flex:0 0 auto;
-  border:1px solid rgba(231,185,92,.35);
-  border-radius:28%;
-  background:
-    radial-gradient(circle at 50% 45%,rgba(255,224,145,.26),rgba(197,139,36,.08) 42%,rgba(8,10,14,.65) 70%),
-    linear-gradient(145deg,#1c1f27,#0c0e13);
-  box-shadow:
-    inset 0 0 18px rgba(255,209,111,.08),
-    0 12px 30px rgba(0,0,0,.24),
-    0 0 34px rgba(197,139,36,.10);
-  transform:rotate(45deg);
-}
-.spark-emblem::before,.spark-emblem::after{
-  content:"";
-  position:absolute;
-  width:4px;
-  height:4px;
-  border-radius:50%;
-  background:#f8d17d;
-  box-shadow:0 0 10px #e7b95c;
-}
-.spark-emblem::before{top:13%;right:15%}
-.spark-emblem::after{bottom:16%;left:12%;opacity:.55}
-.spark-emblem>span{
-  display:block;
-  color:#f6c85e;
-  font-weight:900;
-  line-height:1;
-  text-shadow:0 0 9px rgba(255,200,76,.9),0 0 24px rgba(197,139,36,.45);
-  transform:rotate(-45deg);
-}
-.spark-emblem-sm{width:54px;height:54px;border-radius:16px}
-.spark-emblem-sm>span{font-size:1.75rem}
-.spark-emblem-lg{width:78px;height:78px;border-radius:21px}
-.spark-emblem-lg>span{font-size:2.5rem}
-.spark-emblem-xl{width:126px;height:126px;border-radius:30px}
-.spark-emblem-xl>span{font-size:4rem}
+  const FALLBACK_RULES = [
+    {
+      key: "vote",
+      label: "Hlas v anketě",
+      description: "Jeden platný hlas v jednom hlasování.",
+      amount: 5,
+      icon: "☑"
+    },
+    {
+      key: "watch_30m",
+      label: "30 minut na streamu",
+      description: "Ověřená účast přes propojený KICK účet.",
+      amount: 10,
+      icon: "◷"
+    },
+    {
+      key: "chat_window",
+      label: "Aktivita v chatu",
+      description: "Smysluplná aktivita v časovém okně. Ne za každou zprávu.",
+      amount: 2,
+      icon: "⌁"
+    },
+    {
+      key: "all_polls_bonus",
+      label: "Všechna hlasování",
+      description: "Bonus za účast ve všech anketách daného streamu.",
+      amount: 15,
+      icon: "✦"
+    },
+    {
+      key: "streak_3",
+      label: "3 streamy v řadě",
+      description: "Série se počítá po splnění minimální účasti.",
+      amount: 25,
+      icon: "Ⅲ"
+    },
+    {
+      key: "streak_5",
+      label: "5 streamů v řadě",
+      description: "Vyšší bonus za pravidelnou účast.",
+      amount: 50,
+      icon: "Ⅴ"
+    }
+  ];
 
-.sparks-home{overflow:hidden}
-.sparks-home-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:34px;align-items:center}
-.sparks-home h2{font-size:clamp(2rem,4vw,3.6rem);margin:8px 0 14px}
-.sparks-home-actions{justify-content:flex-start;margin-top:22px}
-.spark-showcase{
-  min-height:300px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:28px;
-  padding:34px;
-  border:1px solid var(--line);
-  border-radius:24px;
-  background:
-    radial-gradient(circle at 35% 40%,rgba(197,139,36,.16),transparent 36%),
-    radial-gradient(circle at 75% 70%,rgba(54,137,181,.12),transparent 34%),
-    linear-gradient(160deg,#181b22,#0d1015);
-  box-shadow:0 24px 70px rgba(0,0,0,.2);
-}
-.spark-showcase-copy{display:grid;gap:7px}
-.spark-showcase-copy strong{font-size:1.45rem;letter-spacing:.2em}
-.spark-showcase-copy span{color:var(--muted);font-size:.9rem}
 
-.sparks-page{min-height:70vh}
-.sparks-hero{
-  padding:92px 0 76px;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 72% 34%,rgba(197,139,36,.17),transparent 25%),
-    radial-gradient(circle at 78% 55%,rgba(56,113,164,.11),transparent 25%),
-    linear-gradient(180deg,rgba(8,9,12,.22),rgba(15,17,21,.98)),
-    url("assets/pozadi_dungeon.png") center/cover no-repeat;
-}
-.sparks-hero-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);gap:48px;align-items:center}
-.sparks-hero-copy h1{font-size:clamp(2.5rem,5.4vw,4.9rem);line-height:.98;margin:16px 0 20px;max-width:830px}
-.sparks-hero-copy>p{max-width:720px;color:#ded7ca;font-size:1.08rem;line-height:1.7}
-.sparks-hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
-.sparks-trust-row{display:flex;gap:18px;flex-wrap:wrap;margin-top:24px;color:#c9c4bb;font-size:.88rem}
-.sparks-trust-row span{display:inline-flex;align-items:center;gap:6px}
+  const FALLBACK_REWARDS = [
+    {
+      name: "Kosmetický odznak",
+      description: "Speciální odznak u profilu Světlonoše.",
+      price: 500,
+      category: "Kosmetika"
+    },
+    {
+      name: "Rámeček profilu",
+      description: "Odemkni tematický rámeček pro svůj profil.",
+      price: 1000,
+      category: "Kosmetika"
+    },
+    {
+      name: "Navrhni možnost do ankety",
+      description: "Přidej vlastní možnost do vhodného hlasování.",
+      price: 1500,
+      category: "Interakce"
+    },
+    {
+      name: "Navrhni otázku do hlasování",
+      description: "Pošli návrh otázky pro některý z dalších streamů.",
+      price: 2500,
+      category: "Interakce"
+    },
+    {
+      name: "Prioritní otázka do streamu",
+      description: "Tvoje otázka dostane přednost v komunitním bloku.",
+      price: 4000,
+      category: "Komunita"
+    },
+    {
+      name: "Speciální titul",
+      description: "Trvalý komunitní titul nebo role dle aktuální nabídky.",
+      price: 5000,
+      category: "Komunita"
+    },
+    {
+      name: "Vyber menší část streamu",
+      description: "Navrhni téma nebo zadání pro předem určený segment.",
+      price: 7500,
+      category: "Speciální"
+    },
+    {
+      name: "Velká komunitní odměna",
+      description: "Výraznější odměna vypsaná týmem Světlonošů.",
+      price: 20000,
+      category: "Speciální"
+    }
+  ];
 
-.spark-wallet-card{
-  position:relative;
-  overflow:hidden;
-  padding:28px;
-  border:1px solid rgba(231,185,92,.28);
-  border-radius:24px;
-  background:linear-gradient(160deg,rgba(31,34,42,.95),rgba(12,14,19,.96));
-  box-shadow:0 28px 80px rgba(0,0,0,.34);
-}
-.spark-wallet-card::after{
-  content:"";
-  position:absolute;
-  width:220px;height:220px;
-  right:-70px;top:-90px;
-  border-radius:50%;
-  background:rgba(197,139,36,.12);
-  filter:blur(8px);
-  pointer-events:none;
-}
-.spark-wallet-top{display:flex;align-items:center;gap:18px;position:relative;z-index:1}
-.spark-wallet-label{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.14em;margin-bottom:5px}
-.spark-wallet-top strong{font-size:1.25rem}
-.spark-wallet-balance{display:flex;align-items:flex-end;gap:8px;margin-top:32px;font-size:clamp(2.7rem,5.8vw,4.7rem);font-weight:900;line-height:.92;letter-spacing:-.04em}
-.spark-wallet-balance .spark-unit{font-size:.42em;color:#e7b95c;letter-spacing:0;margin-bottom:.18em;text-shadow:0 0 18px rgba(231,185,92,.38)}
-.spark-wallet-caption{color:var(--muted);margin-top:16px;line-height:1.55}
-.spark-wallet-progress{height:8px;background:#0a0c10;border:1px solid rgba(255,255,255,.06);border-radius:999px;overflow:hidden;margin-top:24px}
-.spark-wallet-progress>div{height:100%;border-radius:inherit;background:linear-gradient(90deg,#a96d17,#f0c25c);box-shadow:0 0 16px rgba(231,185,92,.4)}
-.spark-wallet-meta{display:flex;justify-content:space-between;gap:16px;margin-top:9px;color:var(--muted);font-size:.82rem}
 
-.sparks-section-head{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(260px,.85fr);gap:36px;align-items:end;margin-bottom:30px}
-.sparks-section-head h2{font-size:clamp(2rem,4vw,3.4rem);margin:8px 0 0;max-width:720px}
-.sparks-section-head>p{color:var(--muted);line-height:1.65;margin:0}
+  let rewards = [];
+  let category = "Vše";
 
-.spark-earn-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-.spark-feature-card{
-  min-width:0;
-  padding:22px;
-  border:1px solid var(--line);
-  border-radius:17px;
-  background:linear-gradient(180deg,var(--panel2),var(--panel));
-  box-shadow:0 14px 34px rgba(0,0,0,.12);
-}
-.spark-feature-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
-.spark-feature-icon{display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(231,185,92,.28);border-radius:12px;background:rgba(197,139,36,.08);color:#f0c15b;font-size:1.2rem}
-.spark-feature-value{color:#f0c15b;font-weight:900;font-size:1.1rem}
-.spark-feature-card h3{margin:0 0 8px;font-size:1.05rem}
-.spark-feature-card p{margin:0;color:var(--muted);line-height:1.55;font-size:.92rem}
 
-.sparks-levels{background:linear-gradient(180deg,rgba(255,255,255,.012),transparent)}
-.spark-level-track{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;position:relative;padding-top:28px}
-.spark-level-track::before{content:"";position:absolute;top:8px;left:5%;right:5%;height:2px;background:linear-gradient(90deg,rgba(197,139,36,.18),#d99d36,rgba(197,139,36,.18))}
-.spark-level-track>div{position:relative;padding:18px 12px;border:1px solid var(--line);border-radius:14px;background:#11141a;text-align:center}
-.spark-level-track>div::before{content:"";position:absolute;top:-25px;left:50%;width:9px;height:9px;transform:translateX(-50%) rotate(45deg);background:#e7b95c;box-shadow:0 0 15px rgba(231,185,92,.48)}
-.spark-level-track span{display:block;color:#e7b95c;font-size:.78rem;margin-bottom:5px}
-.spark-level-track strong{font-size:.88rem}
+  function format(n) {
+    return Number(
+      n ?? 0
+    ).toLocaleString(
+      "cs-CZ"
+    );
+  }
 
-.spark-reward-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
-.spark-filter-button{padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:#11141a;color:var(--muted);font:inherit;font-size:.86rem;cursor:pointer}
-.spark-filter-button:hover,.spark-filter-button.is-active{border-color:rgba(231,185,92,.42);color:#f1c66b;background:rgba(197,139,36,.08)}
-.spark-rewards-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.spark-reward-card{
-  min-width:0;
-  display:flex;
-  flex-direction:column;
-  min-height:315px;
-  padding:20px;
-  border:1px solid var(--line);
-  border-radius:18px;
-  background:linear-gradient(160deg,#191c23,#0e1116);
-  box-shadow:0 16px 40px rgba(0,0,0,.15);
-}
-.spark-reward-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.spark-reward-category{display:inline-flex;align-items:center;width:max-content;max-width:100%;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.045);color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em}
-.spark-reward-price{white-space:nowrap;color:#f0c15b;font-weight:900}
-.spark-reward-price b{font-size:.9em}
-.spark-reward-glyph{display:grid;place-items:center;width:66px;height:66px;margin:30px 0 22px;border:1px solid rgba(231,185,92,.24);border-radius:20px;background:radial-gradient(circle,rgba(197,139,36,.18),rgba(197,139,36,.03) 60%);color:#f0c15b;font-size:2rem;text-shadow:0 0 17px rgba(231,185,92,.48)}
-.spark-reward-card h3{font-size:1.05rem;margin:0 0 8px}
-.spark-reward-card p{color:var(--muted);font-size:.9rem;line-height:1.55;margin:0 0 18px;flex:1}
-.spark-reward-button{width:100%;text-align:center}
 
-.sparks-rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.sparks-rules-grid .live-panel{margin:0}
+  function updateHeroLoginButton(profile) {
 
-.account-modal-backdrop{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.76);backdrop-filter:blur(8px)}
-.account-modal{position:relative;width:min(520px,100%);max-height:min(760px,calc(100vh - 40px));overflow:auto;padding:28px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(160deg,#1a1d24,#0e1116);box-shadow:0 36px 100px rgba(0,0,0,.48)}
-.account-close{position:absolute;top:13px;right:15px;width:36px;height:36px;border:0;border-radius:10px;background:rgba(255,255,255,.04);color:var(--muted);font-size:1.5rem;cursor:pointer}
-.account-close:hover{color:var(--text);background:rgba(255,255,255,.07)}
-.account-brand-row{display:flex;align-items:center;gap:18px;margin-bottom:14px}
-.account-brand-row h2{margin:4px 0 0}
-.account-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:18px 0;padding:5px;border:1px solid var(--line);border-radius:12px;background:#0d1015}
-.account-tab{padding:10px;border:0;border-radius:8px;background:transparent;color:var(--muted);font:inherit;font-weight:700;cursor:pointer}
-.account-tab.is-active{background:#1c2028;color:var(--text)}
-.account-full-button{width:100%;text-align:center;margin-top:8px}
-.account-profile-card{display:grid;grid-template-columns:auto 1fr auto;gap:13px;align-items:center;padding:16px;border:1px solid var(--line);border-radius:15px;background:#11141a}
-.account-avatar{display:grid;place-items:center;width:52px;height:52px;overflow:hidden;border-radius:15px;background:rgba(197,139,36,.1);border:1px solid rgba(231,185,92,.28);color:#f0c15b;font-weight:900}
-.account-avatar img{display:block;width:100%;height:100%;object-fit:cover}
-.account-profile-copy{display:grid;gap:0;min-width:0}
-.account-profile-copy strong,.account-profile-copy span{overflow-wrap:anywhere}
-.account-profile-copy strong{font-size:1.12rem;line-height:1.15}
-.account-profile-copy span{line-height:1.2}
-.account-balance{display:flex;align-items:center;gap:5px;color:#f0c15b;font-size:1.15rem;font-weight:800;text-shadow:0 0 14px rgba(240,193,91,.12)}.account-balance strong{font-size:1.45rem;line-height:1}
-.account-kick-card{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:14px;padding:16px;border:1px solid rgba(231,185,92,.2);border-radius:15px;background:rgba(197,139,36,.055)}
-.account-kick-card p{margin:5px 0 0;font-size:.88rem;line-height:1.45}
-.account-kick-card.is-connected{border-color:rgba(89,190,132,.2);background:rgba(89,190,132,.05)}
-.account-ok{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(89,190,132,.12);color:#78d39c;font-weight:900}
-.account-actions-row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:16px}
+    const loginButton =
+      document.querySelector(
+        ".sparks-hero-actions [data-account-open]"
+      );
 
-.sparks-admin-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:18px}
-.sparks-admin-heading h2{margin:8px 0 6px}
-.spark-rules-admin{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.spark-rule-admin-card{min-width:0;padding:16px;border:1px solid var(--line);border-radius:14px;background:#11141a}
-.spark-rule-admin-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
-.spark-rule-admin-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:rgba(197,139,36,.09);color:#efbf5b}
-.spark-rule-admin-card>strong{display:block;font-size:.92rem}
-.spark-rule-admin-card>p{min-height:52px;color:var(--muted);font-size:.78rem;line-height:1.45}
-.spark-rule-admin-card>small{color:var(--muted);font-size:.72rem}
-.spark-rule-admin-value{display:flex;align-items:center;gap:6px;margin:13px 0 4px}
-.spark-rule-admin-value input{min-width:0;width:100%;padding:10px;border:1px solid var(--line);border-radius:9px;background:#0d1015;color:var(--text);font:inherit;font-weight:900}
-.spark-rule-admin-value span{color:#e7b95c;font-weight:900}
-.spark-switch{position:relative;width:40px;height:22px;flex:0 0 auto}.spark-switch input{position:absolute;opacity:0;pointer-events:none}.spark-switch span{display:block;width:100%;height:100%;border-radius:999px;background:#2a2e36;border:1px solid var(--line);cursor:pointer}.spark-switch span::after{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;border-radius:50%;background:#888f9a;transition:.18s ease}.spark-switch input:checked+span{background:rgba(197,139,36,.22);border-color:rgba(231,185,92,.32)}.spark-switch input:checked+span::after{left:21px;background:#e7b95c}
-.sparks-manual-grid{grid-template-columns:1.4fr .6fr}
-.spark-rewards-admin{display:grid;gap:10px}
-.spark-reward-admin-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:18px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:13px;background:#11141a}
-.spark-reward-admin-row.is-disabled{opacity:.55}
-.spark-reward-admin-main{min-width:0}.spark-reward-admin-main strong{display:block;margin:7px 0 4px;overflow-wrap:anywhere}.spark-reward-admin-main p{margin:0;color:var(--muted);font-size:.82rem;overflow-wrap:anywhere}
-.spark-reward-admin-price{white-space:nowrap;color:#e7b95c;font-size:1.05rem;font-weight:900}.spark-reward-admin-price span{font-size:.9em}
-.spark-reward-modal{width:min(720px,100%)}
-.spark-reward-checks{padding-top:0}
+    if (!loginButton) {
+      return;
+    }
 
-@media(max-width:1000px){
-  .sparks-hero-grid,.sparks-home-grid{grid-template-columns:1fr}
-  .spark-wallet-card{max-width:620px}
-  .spark-earn-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .spark-rewards-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .spark-level-track{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:34px}
-  .spark-rules-admin{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
+    const loggedIn =
+      !!profile?.kick_user_id;
 
-@media(max-width:760px){
-  .sparks-hero{padding-top:64px}
-  .sparks-section-head,.sparks-rules-grid{grid-template-columns:1fr}
-  .spark-earn-grid,.spark-rewards-grid,.spark-rules-admin{grid-template-columns:1fr}
-  .spark-level-track{grid-template-columns:1fr;gap:10px;padding-top:0}
-  .spark-level-track::before,.spark-level-track>div::before{display:none}
-  .spark-showcase{min-height:230px;flex-direction:column;text-align:center}
-  .spark-emblem-xl{width:96px;height:96px}.spark-emblem-xl>span{font-size:3.2rem}
-  .spark-wallet-meta{flex-direction:column;gap:4px}
-  .account-profile-card{grid-template-columns:auto 1fr}.account-balance{grid-column:1/-1;justify-content:flex-end}
-  .account-kick-card{flex-direction:column;align-items:flex-start}
-  .spark-reward-admin-row{grid-template-columns:1fr}.spark-reward-admin-price{justify-self:start}
-  .sparks-admin-heading{flex-direction:column}
-  .sparks-manual-grid{grid-template-columns:1fr}
-}
-.nav-account-mobile{display:none}
-@media(max-width:760px){
-  .nav-account-mobile{display:inline-flex;margin-left:auto}
-}
+    loginButton.hidden =
+      loggedIn;
+
+  }
+
+
+  function renderRules(data) {
+
+    const rules =
+      (
+        data?.length
+          ? data
+          : FALLBACK_RULES
+      )
+      .filter(
+        r =>
+          r.enabled !== false
+      );
+
+    $("sparkEarnGrid").innerHTML =
+      rules
+        .map(
+          (r, index) => `
+            <article class="spark-feature-card">
+
+              <div class="spark-feature-top">
+
+                <span class="spark-feature-icon">
+                  ${esc(
+                    r.icon
+                    ||
+                    [
+                      "☑",
+                      "◷",
+                      "⌁",
+                      "✦",
+                      "Ⅲ",
+                      "Ⅴ"
+                    ][index % 6]
+                  )}
+                </span>
+
+                <span class="spark-feature-value">
+                  +${format(r.amount)} ✦
+                </span>
+
+              </div>
+
+              <h3>
+                ${esc(r.label)}
+              </h3>
+
+              <p>
+                ${esc(r.description || "")}
+              </p>
+
+            </article>
+          `
+        )
+        .join("");
+
+  }
+
+
+  function renderFilters() {
+
+    const categories = [
+      "Vše",
+      ...new Set(
+        rewards
+          .map(
+            r =>
+              r.category
+          )
+          .filter(
+            Boolean
+          )
+      )
+    ];
+
+    $("sparkRewardFilter").innerHTML =
+      categories
+        .map(
+          c => `
+            <button
+              type="button"
+              class="spark-filter-button ${c === category ? "is-active" : ""}"
+              data-category="${esc(c)}"
+            >
+              ${esc(c)}
+            </button>
+          `
+        )
+        .join("");
+
+    $("sparkRewardFilter")
+      .querySelectorAll(
+        "[data-category]"
+      )
+      .forEach(
+        button => {
+
+          button.onclick =
+            () => {
+
+              category =
+                button.dataset.category;
+
+              renderFilters();
+
+              renderRewards();
+
+            };
+
+        }
+      );
+
+  }
+
+
+  function renderRewards() {
+
+    const visible =
+      rewards.filter(
+        r =>
+
+          r.enabled !== false
+
+          &&
+
+          (
+            category === "Vše"
+
+            ||
+
+            r.category === category
+          )
+      );
+
+    $("sparkRewardsPublic").innerHTML =
+      visible.length
+
+        ? visible
+            .map(
+              r => `
+                <article class="spark-reward-card">
+
+                  <div class="spark-reward-card-top">
+
+                    <span class="spark-reward-category">
+                      ${esc(r.category || "Odměna")}
+                    </span>
+
+                    <span class="spark-reward-price">
+                      ${format(r.price)} <b>✦</b>
+                    </span>
+
+                  </div>
+
+                  <div
+                    class="spark-reward-glyph"
+                    aria-hidden="true"
+                  >
+                    ✦
+                  </div>
+
+                  <h3>
+                    ${esc(r.name)}
+                  </h3>
+
+                  <p>
+                    ${esc(r.description || "")}
+                  </p>
+
+                  <button
+                    class="btn spark-reward-button"
+                    type="button"
+                    data-account-open
+                  >
+                    Chci tuto odměnu
+                  </button>
+
+                </article>
+              `
+            )
+            .join("")
+
+        : `
+          <div class="live-panel">
+            <div class="muted">
+              V této kategorii zatím nejsou žádné odměny.
+            </div>
+          </div>
+        `;
+
+  }
+
+
+  function levelFor(
+    lifetime
+  ) {
+
+    const levels = [
+      [0, "Zbloudilá jiskra"],
+      [100, "Jiskra"],
+      [300, "Plamínek"],
+      [750, "Pochodeň"],
+      [1500, "Světlonoš"],
+      [3000, "Strážce světla"],
+      [6000, "Nositel plamene"],
+      [10000, "Věčný plamen"]
+    ];
+
+    let current =
+      levels[0];
+
+    let next =
+      null;
+
+    for (
+      let i = 0;
+      i < levels.length;
+      i++
+    ) {
+
+      if (
+        lifetime >=
+        levels[i][0]
+      ) {
+
+        current =
+          levels[i];
+
+      }
+
+      else {
+
+        next =
+          levels[i];
+
+        break;
+
+      }
+
+    }
+
+    const progress =
+      next
+
+        ? Math.max(
+            0,
+            Math.min(
+              100,
+              (
+                (
+                  lifetime
+                  -
+                  current[0]
+                )
+                /
+                (
+                  next[0]
+                  -
+                  current[0]
+                )
+              )
+              *
+              100
+            )
+          )
+
+        : 100;
+
+    return {
+      name:
+        current[1],
+
+      progress
+    };
+
+  }
+
+
+  function renderWalletAvatar(
+    profile,
+    displayName
+  ) {
+
+    const avatar =
+      $("sparkWalletAvatar");
+
+    if (!avatar) {
+      return;
+    }
+
+    if (
+      profile?.kick_avatar_url
+    ) {
+
+      avatar.innerHTML = `
+        <img
+          src="${esc(profile.kick_avatar_url)}"
+          alt="${esc(displayName)}"
+          referrerpolicy="no-referrer"
+          style="
+            width:100%;
+            height:100%;
+            display:block;
+            object-fit:cover;
+            border-radius:inherit;
+          "
+        >
+      `;
+
+      return;
+
+    }
+
+    if (profile) {
+
+      const fallbackLetter =
+        (
+          displayName ||
+          ""
+        )
+          .trim()
+          .charAt(0)
+          .toUpperCase()
+
+        ||
+
+        "✦";
+
+      avatar.textContent =
+        fallbackLetter;
+
+      return;
+
+    }
+
+    avatar.textContent =
+      "✦";
+
+  }
+
+
+  function renderWallet(
+    profile
+  ) {
+
+    updateHeroLoginButton(
+      profile
+    );
+
+    if (
+      !profile
+      ||
+      !profile.kick_user_id
+    ) {
+
+      $("sparkWalletName")
+        .textContent =
+          "Nepřihlášený poutník";
+
+      $("sparkBalance")
+        .textContent =
+          "—";
+
+      $("sparkWalletCaption")
+        .textContent =
+          "Přihlas se a propoj KICK, aby se Jiskry začaly počítat.";
+
+      $("sparkLevelProgress")
+        .style.width =
+          "0%";
+
+      $("sparkLevelName")
+        .textContent =
+          "Jiskra čeká na zažehnutí";
+
+      $("sparkLifetime")
+        .textContent =
+          "0 celkem";
+
+      renderWalletAvatar(
+        null,
+        null
+      );
+
+      return;
+
+    }
+
+
+    const name =
+
+      profile.kick_display_name
+
+      ||
+
+      profile.kick_username
+
+      ||
+
+      "Světlonoš";
+
+
+    const lifetime =
+      Number(
+        profile.lifetime_earned ||
+        0
+      );
+
+
+    const level =
+      levelFor(
+        lifetime
+      );
+
+
+    $("sparkWalletName")
+      .textContent =
+        name;
+
+
+    $("sparkBalance")
+      .textContent =
+        format(
+          profile.balance ||
+          0
+        );
+
+
+    $("sparkWalletCaption")
+      .textContent =
+        "KICK je propojený. Jiskry jsou aktivní.";
+
+
+    $("sparkLevelProgress")
+      .style.width =
+        level.progress
+        +
+        "%";
+
+
+    $("sparkLevelName")
+      .textContent =
+        level.name;
+
+
+    $("sparkLifetime")
+      .textContent =
+        `${format(lifetime)} celkem`;
+
+
+    renderWalletAvatar(
+      profile,
+      name
+    );
+
+  }
+
+
+  async function syncAccountState() {
+
+    if (
+      !window.SVETLONOSI_ACCOUNT
+    ) {
+
+      renderWallet(
+        null
+      );
+
+      return;
+
+    }
+
+    try {
+
+      await window
+        .SVETLONOSI_ACCOUNT
+        .refresh();
+
+    }
+
+    catch (
+      error
+    ) {
+
+      console.warn(
+        "Nepodařilo se obnovit účet Jisker:",
+        error
+      );
+
+    }
+
+    const profile =
+      window
+        .SVETLONOSI_ACCOUNT
+        ?.getProfile?.()
+
+      ??
+
+      null;
+
+    renderWallet(
+      profile
+    );
+
+  }
+
+
+  async function loadCatalog() {
+
+    const [
+      rulesResult,
+      rewardsResult
+    ] =
+      await Promise.all([
+
+        db
+          .from(
+            "spark_rules"
+          )
+          .select(
+            "key,label,description,amount,enabled,sort_order,icon"
+          )
+          .eq(
+            "enabled",
+            true
+          )
+          .order(
+            "sort_order"
+          ),
+
+        db
+          .from(
+            "spark_rewards"
+          )
+          .select(
+            "id,name,description,price,category,enabled,sort_order"
+          )
+          .eq(
+            "enabled",
+            true
+          )
+          .order(
+            "sort_order"
+          )
+          .order(
+            "price"
+          )
+
+      ]);
+
+
+    if (
+      rulesResult.error
+    ) {
+
+      console.warn(
+        "Používám výchozí pravidla Jisker:",
+        rulesResult.error.message
+      );
+
+    }
+
+
+    if (
+      rewardsResult.error
+    ) {
+
+      console.warn(
+        "Používám výchozí odměny Jisker:",
+        rewardsResult.error.message
+      );
+
+    }
+
+
+    renderRules(
+      rulesResult.error
+        ? FALLBACK_RULES
+        : rulesResult.data
+    );
+
+
+    rewards =
+      rewardsResult.error
+      ||
+      !rewardsResult.data?.length
+
+        ? FALLBACK_REWARDS
+
+        : rewardsResult.data;
+
+
+    renderFilters();
+
+    renderRewards();
+
+  }
+
+
+  window.addEventListener(
+    "svetlonosi-account-changed",
+    event => {
+
+      renderWallet(
+        event.detail?.profile ??
+        null
+      );
+
+    }
+  );
+
+
+  syncAccountState();
+
+  loadCatalog();
+
+})();
