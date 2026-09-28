@@ -29,13 +29,17 @@
     <div class="container hall-shell">
       <div class="live-kicker">Jiskry Světlonošů</div>
       <h1>Síň slávy</h1>
-      <p>Pořadí se počítá podle všech Jisker, které jsi kdy získal. Utracené Jiskry tvoje umístění nesnižují.</p>
+      <p>
+        Pořadí se počítá podle všech Jisker, které jsi kdy získal.
+        Utracené Jiskry tvoje umístění nesnižují.
+      </p>
 
       <div class="hall-search-row">
         <label class="hall-search-field">
           <span>Vyhledat Světlonoše</span>
           <input id="hallSearchInput" type="search" placeholder="KICK přezdívka…" autocomplete="off">
         </label>
+
         <button class="btn primary" type="button" id="hallSearchButton">Hledat</button>
         <button class="btn" type="button" id="hallResetButton">Zobrazit vše</button>
       </div>
@@ -44,13 +48,30 @@
 
   <section class="section hall-section">
     <div class="container hall-shell">
+
       <div id="hallMyRank"></div>
+
+      <div class="hall-list-toolbar">
+        <div class="hall-list-summary" id="hallListSummary">Načítám pořadí…</div>
+
+        <label class="hall-page-size">
+          <span>Na stránku</span>
+          <select id="hallPageSize">
+            <option value="20" selected>20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </label>
+      </div>
 
       <div class="hall-board" id="hallBoard">
         <div class="hall-loading">Načítám Síň slávy…</div>
       </div>
 
+      <div class="hall-pagination" id="hallPagination" aria-label="Stránkování Síně slávy"></div>
+
       <div id="hallMessage" class="live-message"></div>
+
     </div>
   </section>
 </main>

@@ -900,3 +900,426 @@ body.stream-overlay-page::before,
 body.stream-overlay-page::after{
   background:transparent!important;
 }
+
+/* =========================================================
+   RECOVERY V4
+   Zachovává všechny existující styly Jisker / účtu / Síně slávy.
+   Přidává pouze homepage profil preview + správný footer + stránkování.
+   ========================================================= */
+
+/* Footer dole jen tehdy, když je stránka krátká. */
+body:not(.stream-overlay-page){
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  min-height:100dvh;
+}
+
+body:not(.stream-overlay-page) > header{
+  flex:0 0 auto;
+}
+
+body:not(.stream-overlay-page) > main{
+  flex:1 0 auto;
+  width:100%;
+}
+
+body:not(.stream-overlay-page) > footer{
+  flex:0 0 auto;
+  margin-top:auto;
+}
+
+/* Síň slávy roste pouze podle skutečného obsahu. */
+.hall-page,
+.public-profile-page{
+  min-height:0!important;
+}
+
+.hall-section{
+  min-height:0!important;
+  padding-top:34px;
+  padding-bottom:42px;
+}
+
+/* ---------- Homepage: fiktivní profil ---------- */
+.sparks-home-grid{
+  grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);
+  gap:52px;
+  align-items:center;
+}
+
+.sparks-home-copy h2{
+  font-size:clamp(2.35rem,4.6vw,3.8rem);
+  line-height:1.05;
+  margin:8px 0 18px;
+}
+
+.sparks-home-copy .lead{
+  max-width:720px;
+}
+
+.spark-profile-demo{
+  position:relative;
+  min-width:0;
+  padding:24px;
+  border:1px solid rgba(231,185,92,.26);
+  border-radius:24px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 78% 8%,rgba(197,139,36,.16),transparent 30%),
+    linear-gradient(145deg,rgba(28,31,39,.97),rgba(10,13,18,.98));
+  box-shadow:0 24px 70px rgba(0,0,0,.28);
+}
+
+.spark-profile-demo::after{
+  content:"";
+  position:absolute;
+  width:220px;
+  height:220px;
+  right:-80px;
+  bottom:-110px;
+  border-radius:50%;
+  background:rgba(50,108,165,.10);
+  filter:blur(18px);
+  pointer-events:none;
+}
+
+.spark-demo-head{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  gap:14px;
+  align-items:center;
+}
+
+.spark-demo-avatar{
+  display:grid;
+  place-items:center;
+  width:66px;
+  height:66px;
+  flex:0 0 66px;
+  border-radius:18px;
+  border:1px solid rgba(231,185,92,.34);
+  background:
+    radial-gradient(circle at 32% 28%,#f7d477,#c58b24 48%,#382710 100%);
+  color:#17120a;
+  font-weight:900;
+  letter-spacing:.06em;
+  box-shadow:0 10px 24px rgba(0,0,0,.25);
+}
+
+.spark-demo-identity{
+  display:grid;
+  gap:2px;
+  min-width:0;
+}
+
+.spark-demo-kicker{
+  color:#d8b661;
+  text-transform:uppercase;
+  letter-spacing:.15em;
+  font-size:.68rem;
+  font-weight:800;
+}
+
+.spark-demo-identity strong{
+  min-width:0;
+  overflow-wrap:anywhere;
+  font-size:1.45rem;
+  line-height:1.08;
+}
+
+.spark-demo-identity small{
+  color:var(--muted);
+  font-size:.88rem;
+}
+
+.spark-demo-rank{
+  display:grid;
+  justify-items:end;
+  gap:2px;
+}
+
+.spark-demo-rank span{
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.13em;
+  font-size:.65rem;
+}
+
+.spark-demo-rank strong{
+  color:#f0c15b;
+  font-size:1.7rem;
+  line-height:1;
+}
+
+.spark-demo-points{
+  position:relative;
+  z-index:1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-top:24px;
+}
+
+.spark-demo-points-main{
+  display:grid;
+  gap:4px;
+}
+
+.spark-demo-points-main strong{
+  font-size:2.55rem;
+  line-height:1;
+}
+
+.spark-demo-points-main span{
+  color:var(--muted);
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.09em;
+}
+
+.spark-demo-badge{
+  padding:8px 12px;
+  border:1px solid rgba(231,185,92,.28);
+  border-radius:999px;
+  background:rgba(197,139,36,.08);
+  color:#efc86c;
+  font-size:.82rem;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.spark-demo-progress{
+  position:relative;
+  z-index:1;
+  margin-top:22px;
+}
+
+.spark-demo-progress-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:8px;
+  color:var(--muted);
+  font-size:.78rem;
+}
+
+.spark-demo-progress-top strong{
+  color:#e6c266;
+}
+
+.spark-demo-progress-bar{
+  height:7px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:999px;
+  background:#090b0f;
+}
+
+.spark-demo-progress-bar span{
+  display:block;
+  width:78%;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#a96d17,#f0c25c);
+}
+
+.spark-demo-grid{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:18px;
+}
+
+.spark-demo-mini{
+  min-width:0;
+  padding:12px 13px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:13px;
+  background:rgba(255,255,255,.025);
+}
+
+.spark-demo-mini span{
+  display:block;
+  margin-bottom:4px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-size:.64rem;
+}
+
+.spark-demo-mini strong{
+  display:block;
+  overflow-wrap:anywhere;
+  font-size:.88rem;
+}
+
+.spark-demo-note{
+  position:relative;
+  z-index:1;
+  margin-top:13px;
+  color:#817c73;
+  font-size:.72rem;
+}
+
+/* ---------- Síň slávy: ovládání seznamu ---------- */
+.hall-list-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin:0 0 12px;
+}
+
+.hall-list-summary{
+  color:var(--muted);
+  font-size:.86rem;
+}
+
+.hall-page-size{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:var(--muted);
+  font-size:.8rem;
+}
+
+.hall-page-size select{
+  min-width:72px;
+  padding:8px 28px 8px 10px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:#11141a;
+  color:var(--text);
+  font:inherit;
+  cursor:pointer;
+  outline:none;
+}
+
+.hall-page-size select:focus{
+  border-color:rgba(231,185,92,.48);
+}
+
+/* ---------- Síň slávy: stránkování ---------- */
+.hall-pagination{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  margin-top:18px;
+}
+
+.hall-page-numbers{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+
+.hall-page-button{
+  min-width:36px;
+  height:36px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 10px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:#11141a;
+  color:var(--muted);
+  font:inherit;
+  font-size:.82rem;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.hall-page-button:hover:not(:disabled){
+  border-color:rgba(231,185,92,.4);
+  color:var(--text);
+  background:rgba(197,139,36,.07);
+}
+
+.hall-page-button.is-active{
+  border-color:var(--accent);
+  background:var(--accent);
+  color:#17120a;
+}
+
+.hall-page-button:disabled{
+  opacity:.35;
+  cursor:default;
+}
+
+.hall-page-nav{
+  min-width:104px;
+}
+
+.hall-page-ellipsis{
+  display:grid;
+  place-items:center;
+  width:24px;
+  height:36px;
+  color:var(--muted);
+}
+
+#hallPagination:empty,
+#hallMessage:empty{
+  display:none;
+}
+
+@media(max-width:1000px){
+  .sparks-home-grid{
+    grid-template-columns:1fr;
+  }
+
+  .spark-profile-demo{
+    max-width:680px;
+  }
+}
+
+@media(max-width:760px){
+  .spark-demo-head{
+    grid-template-columns:auto minmax(0,1fr);
+  }
+
+  .spark-demo-rank{
+    grid-column:1/-1;
+    justify-items:start;
+  }
+
+  .spark-demo-points{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .spark-demo-grid{
+    grid-template-columns:1fr;
+  }
+
+  .hall-list-toolbar{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .hall-pagination{
+    justify-content:space-between;
+    flex-wrap:wrap;
+  }
+
+  .hall-page-nav{
+    flex:1 1 0;
+  }
+
+  .hall-page-numbers{
+    order:3;
+    width:100%;
+    flex-wrap:wrap;
+  }
+}
