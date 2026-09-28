@@ -66,7 +66,18 @@
     $('resultMessage').textContent='Odesílám hlas…';
     const {error} = await db.rpc('cast_vote',{p_poll_id:poll.id,p_option_id:id,p_voter_id:voterId()});
     if(error){ $('resultMessage').textContent='Hlas se nepodařilo odeslat.'; console.error(error); return; }
-    mine=id; $('resultMessage').textContent='Hlas přijat.'; await refreshCounts(); render();
+    mine=id;
+    let sparkBonus = 0;
+    try {
+      const { data: sparkData, error: sparkError } = await db.rpc('award_vote_sparks', { p_poll_id: poll.id });
+      if (!sparkError) sparkBonus = Number(sparkData || 0);
+    } catch (sparkError) {
+      console.warn('Jiskry za hlas se zatím nepodařilo připsat:', sparkError);
+    }
+    $('resultMessage').textContent = sparkBonus > 0 ? `Hlas přijat. +${sparkBonus} ✦` : 'Hlas přijat.';
+    await refreshCounts();
+    render();
+    if (sparkBonus > 0 && window.SVETLONOSI_ACCOUNT?.refresh) await window.SVETLONOSI_ACCOUNT.refresh();
   }
 
   async function loadHistory(){

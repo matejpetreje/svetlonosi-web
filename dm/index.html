@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
-<header><div class="container nav"><a class="brand" href="../index.html"><img class="brand-logo" src="../assets/logo_svetlonosi.png" alt="Světlonoši"><span class="brand-wordmark">SVĚTLO<span>NOŠI</span></span></a><nav><a href="../index.html">Web</a><a href="../live/">Divácká stránka</a></nav></div></header>
+<header><div class="container nav"><a class="brand" href="../index.html"><img class="brand-logo" src="../assets/logo_svetlonosi.png" alt="Světlonoši"><span class="brand-wordmark">SVĚTLO<span>NOŠI</span></span></a><nav><a href="../index.html">Web</a><a href="../live/">Divácká stránka</a><a href="../jiskry/">Jiskry</a></nav></div></header>
 <main class="live-main">
   <section class="section live-section">
     <div class="container live-shell">
@@ -69,6 +69,48 @@
           <div id="kickMessage" class="live-message"></div>
         </section>
 
+        <section class="live-panel sparks-admin-panel">
+          <div class="live-kicker">Jiskry</div>
+          <div class="sparks-admin-heading">
+            <div>
+              <h2>Ekonomika Jisker</h2>
+              <p class="muted">Nastav bodování na jednom místě. Změny se projeví na veřejné stránce Jisker.</p>
+            </div>
+            <span class="spark-emblem spark-emblem-sm" aria-hidden="true"><span>✦</span></span>
+          </div>
+          <div id="sparkRulesGrid" class="spark-rules-admin"><div class="muted">Načítám pravidla…</div></div>
+          <div class="live-actions">
+            <button class="btn primary" id="saveSparkRulesButton">Uložit bodování</button>
+          </div>
+          <div id="sparkRulesMessage" class="live-message"></div>
+        </section>
+
+        <section class="live-panel sparks-admin-panel">
+          <div class="live-kicker">Jiskry</div>
+          <h2>Ruční úprava Jisker</h2>
+          <p class="muted">Použij pro soutěže, speciální eventy nebo opravu zůstatku. Každá změna se uloží do historie transakcí.</p>
+          <div class="live-form-grid sparks-manual-grid">
+            <label class="live-field"><span>KICK přezdívka</span><input id="sparkAdjustKick" placeholder="např. MedvedCZ"></label>
+            <label class="live-field"><span>Změna</span><input id="sparkAdjustAmount" type="number" step="1" placeholder="100 nebo -50"></label>
+          </div>
+          <label class="live-field"><span>Důvod</span><input id="sparkAdjustReason" maxlength="180" placeholder="Výhra komunitní soutěže"></label>
+          <div class="live-actions"><button class="btn primary" id="sparkAdjustButton">Zapsat změnu</button></div>
+          <div id="sparkAdjustMessage" class="live-message"></div>
+        </section>
+
+        <section class="live-panel sparks-admin-panel">
+          <div class="live-kicker">Odměny</div>
+          <div class="sparks-admin-heading">
+            <div>
+              <h2>Tabulka odměn</h2>
+              <p class="muted">Přidávej, upravuj, skrývej a řaď odměny dostupné divákům.</p>
+            </div>
+            <button class="btn primary" id="newSparkRewardButton">+ Nová odměna</button>
+          </div>
+          <div id="sparkRewardsAdmin" class="spark-rewards-admin"><div class="muted">Načítám odměny…</div></div>
+          <div id="sparkRewardsMessage" class="live-message"></div>
+        </section>
+
         <section class="live-panel"><div class="live-kicker">Kronika</div><h2>Správa Kroniky</h2><div id="dmHistory" class="live-history"></div></section>
       </div>
     </div>
@@ -76,5 +118,24 @@
 </main>
 
 <div class="live-modal-backdrop" id="editModal" hidden><div class="live-modal"><div class="live-kicker">Upravit Kroniku</div><h2>Opravit záznam</h2><label class="live-field"><span>Otázka</span><input id="editQuestion"></label><label class="live-field"><span>Výsledek</span><input id="editWinner"></label><div class="live-actions"><button class="btn primary" id="saveEditButton">Uložit změny</button><button class="btn" id="cancelEditButton">Zavřít</button></div></div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../js/supabase-config.js"></script><script src="../js/dm.js"></script>
+
+<div class="live-modal-backdrop" id="sparkRewardModal" hidden>
+  <div class="live-modal spark-reward-modal">
+    <div class="live-kicker">Odměny</div>
+    <h2 id="sparkRewardModalTitle">Nová odměna</h2>
+    <input type="hidden" id="sparkRewardId">
+    <div class="live-form-grid">
+      <label class="live-field"><span>Název</span><input id="sparkRewardName" maxlength="90" placeholder="Navrhni otázku do hlasování"></label>
+      <label class="live-field"><span>Cena v Jiskrách</span><input id="sparkRewardPrice" type="number" min="0" step="1" placeholder="2500"></label>
+    </div>
+    <div class="live-form-grid">
+      <label class="live-field"><span>Kategorie</span><select id="sparkRewardCategory"><option value="Kosmetika">Kosmetika</option><option value="Interakce">Interakce</option><option value="Komunita">Komunita</option><option value="Speciální">Speciální</option></select></label>
+      <label class="live-field"><span>Pořadí</span><input id="sparkRewardSort" type="number" min="0" step="1" value="100"></label>
+    </div>
+    <label class="live-field"><span>Popis</span><input id="sparkRewardDescription" maxlength="220" placeholder="Krátce vysvětli, co divák za Jiskry získá."></label>
+    <div class="live-checks spark-reward-checks"><label><input type="checkbox" id="sparkRewardEnabled" checked> Odměna je viditelná</label></div>
+    <div class="live-actions"><button class="btn primary" id="saveSparkRewardButton">Uložit odměnu</button><button class="btn" id="cancelSparkRewardButton">Zavřít</button></div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../js/supabase-config.js"></script><script src="../js/dm.js"></script><script src="../js/sparks-admin.js"></script>
 </body></html>
