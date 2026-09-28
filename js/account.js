@@ -136,7 +136,7 @@
     document.querySelectorAll('[data-account-label]').forEach(label => {
       if (!currentSession?.user) label.textContent = 'Přihlásit se';
       else if (currentProfile?.kick_display_name || currentProfile?.kick_username) label.textContent = currentProfile.kick_display_name || currentProfile.kick_username;
-      else label.textContent = 'Dokončit účet';
+      else label.textContent = 'Zapojit se';
     });
 
     const signedOut = document.getElementById('accountSignedOut');
