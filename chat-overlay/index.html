@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>Světlonoši — KICK Chat Overlay</title>
+
+  <style>
+    :root{
+      --chat-text:#2b1c10;
+      --chat-muted:#6d5844;
+      --chat-accent:#7d321b;
+      --chat-shadow:rgba(255,244,216,.72);
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    html,
+    body{
+      margin:0;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+
+      background:transparent!important;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      color:
+        var(--chat-text);
+    }
+
+    body{
+      position:relative;
+    }
+
+    .chat-overlay{
+      position:absolute;
+
+      left:0;
+      bottom:0;
+
+      width:100%;
+      max-height:100%;
+
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+
+      gap:8px;
+
+      padding:
+        12px
+        14px;
+    }
+
+    .chat-message{
+      width:100%;
+
+      opacity:0;
+
+      transform:
+        translateY(10px);
+
+      animation:
+        chatIn
+        .22s
+        ease
+        forwards;
+    }
+
+    .chat-line{
+      display:flex;
+      align-items:flex-start;
+      flex-wrap:wrap;
+
+      gap:5px;
+
+      min-width:0;
+
+      font-size:
+        22px;
+
+      line-height:
+        1.28;
+
+      font-weight:
+        600;
+
+      text-shadow:
+        0 1px 0 var(--chat-shadow),
+        0 0 2px rgba(255,244,216,.55);
+    }
+
+    .chat-jiskry-badge{
+      width:22px;
+      height:22px;
+
+      flex:
+        0 0 22px;
+
+      display:inline-grid;
+      place-items:center;
+
+      overflow:hidden;
+
+      margin-top:
+        2px;
+
+      border-radius:
+        5px;
+
+      vertical-align:
+        middle;
+    }
+
+    .chat-jiskry-badge img{
+      display:block;
+
+      width:100%;
+      height:100%;
+
+      object-fit:
+        contain;
+
+      filter:
+        drop-shadow(
+          0 1px 2px rgba(0,0,0,.34)
+        );
+    }
+
+    .chat-jiskry-badge > span{
+      display:grid;
+      place-items:center;
+
+      width:100%;
+      height:100%;
+
+      font-size:
+        17px;
+
+      line-height:
+        1;
+
+      font-weight:
+        900;
+
+      filter:
+        drop-shadow(
+          0 1px 1px rgba(0,0,0,.25)
+        );
+    }
+
+    .chat-username{
+      flex:
+        0 1 auto;
+
+      min-width:0;
+
+      overflow:hidden;
+      text-overflow:ellipsis;
+
+      white-space:nowrap;
+
+      color:
+        var(--chat-accent);
+
+      font-weight:
+        800;
+    }
+
+    .chat-colon{
+      flex:
+        0 0 auto;
+
+      font-weight:
+        800;
+
+      color:
+        var(--chat-text);
+    }
+
+    .chat-content{
+      flex:
+        1 1 100%;
+
+      min-width:0;
+
+      padding-left:
+        27px;
+
+      overflow-wrap:anywhere;
+      word-break:normal;
+
+      color:
+        var(--chat-text);
+
+      font-weight:
+        600;
+    }
+
+    .chat-message.is-leaving{
+      animation:
+        chatOut
+        .22s
+        ease
+        forwards;
+    }
+
+    .spark-accent-gold{color:#b47b15}
+    .spark-accent-ash{color:#756a5b}
+    .spark-accent-ember{color:#b45d27}
+    .spark-accent-blue{color:#3d78a2}
+    .spark-accent-green{color:#3f7d55}
+    .spark-accent-purple{color:#76519d}
+    .spark-accent-red{color:#a74343}
+    .spark-accent-light{color:#b28c2a}
+    .spark-accent-legendary{color:#b98616}
+
+    body.compact .chat-overlay{
+      gap:5px;
+
+      padding:
+        8px
+        10px;
+    }
+
+    body.compact .chat-line{
+      gap:4px;
+
+      font-size:
+        18px;
+    }
+
+    body.compact .chat-jiskry-badge{
+      width:18px;
+      height:18px;
+
+      flex-basis:
+        18px;
+
+      margin-top:
+        1px;
+    }
+
+    body.compact .chat-jiskry-badge > span{
+      font-size:
+        14px;
+    }
+
+    body.compact .chat-content{
+      padding-left:
+        22px;
+    }
+
+    body.one-line .chat-line{
+      flex-wrap:nowrap;
+    }
+
+    body.one-line .chat-content{
+      flex:
+        1 1 auto;
+
+      padding-left:
+        0;
+    }
+
+    @keyframes chatIn{
+      to{
+        opacity:1;
+
+        transform:
+          translateY(0);
+      }
+    }
+
+    @keyframes chatOut{
+      to{
+        opacity:0;
+
+        transform:
+          translateY(-8px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div
+    class="chat-overlay"
+    id="chatOverlay"
+    aria-live="polite"
+  ></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/chat-overlay.js"></script>
+
+</body>
+
+</html>
