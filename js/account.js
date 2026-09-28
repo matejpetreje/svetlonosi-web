@@ -793,7 +793,7 @@
 
         await db.functions.invoke(
 
-          "kick-user",
+          "kick-jiskry-user",
 
           {
 
