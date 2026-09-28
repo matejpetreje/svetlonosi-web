@@ -543,7 +543,7 @@ code{background:#0b0d10;border:1px solid var(--line);padding:2px 6px;border-radi
 .account-close{position:absolute;top:13px;right:15px;width:36px;height:36px;border:0;border-radius:10px;background:rgba(255,255,255,.04);color:var(--muted);font-size:1.5rem;cursor:pointer}
 .account-close:hover{color:var(--text);background:rgba(255,255,255,.07)}
 .account-brand-row{display:flex;align-items:center;gap:18px;margin-bottom:14px}
-.account-brand-row h2{margin:2px 0 0;font-size:1.85rem;line-height:1.05}
+.account-brand-row h2{margin:4px 0 0}
 .account-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:18px 0;padding:5px;border:1px solid var(--line);border-radius:12px;background:#0d1015}
 .account-tab{padding:10px;border:0;border-radius:8px;background:transparent;color:var(--muted);font:inherit;font-weight:700;cursor:pointer}
 .account-tab.is-active{background:#1c2028;color:var(--text)}
@@ -551,8 +551,10 @@ code{background:#0b0d10;border:1px solid var(--line);padding:2px 6px;border-radi
 .account-profile-card{display:grid;grid-template-columns:auto 1fr auto;gap:13px;align-items:center;padding:16px;border:1px solid var(--line);border-radius:15px;background:#11141a}
 .account-avatar{display:grid;place-items:center;width:52px;height:52px;overflow:hidden;border-radius:15px;background:rgba(197,139,36,.1);border:1px solid rgba(231,185,92,.28);color:#f0c15b;font-weight:900}
 .account-avatar img{display:block;width:100%;height:100%;object-fit:cover}
-.account-profile-copy{display:grid;gap:2px;min-width:0}
+.account-profile-copy{display:grid;gap:0;min-width:0}
 .account-profile-copy strong,.account-profile-copy span{overflow-wrap:anywhere}
+.account-profile-copy strong{font-size:1.12rem;line-height:1.15}
+.account-profile-copy span{line-height:1.2}
 .account-balance{display:flex;align-items:center;gap:5px;color:#f0c15b;font-size:1.15rem;font-weight:800;text-shadow:0 0 14px rgba(240,193,91,.12)}.account-balance strong{font-size:1.45rem;line-height:1}
 .account-kick-card{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:14px;padding:16px;border:1px solid rgba(231,185,92,.2);border-radius:15px;background:rgba(197,139,36,.055)}
 .account-kick-card p{margin:5px 0 0;font-size:.88rem;line-height:1.45}
