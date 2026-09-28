@@ -684,22 +684,109 @@ code{background:#0b0d10;border:1px solid var(--line);padding:2px 6px;border-radi
 
 
 /* =========================================================
-   SJEDNOCENÉ DUNGEON POZADÍ + JEMNÝ BLUR PŘECHOD
+   SJEDNOCENÉ DUNGEON POZADÍ V2
+   Ostrý hero → plynule do jemně rozmazaného pozadí celé stránky
    ========================================================= */
 
+/*
+   Celý veřejný web dostane jednu společnou, jemně rozmazanou
+   dungeon vrstvu. OBS overlay zůstává transparentní.
+*/
+body:not(.stream-overlay-page){
+  position:relative;
+  min-height:100vh;
+  background:#0f1115;
+  isolation:isolate;
+}
+
+body:not(.stream-overlay-page)::before{
+  content:"";
+  position:fixed;
+  z-index:-2;
+  inset:-28px;
+  pointer-events:none;
+  background:
+    url("assets/pozadi_dungeon.png")
+    center center / cover
+    no-repeat;
+  filter:
+    blur(12px)
+    brightness(.42)
+    saturate(.88);
+  transform:scale(1.05);
+  opacity:.82;
+}
+
+body:not(.stream-overlay-page)::after{
+  content:"";
+  position:fixed;
+  z-index:-1;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(
+      circle at 50% 12%,
+      rgba(197,139,36,.10),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(8,9,12,.16) 0%,
+      rgba(10,12,16,.40) 34%,
+      rgba(15,17,21,.70) 68%,
+      rgba(15,17,21,.88) 100%
+    );
+}
+
+/*
+   Hero části mají ostrou verzi stejného pozadí.
+   Spodní část hero se postupně rozpouští do rozmazané vrstvy body.
+*/
 .hero,
 .live-hero,
 .sparks-hero,
 .hall-hero,
 .public-profile-hero{
   position:relative;
-  overflow:hidden;
   isolation:isolate;
+  overflow:hidden;
+  background:transparent!important;
+}
+
+.hero::before,
+.live-hero::before,
+.sparks-hero::before,
+.hall-hero::before,
+.public-profile-hero::before{
+  content:"";
+  position:absolute;
+  z-index:-2;
+  inset:0;
+  pointer-events:none;
   background:
-    radial-gradient(circle at 72% 28%,rgba(197,139,36,.16),transparent 28%),
-    radial-gradient(circle at 22% 68%,rgba(56,113,164,.08),transparent 26%),
-    linear-gradient(180deg,rgba(8,9,12,.16) 0%,rgba(8,9,12,.34) 52%,rgba(15,17,21,.76) 82%,rgba(15,17,21,.98) 100%),
-    url("assets/pozadi_dungeon.png") center/cover no-repeat;
+    url("assets/pozadi_dungeon.png")
+    center center / cover
+    no-repeat;
+  -webkit-mask-image:
+    linear-gradient(
+      180deg,
+      #000 0%,
+      #000 60%,
+      rgba(0,0,0,.96) 70%,
+      rgba(0,0,0,.76) 82%,
+      rgba(0,0,0,.34) 93%,
+      transparent 100%
+    );
+  mask-image:
+    linear-gradient(
+      180deg,
+      #000 0%,
+      #000 60%,
+      rgba(0,0,0,.96) 70%,
+      rgba(0,0,0,.76) 82%,
+      rgba(0,0,0,.34) 93%,
+      transparent 100%
+    );
 }
 
 .hero::after,
@@ -709,24 +796,22 @@ code{background:#0b0d10;border:1px solid var(--line);padding:2px 6px;border-radi
 .public-profile-hero::after{
   content:"";
   position:absolute;
-  left:0;
-  right:0;
-  bottom:-1px;
-  height:190px;
-  z-index:0;
+  z-index:-1;
+  inset:0;
   pointer-events:none;
-  background:linear-gradient(
-    180deg,
-    rgba(15,17,21,0) 0%,
-    rgba(15,17,21,.20) 24%,
-    rgba(15,17,21,.58) 56%,
-    rgba(15,17,21,.88) 80%,
-    #0f1115 100%
-  );
-  -webkit-backdrop-filter:blur(8px);
-  backdrop-filter:blur(8px);
-  -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.38) 28%,#000 58%,#000 100%);
-  mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.38) 28%,#000 58%,#000 100%);
+  background:
+    radial-gradient(
+      circle at 50% 38%,
+      rgba(255,173,60,.10),
+      transparent 36%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(8,9,12,.22) 0%,
+      rgba(8,9,12,.30) 52%,
+      rgba(15,17,21,.28) 72%,
+      rgba(15,17,21,0) 100%
+    );
 }
 
 .hero .container,
@@ -738,10 +823,80 @@ code{background:#0b0d10;border:1px solid var(--line);padding:2px 6px;border-radi
   z-index:1;
 }
 
-/* Spodní obsah navazuje na stejnou tmavou barvu jako blur přechod. */
+/*
+   Hlavní obsah už není jednolitá černá plocha.
+   Dungeon zůstává jemně vidět pod tmavou translucentní vrstvou.
+*/
 .live-main,
 .sparks-page,
 .hall-page,
 .public-profile-page{
-  background:#0f1115;
+  background:transparent!important;
+}
+
+.section,
+.live-section,
+.hall-section{
+  position:relative;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15,17,21,.44),
+      rgba(15,17,21,.60)
+    );
+  -webkit-backdrop-filter:blur(1.5px);
+  backdrop-filter:blur(1.5px);
+}
+
+/*
+   První sekce pod hero nemá ostrou hranu.
+*/
+.hero + .section,
+.live-hero + .section,
+.sparks-hero + .section,
+.hall-hero + .section,
+.public-profile-hero + .section{
+  border-top-color:rgba(255,255,255,.025);
+}
+
+/*
+   Síň slávy a veřejný profil potřebují dost prostoru,
+   ale bez velké prázdné černé plochy.
+*/
+.hall-page,
+.public-profile-page{
+  min-height:calc(100vh - 68px);
+}
+
+.hall-section{
+  min-height:360px;
+  padding-bottom:72px;
+}
+
+/*
+   Footer navazuje na stejné pozadí a jen ho mírně ztmaví.
+*/
+footer{
+  position:relative;
+  background:rgba(10,12,16,.62);
+  -webkit-backdrop-filter:blur(8px);
+  backdrop-filter:blur(8px);
+  border-top:1px solid rgba(255,255,255,.06);
+}
+
+/*
+   Právní stránky a ostatní standardní obsah nejsou čistě černé.
+*/
+.legal,
+main:not(.stream-overlay-page){
+  position:relative;
+}
+
+/*
+   OBS overlay musí zůstat 100% transparentní.
+*/
+body.stream-overlay-page,
+body.stream-overlay-page::before,
+body.stream-overlay-page::after{
+  background:transparent!important;
 }
