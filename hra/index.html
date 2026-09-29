@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/favicon.png">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>717 Runner — prototyp</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="game-shell">
+    <section class="hud">
+      <div>
+        <span class="eyebrow">717 RUNNER — PROTOTYP</span>
+        <strong id="characterName">Rokar</strong>
+      </div>
+
+      <div class="hud-right">
+        <div>SKÓRE <strong id="score">00000</strong></div>
+        <div>REKORD <strong id="best">00000</strong></div>
+      </div>
+    </section>
+
+    <div class="stage-wrap">
+      <canvas id="game" width="1280" height="720" aria-label="717 Runner"></canvas>
+
+      <div class="start-panel" id="startPanel">
+        <h1>717 Runner</h1>
+        <p>
+          Běž. Přeskoč kládu na cestě. Podlez nízkou větev.
+          Po dosažení milníků se vystřídají členové 717.
+        </p>
+        <button id="startButton">SPUSTIT HRU</button>
+        <div class="controls-help">
+          <span><kbd>SPACE</kbd> / <kbd>↑</kbd> skok</span>
+          <span><kbd>↓</kbd> slide</span>
+        </div>
+      </div>
+
+      <div class="game-over" id="gameOverPanel" hidden>
+        <span id="resultLabel">KONEC BĚHU</span>
+        <strong id="finalScore">0</strong>
+        <button id="restartButton">ZNOVU</button>
+      </div>
+    </div>
+
+    <section class="mobile-controls">
+      <button id="jumpButton">SKOK</button>
+      <button id="slideButton">SLIDE</button>
+    </section>
+  </main>
+
+  <script src="game.js"></script>
+</body>
+</html>

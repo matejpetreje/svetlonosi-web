@@ -1,0 +1,184 @@
+*{
+  box-sizing:border-box;
+}
+
+:root{
+  color-scheme:dark;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#0b0d10;
+  color:#f8f2df;
+}
+
+html,
+body{
+  margin:0;
+  min-height:100%;
+  background:
+    radial-gradient(circle at 50% 0%,#202933 0,#0b0d10 55%);
+}
+
+body{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:18px;
+}
+
+.game-shell{
+  width:min(1280px,100%);
+}
+
+.hud{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:24px;
+  padding:0 4px 10px;
+}
+
+.eyebrow{
+  display:block;
+  margin-bottom:2px;
+  font-size:12px;
+  letter-spacing:.2em;
+  color:#d0a346;
+}
+
+#characterName{
+  font-size:24px;
+}
+
+.hud-right{
+  display:flex;
+  gap:28px;
+  text-align:right;
+  font-size:12px;
+  letter-spacing:.12em;
+  color:#b9b4a7;
+}
+
+.hud-right strong{
+  display:block;
+  margin-top:2px;
+  color:#f3c45b;
+  font-size:20px;
+  letter-spacing:.08em;
+}
+
+.stage-wrap{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;
+  overflow:hidden;
+  border:1px solid #574522;
+  border-radius:12px;
+  background:#111;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+
+canvas{
+  display:block;
+  width:100%;
+  height:100%;
+  image-rendering:pixelated;
+  image-rendering:crisp-edges;
+}
+
+.start-panel,
+.game-over{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:28px;
+  background:linear-gradient(rgba(5,9,12,.35),rgba(5,9,12,.75));
+  text-shadow:0 2px 8px #000;
+}
+
+.start-panel h1{
+  margin:0;
+  font-size:clamp(42px,8vw,92px);
+  line-height:.95;
+  color:#f2c35c;
+}
+
+.start-panel p{
+  max-width:650px;
+  font-size:18px;
+  line-height:1.5;
+}
+
+button{
+  border:1px solid #e1b85a;
+  border-radius:8px;
+  padding:13px 22px;
+  background:#251b0e;
+  color:#ffd574;
+  font-weight:800;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#382713;
+}
+
+.controls-help{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:18px;
+  margin-top:18px;
+  font-size:13px;
+  color:#d7d0bf;
+}
+
+kbd{
+  padding:3px 7px;
+  border:1px solid #766445;
+  border-radius:5px;
+  background:#151515;
+}
+
+.game-over[hidden]{
+  display:none;
+}
+
+.game-over span{
+  color:#d39a38;
+  letter-spacing:.18em;
+  font-weight:800;
+}
+
+.game-over strong{
+  margin:8px 0 20px;
+  font-size:72px;
+  color:#fff0bd;
+}
+
+.mobile-controls{
+  display:none;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:12px;
+}
+
+@media (max-width:800px){
+  body{
+    padding:8px;
+  }
+
+  .hud{
+    align-items:center;
+  }
+
+  .hud-right{
+    gap:12px;
+  }
+
+  .mobile-controls{
+    display:grid;
+  }
+}

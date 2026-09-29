@@ -31,6 +31,26 @@
   let pageSize = 20;
   let currentSearch = "";
 
+  const EASTER_EGG_SEARCH_CODE =
+    "easteregghra";
+
+  function openEasterEggIfMatched(value) {
+    const normalized =
+      String(value ?? "")
+        .trim()
+        .toLocaleLowerCase("cs-CZ");
+
+    if (
+      normalized !==
+      EASTER_EGG_SEARCH_CODE
+    ) {
+      return false;
+    }
+
+    window.location.assign("/hra/");
+    return true;
+  }
+
   function levelFor(lifetime) {
     const levels = [
       [0, "Zbloudilá jiskra"],
@@ -714,7 +734,20 @@
   }
 
   $("hallSearchButton").onclick =
-    () => loadHall($("hallSearchInput").value);
+    () => {
+      const value =
+        $("hallSearchInput").value;
+
+      if (
+        openEasterEggIfMatched(
+          value
+        )
+      ) {
+        return;
+      }
+
+      loadHall(value);
+    };
 
   $("hallResetButton").onclick =
     () => {
@@ -727,7 +760,19 @@
     event => {
       if (event.key === "Enter") {
         event.preventDefault();
-        loadHall($("hallSearchInput").value);
+
+        const value =
+          $("hallSearchInput").value;
+
+        if (
+          openEasterEggIfMatched(
+            value
+          )
+        ) {
+          return;
+        }
+
+        loadHall(value);
       }
     }
   );
