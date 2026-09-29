@@ -13,10 +13,9 @@
 
   <style>
     :root{
-      --chat-text:#2b1c10;
-      --chat-muted:#6d5844;
-      --chat-accent:#7d321b;
-      --chat-shadow:rgba(255,244,216,.72);
+      --chat-text:#2b1a0c;
+      --chat-name:#7a2b15;
+      --chat-shadow:rgba(255,244,216,.92);
     }
 
     *{
@@ -47,82 +46,71 @@
 
     .chat-overlay{
       position:absolute;
-
-      left:0;
-      bottom:0;
-
-      width:100%;
-      max-height:100%;
+      inset:0;
 
       display:flex;
       flex-direction:column;
       justify-content:flex-end;
 
-      gap:8px;
+      gap:6px;
 
       padding:
-        12px
-        14px;
+        14px
+        16px;
+
+      overflow:hidden;
     }
 
     .chat-message{
+      flex:0 0 auto;
+
       width:100%;
 
       opacity:0;
 
       transform:
-        translateY(10px);
+        translateY(8px);
 
       animation:
         chatIn
-        .22s
+        .18s
         ease
         forwards;
     }
 
     .chat-line{
       display:flex;
-      align-items:flex-start;
-      flex-wrap:wrap;
+      align-items:center;
 
       gap:5px;
 
       min-width:0;
 
-      font-size:
-        22px;
+      font-size:19px;
+      line-height:1.25;
 
-      line-height:
-        1.28;
-
-      font-weight:
-        600;
+      font-weight:600;
 
       text-shadow:
         0 1px 0 var(--chat-shadow),
-        0 0 2px rgba(255,244,216,.55);
+        0 0 2px rgba(255,244,216,.82);
     }
 
     .chat-jiskry-badge{
-      width:22px;
-      height:22px;
+      width:20px;
+      height:20px;
 
       flex:
-        0 0 22px;
+        0 0 20px;
 
       display:inline-grid;
       place-items:center;
 
       overflow:hidden;
 
-      margin-top:
-        2px;
+      border-radius:4px;
 
-      border-radius:
-        5px;
-
-      vertical-align:
-        middle;
+      vertical-align:middle;
     }
 
     .chat-jiskry-badge img{
@@ -131,12 +119,11 @@
       width:100%;
       height:100%;
 
-      object-fit:
-        contain;
+      object-fit:contain;
 
       filter:
         drop-shadow(
-          0 1px 2px rgba(0,0,0,.34)
+          0 1px 1px rgba(0,0,0,.35)
         );
     }
 
@@ -147,14 +134,10 @@
       width:100%;
       height:100%;
 
-      font-size:
-        17px;
+      font-size:15px;
+      line-height:1;
 
-      line-height:
-        1;
-
-      font-weight:
-        900;
+      font-weight:900;
 
       filter:
         drop-shadow(
@@ -164,9 +147,9 @@
 
     .chat-username{
       flex:
-        0 1 auto;
+        0 0 auto;
 
-      min-width:0;
+      max-width:42%;
 
       overflow:hidden;
       text-overflow:ellipsis;
@@ -174,48 +157,35 @@
       white-space:nowrap;
 
       color:
-        var(--chat-accent);
+        var(--chat-name);
 
-      font-weight:
-        800;
+      font-weight:800;
     }
 
     .chat-colon{
-      flex:
-        0 0 auto;
-
-      font-weight:
-        800;
+      flex:0 0 auto;
 
       color:
         var(--chat-text);
+
+      font-weight:800;
+
+      margin-left:-2px;
     }
 
     .chat-content{
       flex:
-        1 1 100%;
+        1 1 auto;
 
       min-width:0;
-
-      padding-left:
-        27px;
-
-      overflow-wrap:anywhere;
-      word-break:normal;
 
       color:
         var(--chat-text);
 
-      font-weight:
-        600;
-    }
+      font-weight:600;
 
-    .chat-message.is-leaving{
-      animation:
-        chatOut
-        .22s
-        ease
-        forwards;
+      overflow-wrap:anywhere;
+      word-break:normal;
     }
 
     .spark-accent-gold{color:#b47b15}
@@ -229,51 +199,23 @@
     .spark-accent-legendary{color:#b98616}
 
     body.compact .chat-overlay{
-      gap:5px;
-
-      padding:
-        8px
-        10px;
+      gap:4px;
+      padding:10px 12px;
     }
 
     body.compact .chat-line{
       gap:4px;
-
-      font-size:
-        18px;
+      font-size:16px;
     }
 
     body.compact .chat-jiskry-badge{
-      width:18px;
-      height:18px;
-
-      flex-basis:
-        18px;
-
-      margin-top:
-        1px;
+      width:17px;
+      height:17px;
+      flex-basis:17px;
     }
 
     body.compact .chat-jiskry-badge > span{
-      font-size:
-        14px;
-    }
-
-    body.compact .chat-content{
-      padding-left:
-        22px;
-    }
-
-    body.one-line .chat-line{
-      flex-wrap:nowrap;
-    }
-
-    body.one-line .chat-content{
-      flex:
-        1 1 auto;
-
-      padding-left:
-        0;
+      font-size:13px;
     }
 
     @keyframes chatIn{
@@ -282,15 +224,6 @@
 
         transform:
           translateY(0);
-      }
-    }
-
-    @keyframes chatOut{
-      to{
-        opacity:0;
-
-        transform:
-          translateY(-8px);
       }
     }
   </style>

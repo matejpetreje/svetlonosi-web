@@ -26,29 +26,17 @@
       window.location.search
     );
 
-  const MAX_MESSAGES =
+  const DOM_LIMIT =
     Math.min(
-      20,
+      500,
       Math.max(
-        1,
+        50,
         Number(
-          params.get("max")
+          params.get("buffer")
           ||
-          10
+          200
         )
       )
-    );
-
-  const TTL_MS =
-    Math.max(
-      0,
-      Number(
-        params.get("ttl")
-        ||
-        60
-      )
-      *
-      1000
     );
 
   if (
@@ -58,16 +46,6 @@
   ) {
     document.body.classList.add(
       "compact"
-    );
-  }
-
-  if (
-    params.get("line")
-    ===
-    "1"
-  ) {
-    document.body.classList.add(
-      "one-line"
     );
   }
 
@@ -244,22 +222,10 @@
       element
     );
 
-    trimMessages();
-
-    if (
-      TTL_MS > 0
-    ) {
-      window.setTimeout(
-        () =>
-          removeMessage(
-            element
-          ),
-        TTL_MS
-      );
-    }
+    trimDomBuffer();
   }
 
-  function trimMessages() {
+  function trimDomBuffer() {
     const messages =
       [
         ...overlay.querySelectorAll(
@@ -270,37 +236,22 @@
     while (
       messages.length
       >
-      MAX_MESSAGES
+      DOM_LIMIT
     ) {
       const oldest =
         messages.shift();
 
       if (oldest) {
+        const id =
+          oldest.dataset.messageId;
+
+        if (id) {
+          seen.delete(id);
+        }
+
         oldest.remove();
       }
     }
-  }
-
-  function removeMessage(
-    element
-  ) {
-    if (
-      !element
-      ||
-      !element.isConnected
-    ) {
-      return;
-    }
-
-    element.classList.add(
-      "is-leaving"
-    );
-
-    window.setTimeout(
-      () =>
-        element.remove(),
-      230
-    );
   }
 
   async function loadInitial() {
@@ -321,7 +272,7 @@
           }
         )
         .limit(
-          MAX_MESSAGES
+          DOM_LIMIT
         );
 
     if (error) {
@@ -333,9 +284,6 @@
       return;
     }
 
-    const now =
-      Date.now();
-
     [...(
       data
       ||
@@ -343,59 +291,17 @@
     )]
       .reverse()
       .forEach(
-        message => {
-          const age =
-            now
-            -
-            new Date(
-              message.received_at
-            )
-            .getTime();
-
-          if (
-            TTL_MS > 0
-            &&
-            age > TTL_MS
-          ) {
-            return;
-          }
-
+        message =>
           renderMessage(
             message,
             false
-          );
-
-          if (
-            TTL_MS > 0
-          ) {
-            const element =
-              overlay.querySelector(
-                `[data-message-id="${CSS.escape(String(message.id))}"]`
-              );
-
-            if (element) {
-              const remaining =
-                Math.max(
-                  250,
-                  TTL_MS - age
-                );
-
-              window.setTimeout(
-                () =>
-                  removeMessage(
-                    element
-                  ),
-                remaining
-              );
-            }
-          }
-        }
+          )
       );
   }
 
   db
     .channel(
-      "kick-chat-overlay-v2"
+      "kick-chat-overlay-v4"
     )
     .on(
       "postgres_changes",
