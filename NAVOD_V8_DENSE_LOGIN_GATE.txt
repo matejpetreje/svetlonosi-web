@@ -1,0 +1,32 @@
+SVĚTLONOŠI WEB V8 — SDÍLENÉ POŘADÍ + LOGIN GATE
+===================================================
+
+1) Síň slávy
+- pořadí je DENSE RANK bez mezer
+- stejné lifetime_earned = stejné pořadí
+- další unikátní bodová hodnota pokračuje následujícím číslem
+  např. #1, #1, #2, #3
+- stejné pořadí se dopočítá i na veřejném profilu
+
+2) Chráněné části webu
+Nepřihlášený uživatel při kliknutí na:
+- Síň slávy
+- Obchod
+- Inventář
+- veřejný profil
+
+NEPŘEJDE na stránku. Otevře se account modal s textem
+"Přihlášení je potřeba" a tlačítkem Přihlásit se přes KICK.
+
+Po KICK přihlášení se uživatel vrátí přímo na stránku,
+na kterou původně chtěl jít.
+
+Při přímém otevření chráněné URL bez přihlášení se modal
+otevře automaticky.
+
+3) Obchod
+- katalog už není veřejně viditelný bez přihlášení
+- při odhlášení se obsah obchodu nenačte
+
+SQL není potřeba. Dense rank se počítá nad lifetime_earned na frontendu
+z dat existující funkce spark_hall_of_fame.

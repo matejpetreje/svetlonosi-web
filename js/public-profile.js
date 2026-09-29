@@ -232,6 +232,59 @@
       `${name} — Síň slávy Světlonošů`;
   }
 
+  async function getDenseRank(lifetimeEarned) {
+    const chunkSize = 100;
+    let offset = 0;
+    const pointValues = [];
+
+    while (true) {
+      const { data, error } =
+        await db.rpc(
+          "spark_hall_of_fame",
+          {
+            p_search: null,
+            p_limit: chunkSize,
+            p_offset: offset
+          }
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      const chunk = data || [];
+
+      for (const row of chunk) {
+        pointValues.push(
+          Number(row.lifetime_earned || 0)
+        );
+      }
+
+      if (chunk.length < chunkSize) {
+        break;
+      }
+
+      offset += chunkSize;
+
+      if (offset >= 10000) {
+        break;
+      }
+    }
+
+    const uniqueDescending =
+      [...new Set(pointValues)]
+        .sort((a, b) => b - a);
+
+    const index =
+      uniqueDescending.indexOf(
+        Number(lifetimeEarned || 0)
+      );
+
+    return index >= 0
+      ? index + 1
+      : null;
+  }
+
   async function loadProfile() {
     const { data: sessionData } =
       await db.auth.getSession();
@@ -301,6 +354,23 @@
         </div>
       `;
       return;
+    }
+
+    try {
+      const denseRank =
+        await getDenseRank(
+          profile.lifetime_earned
+        );
+
+      if (denseRank != null) {
+        profile.rank =
+          denseRank;
+      }
+    } catch (rankError) {
+      console.warn(
+        "Dense rank se nepodařilo dopočítat:",
+        rankError
+      );
     }
 
     renderProfile(

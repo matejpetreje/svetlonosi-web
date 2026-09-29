@@ -135,17 +135,32 @@
 
   function renderAuthGate() {
     const gate = $("shopAuthGate");
+    const toolbar = document.querySelector(".spark-store-toolbar");
 
-    if (session?.user && profile?.kick_user_id) {
+    if (session?.user) {
       gate.innerHTML = "";
+
+      if (toolbar) {
+        toolbar.hidden = false;
+      }
+
       return;
     }
 
+    if (toolbar) {
+      toolbar.hidden = true;
+    }
+
+    $("shopGrid").innerHTML = "";
+    $("shopMessage").textContent = "";
+
     gate.innerHTML = `
-      <div class="spark-login-gate spark-login-gate-inline">
+      <div class="spark-login-gate hall-login-gate">
+        <div class="spark-login-gate-icon">✦</div>
+
         <div>
-          <strong>Přihlášení je potřeba až pro nákup.</strong>
-          <span>Katalog si můžeš prohlížet i bez přihlášení.</span>
+          <strong>Obchod Jisker je dostupný po přihlášení.</strong>
+          <span>Přihlas se přes KICK, aby se zobrazil obchod a tvoje vlastněné předměty.</span>
         </div>
 
         <button
@@ -157,11 +172,15 @@
         </button>
       </div>
     `;
-
-    window.SVETLONOSI_ACCOUNT?.bindOpenButtons?.();
   }
 
   async function loadCatalog() {
+    if (!session?.user) {
+      rows = [];
+      renderAuthGate();
+      return;
+    }
+
     const { data, error } =
       await db.rpc("spark_shop_catalog");
 

@@ -24,6 +24,7 @@
     Number(value ?? 0).toLocaleString("cs-CZ");
 
   let session = null;
+  let globalRows = [];
   let allRows = [];
   let badgeMap = new Map();
   let currentPage = 1;
@@ -54,6 +55,73 @@
     }
 
     return current;
+  }
+
+  function applyDenseRanks(rows) {
+    const sorted = [...rows].sort((a, b) => {
+      const pointsDiff =
+        Number(b.lifetime_earned || 0)
+        -
+        Number(a.lifetime_earned || 0);
+
+      if (pointsDiff !== 0) {
+        return pointsDiff;
+      }
+
+      return String(a.kick_username || "")
+        .localeCompare(
+          String(b.kick_username || ""),
+          "cs",
+          { sensitivity: "base" }
+        );
+    });
+
+    let denseRank = 0;
+    let previousPoints = null;
+
+    return sorted.map(row => {
+      const points =
+        Number(row.lifetime_earned || 0);
+
+      if (
+        previousPoints === null
+        ||
+        points !== previousPoints
+      ) {
+        denseRank += 1;
+        previousPoints = points;
+      }
+
+      return {
+        ...row,
+        rank: denseRank
+      };
+    });
+  }
+
+  function filterHallRows(rows, search = "") {
+    const needle =
+      String(search || "")
+        .trim()
+        .toLocaleLowerCase("cs-CZ");
+
+    if (!needle) {
+      return rows;
+    }
+
+    return rows.filter(row => {
+      const username =
+        String(row.kick_username || "")
+          .toLocaleLowerCase("cs-CZ");
+
+      const displayName =
+        String(row.kick_display_name || "")
+          .toLocaleLowerCase("cs-CZ");
+
+      return username.includes(needle)
+        ||
+        displayName.includes(needle);
+    });
   }
 
   function showLockedState() {
@@ -571,7 +639,15 @@
     $("hallBoard").innerHTML = `<div class="hall-loading">Načítám Síň slávy…</div>`;
 
     try {
-      allRows = await fetchAllHallRows(currentSearch);
+      globalRows = applyDenseRanks(
+        await fetchAllHallRows("")
+      );
+
+      allRows = filterHallRows(
+        globalRows,
+        currentSearch
+      );
+
       await loadBadges(allRows);
       renderCurrentPage();
     } catch (error) {
@@ -593,20 +669,18 @@
       return;
     }
 
-    const { data, error } =
-      await db.rpc(
-        "spark_hall_of_fame",
-        {
-          p_search: profile.kick_username,
-          p_limit: 20,
-          p_offset: 0
-        }
-      );
-
-    if (error) return;
+    if (!globalRows.length) {
+      try {
+        globalRows = applyDenseRanks(
+          await fetchAllHallRows("")
+        );
+      } catch (_) {
+        return;
+      }
+    }
 
     const exact =
-      (data || []).find(
+      globalRows.find(
         row =>
           String(row.kick_user_id) ===
           String(profile.kick_user_id)

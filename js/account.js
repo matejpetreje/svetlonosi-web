@@ -20,6 +20,33 @@
   let currentSession = null;
   let currentProfile = null;
 
+  let pendingProtectedUrl = null;
+  let requiredLoginLabel = null;
+
+  const PROTECTED_ROUTES = [
+    { path: "/jiskry/sin-slavy/", label: "Síň slávy" },
+    { path: "/jiskry/obchod/", label: "Obchod Jisker" },
+    { path: "/jiskry/inventar/", label: "Inventář" },
+    { path: "/jiskry/profil/", label: "Veřejný profil" }
+  ];
+
+  function protectedRouteForUrl(value) {
+    try {
+      const url = new URL(value, window.location.href);
+
+      if (url.origin !== window.location.origin) {
+        return null;
+      }
+
+      return PROTECTED_ROUTES.find(item =>
+        url.pathname === item.path ||
+        url.pathname.startsWith(item.path)
+      ) || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
 
 
   /* =========================================================
@@ -207,7 +234,7 @@
           <div id="accountSignedOut">
 
 
-            <p class="muted">
+            <p class="muted" id="accountSignedOutText">
 
               Přihlas se pomocí svého KICK účtu.
 
@@ -382,7 +409,39 @@
      MODAL
      ========================================================= */
 
+  function setSignedOutModalCopy(
+    title = "Tvoje Jiskra",
+    text = "Přihlas se pomocí svého KICK účtu. Přezdívku a identitu převezmeme přímo z KICKu a Jiskry budou navázané na tento účet."
+  ) {
+    const titleEl =
+      document.getElementById(
+        "accountModalTitle"
+      );
+
+    const textEl =
+      document.getElementById(
+        "accountSignedOutText"
+      );
+
+    if (titleEl) {
+      titleEl.textContent =
+        title;
+    }
+
+    if (textEl) {
+      textEl.textContent =
+        text;
+    }
+  }
+
   function openModal() {
+    pendingProtectedUrl =
+      null;
+
+    requiredLoginLabel =
+      null;
+
+    setSignedOutModalCopy();
 
     const modal =
       document.getElementById(
@@ -393,7 +452,35 @@
       modal.hidden =
         false;
     }
+  }
 
+  function openRequiredLogin(
+    targetUrl = window.location.href,
+    label = "tato část webu"
+  ) {
+    pendingProtectedUrl =
+      new URL(
+        targetUrl,
+        window.location.href
+      ).href;
+
+    requiredLoginLabel =
+      label;
+
+    setSignedOutModalCopy(
+      "Přihlášení je potřeba",
+      `${label} je dostupná jen po přihlášení přes KICK.`
+    );
+
+    const modal =
+      document.getElementById(
+        "accountModal"
+      );
+
+    if (modal) {
+      modal.hidden =
+        false;
+    }
   }
 
 
@@ -931,6 +1018,8 @@
                 "start_login",
 
               return_to:
+                pendingProtectedUrl
+                ||
                 window.location.href
 
             }
@@ -1045,6 +1134,39 @@
 
 
         /*
+          CHRÁNĚNÉ ODKAZY
+        */
+
+        const protectedAnchor =
+          event.target.closest(
+            "a[href]"
+          );
+
+        if (
+          protectedAnchor
+          &&
+          !currentSession?.user
+        ) {
+          const route =
+            protectedRouteForUrl(
+              protectedAnchor.href
+            );
+
+          if (route) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            openRequiredLogin(
+              protectedAnchor.href,
+              route.label
+            );
+
+            return;
+          }
+        }
+
+
+        /*
           OPEN ACCOUNT
         */
 
@@ -1152,6 +1274,23 @@
     );
 
 
+    if (
+      !data.session?.user
+    ) {
+      const currentProtected =
+        protectedRouteForUrl(
+          window.location.href
+        );
+
+      if (currentProtected) {
+        openRequiredLogin(
+          window.location.href,
+          currentProtected.label
+        );
+      }
+    }
+
+
 
     /* =====================================================
        SESSION CHANGE
@@ -1225,6 +1364,14 @@
 
     open:
       openModal,
+
+
+    openRequired:
+      openRequiredLogin,
+
+
+    bindOpenButtons:
+      () => {},
 
 
     getSession:
