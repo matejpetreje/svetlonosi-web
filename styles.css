@@ -2089,8 +2089,9 @@ body:not(.stream-overlay-page) > footer{
   display:block;
   width:78%!important;
   height:78%!important;
-  object-fit:contain!important;
-  border-radius:0!important;
+  object-fit:cover!important;
+  border-radius:26%!important;
+  overflow:hidden!important;
 }
 
 .profile-badge-glyph{
@@ -2258,7 +2259,8 @@ body:not(.stream-overlay-page) > footer{
   height:68px;
   object-fit:contain;
   margin:0 auto 7px;
-  border-radius:15px;
+  border-radius:24px;
+  overflow:hidden;
   filter:drop-shadow(0 4px 10px rgba(0,0,0,.28));
 }
 
@@ -2285,11 +2287,47 @@ body:not(.stream-overlay-page) > footer{
     width:48px;
     height:48px;
     margin:0;
-    border-radius:11px;
+    border-radius:17px;
+    overflow:hidden;
   }
 
   .spark-level-track .spark-rank-card span,
   .spark-level-track .spark-rank-card strong{
     margin:0;
   }
+}
+
+
+/* ============================================================
+   JISKRY — ZAOBLENÍ HODNOSTNÍCH ODZNAKŮ V2
+   Stejné zaoblení na profilu, v Síni slávy, postupu a inventáři.
+   ============================================================ */
+
+.spark-rank-badge,
+.profile-badge-image,
+.public-profile-active-badge-image,
+.spark-product-preview img,
+.spark-inventory-preview img{
+  overflow:hidden;
+}
+
+.public-profile-active-badge-image{
+  border-radius:26%;
+  object-fit:cover;
+}
+
+.profile-badge-overlay{
+  overflow:hidden;
+}
+
+.profile-badge-overlay .profile-badge-image{
+  width:100%!important;
+  height:100%!important;
+  border-radius:inherit!important;
+  object-fit:cover!important;
+}
+
+/* Hodnostní karty — výrazněji zaoblené rohy obrázků. */
+.spark-rank-badge{
+  border-radius:34%;
 }
