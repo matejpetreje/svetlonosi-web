@@ -1,0 +1,28 @@
+SVĚTLONOŠI – CHAT V7 / NOVÁ CESTA + INLINE JS
+===============================================
+
+Důvod:
+Předchozí změny se v OBS/prohlížeči neprojevovaly.
+Proto už nepoužíváme externí chat-overlay.js pro tento overlay.
+
+Nově:
+- CELÁ logika je přímo v HTML
+- vytvořena úplně nová URL:
+  https://svetlonosi.cz/chat-overlay-v2/
+- nový URL path znamená, že OBS nemůže načíst starou cache stránky
+- nicknames: odstín KICK barvy zůstane, ale lightness je pevně 19 %
+- KICK emotes:
+  1) https://files.kick.com/emotes/{ID}/fullsize
+  2) fallback https://d2egosedh0nm8l.cloudfront.net/emotes/{ID}/fullsize
+- badge systém zůstává
+
+DOPORUČENÝ TEST:
+https://svetlonosi.cz/chat-overlay-v2/?history=0
+
+OBS:
+VYTVOŘ NOVÝ Browser Source nebo změň URL starého na:
+https://svetlonosi.cz/chat-overlay-v2/?history=15
+
+Pozor:
+Pokud použiješ history=15, staré uložené testovací zprávy se znovu vykreslí,
+ale už přes nový renderer, takže i [emote:...] tokeny se mají změnit na obrázky.
