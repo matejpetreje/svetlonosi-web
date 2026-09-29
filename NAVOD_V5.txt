@@ -1,0 +1,23 @@
+SVĚTLONOŠI WEB V5
+==================
+
+Obsahuje:
+- tmavší KICK nickname barvy pro pergamen
+- vykreslování KICK emotes místo [emote:ID:NAME]
+- hodnostní odznaky + zaoblení
+- favicon / logo webu v záložce prohlížeče
+
+Nové soubory:
+- /assets/favicon.png
+- /favicon.ico
+
+Favicon je z existujícího logo_svetlonosi.png.
+
+Po nahrání na GitHub:
+1) počkej na GitHub Pages deploy
+2) otevři https://svetlonosi.cz/assets/favicon.png
+3) udělej Ctrl+F5
+4) pokud prohlížeč pořád drží starou globus ikonu, zavři záložku a otevři web znovu
+
+OBS chat:
+https://svetlonosi.cz/chat-overlay/?history=15

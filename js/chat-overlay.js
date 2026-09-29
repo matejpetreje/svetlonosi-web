@@ -107,6 +107,385 @@
           "&#039;"
         );
 
+
+  /*
+   * KICK posílá username_color i světlé/neonové.
+   * Na světlém pergamenu je zachováme barevně,
+   * ale stáhneme jejich jas, aby byly čitelné.
+   */
+  function darkenKickColor(
+    hex
+  ) {
+    if (
+      !/^#[0-9a-fA-F]{6}$/
+        .test(
+          hex
+          ||
+          ""
+        )
+    ) {
+      return null;
+    }
+
+    const r =
+      parseInt(
+        hex.slice(
+          1,
+          3
+        ),
+        16
+      )
+      /
+      255;
+
+    const g =
+      parseInt(
+        hex.slice(
+          3,
+          5
+        ),
+        16
+      )
+      /
+      255;
+
+    const b =
+      parseInt(
+        hex.slice(
+          5,
+          7
+        ),
+        16
+      )
+      /
+      255;
+
+    const max =
+      Math.max(
+        r,
+        g,
+        b
+      );
+
+    const min =
+      Math.min(
+        r,
+        g,
+        b
+      );
+
+    let h = 0;
+    let s = 0;
+
+    let l =
+      (
+        max
+        +
+        min
+      )
+      /
+      2;
+
+    const d =
+      max
+      -
+      min;
+
+    if (
+      d !==
+      0
+    ) {
+      s =
+        l > 0.5
+          ? d
+            /
+            (
+              2
+              -
+              max
+              -
+              min
+            )
+          : d
+            /
+            (
+              max
+              +
+              min
+            );
+
+      switch (max) {
+        case r:
+          h =
+            (
+              g
+              -
+              b
+            )
+            /
+            d
+            +
+            (
+              g < b
+                ? 6
+                : 0
+            );
+          break;
+
+        case g:
+          h =
+            (
+              b
+              -
+              r
+            )
+            /
+            d
+            +
+            2;
+          break;
+
+        default:
+          h =
+            (
+              r
+              -
+              g
+            )
+            /
+            d
+            +
+            4;
+          break;
+      }
+
+      h /=
+        6;
+    }
+
+    // Pergamen: držíme lightness mezi 22–34 %.
+    l =
+      Math.min(
+        0.34,
+        Math.max(
+          0.22,
+          l * 0.58
+        )
+      );
+
+    // U velmi šedých barev trochu zvýšíme sytost,
+    // aby nick nezanikl v textu zprávy.
+    s =
+      Math.max(
+        s,
+        0.38
+      );
+
+    function hueToRgb(
+      p,
+      q,
+      t
+    ) {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+
+      if (t < 1 / 6) {
+        return p
+          +
+          (
+            q
+            -
+            p
+          )
+          *
+          6
+          *
+          t;
+      }
+
+      if (t < 1 / 2) {
+        return q;
+      }
+
+      if (t < 2 / 3) {
+        return p
+          +
+          (
+            q
+            -
+            p
+          )
+          *
+          (
+            2 / 3
+            -
+            t
+          )
+          *
+          6;
+      }
+
+      return p;
+    }
+
+    let rr;
+    let gg;
+    let bb;
+
+    if (s === 0) {
+      rr =
+        gg =
+        bb =
+          l;
+    } else {
+      const q =
+        l < 0.5
+          ? l
+            *
+            (
+              1
+              +
+              s
+            )
+          : l
+            +
+            s
+            -
+            l
+            *
+            s;
+
+      const p =
+        2
+        *
+        l
+        -
+        q;
+
+      rr =
+        hueToRgb(
+          p,
+          q,
+          h
+          +
+          1 / 3
+        );
+
+      gg =
+        hueToRgb(
+          p,
+          q,
+          h
+        );
+
+      bb =
+        hueToRgb(
+          p,
+          q,
+          h
+          -
+          1 / 3
+        );
+    }
+
+    const toHex =
+      value =>
+        Math.round(
+          value
+          *
+          255
+        )
+          .toString(16)
+          .padStart(
+            2,
+            "0"
+          );
+
+    return (
+      "#"
+      +
+      toHex(rr)
+      +
+      toHex(gg)
+      +
+      toHex(bb)
+    );
+  }
+
+  /*
+   * chat.message.sent content používá:
+   * [emote:ID:NAME]
+   *
+   * V overlayi token nahradíme skutečným KICK obrázkem.
+   */
+  function renderKickContent(
+    value
+  ) {
+    const text =
+      String(
+        value
+        ??
+        ""
+      );
+
+    const pattern =
+      /\[emote:(\d+):([^\]]+)\]/g;
+
+    let html =
+      "";
+
+    let lastIndex =
+      0;
+
+    let match;
+
+    while (
+      (
+        match =
+          pattern.exec(
+            text
+          )
+      )
+      !==
+      null
+    ) {
+      html +=
+        esc(
+          text.slice(
+            lastIndex,
+            match.index
+          )
+        );
+
+      const emoteId =
+        match[1];
+
+      const emoteName =
+        match[2];
+
+      html += `
+        <img
+          class="kick-emote"
+          src="https://files.kick.com/emotes/${encodeURIComponent(emoteId)}/fullsize"
+          alt=":${esc(emoteName)}:"
+          title="${esc(emoteName)}"
+        >
+      `;
+
+      lastIndex =
+        pattern.lastIndex;
+    }
+
+    html +=
+      esc(
+        text.slice(
+          lastIndex
+        )
+      );
+
+    return html;
+  }
+
   const rankBadgeFallback = {
     "Zbloudilá jiskra":
       "/assets/jiskry/badges/zbloudila-jiskra.png",
@@ -238,14 +617,9 @@
       "KICK";
 
     const usernameColor =
-      /^#[0-9a-fA-F]{6}$/
-        .test(
-          message.sender_username_color
-          ||
-          ""
-        )
-        ? message.sender_username_color
-        : null;
+      darkenKickColor(
+        message.sender_username_color
+      );
 
     element.innerHTML = `
       <div class="chat-line">
@@ -266,7 +640,7 @@
         <span class="chat-colon">:</span>
 
         <span class="chat-content">
-          ${esc(message.content)}
+          ${renderKickContent(message.content)}
         </span>
 
       </div>
