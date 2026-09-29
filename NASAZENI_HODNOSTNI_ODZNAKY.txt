@@ -1,0 +1,29 @@
+SVĚTLONOŠI — HODNOSTNÍ ODZNAKY V1
+===================================
+
+Tento balík obsahuje:
+- 9 oficiálních hodnostních PNG v assets/jiskry/badges/
+- obrázky přímo v sekci Postup / Hodnosti
+- opravené finální názvy hodností v js/jiskry.js
+- fallback obrázků v chat overlayi
+- SQL migraci pro preview_static_url hodnostních odznaků
+
+NASAZENÍ
+1. Nahraj obsah ZIPu na GitHub místo současného webu.
+2. Počkej na deploy GitHub Pages.
+3. Ověř např.:
+   https://svetlonosi.cz/assets/jiskry/badges/zbloudila-jiskra.png
+4. V Supabase SQL Editor spusť celý soubor:
+   supabase/jiskry_rank_badges_images_v1.sql
+5. Pošli NOVOU zprávu na KICKu. Nové zprávy se uloží s URL odznaku.
+
+Po SQL se stejná sada používá v:
+- Jiskry / Postup
+- aktivním odznaku u profilu a peněženky
+- Síni slávy
+- veřejném profilu
+- inventáři
+- chat overlayi
+
+Poznámka:
+Staré řádky v kick_chat_overlay_messages jsou snapshoty. Nové zprávy už ponesou obrázek; frontend chat overlaye má navíc lokální fallback podle názvu hodnosti.

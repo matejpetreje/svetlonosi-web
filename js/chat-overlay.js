@@ -52,6 +52,18 @@
   const seen =
     new Set();
 
+  const RANK_BADGE_ASSETS = {
+    "Zbloudilá jiskra": "../assets/jiskry/badges/zbloudila-jiskra.png",
+    "Jiskra": "../assets/jiskry/badges/jiskra.png",
+    "Plamínek": "../assets/jiskry/badges/plaminek.png",
+    "Pochodeň": "../assets/jiskry/badges/pochoden.png",
+    "Světlonoš": "../assets/jiskry/badges/svetlonos.png",
+    "Strážce plamene": "../assets/jiskry/badges/strazce-plamene.png",
+    "Nositel světla": "../assets/jiskry/badges/nositel-svetla.png",
+    "Věčný plamen": "../assets/jiskry/badges/vecny-plamen.png",
+    "Maják Světlonošů": "../assets/jiskry/badges/majak-svetlonosu.png"
+  };
+
   const esc =
     value =>
       String(
@@ -101,16 +113,21 @@
         "gold"
       );
 
-    if (
+    const badgeImageUrl =
       message.jiskry_badge_static_url
-    ) {
+      ||
+      RANK_BADGE_ASSETS[message.jiskry_badge_name]
+      ||
+      "";
+
+    if (badgeImageUrl) {
       return `
         <span
           class="chat-jiskry-badge"
           title="${title}"
         >
           <img
-            src="${esc(message.jiskry_badge_static_url)}"
+            src="${esc(badgeImageUrl)}"
             alt=""
           >
         </span>

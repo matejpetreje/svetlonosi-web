@@ -359,9 +359,10 @@
       [300, "Plamínek"],
       [750, "Pochodeň"],
       [1500, "Světlonoš"],
-      [3000, "Strážce světla"],
-      [6000, "Nositel plamene"],
-      [10000, "Věčný plamen"]
+      [3000, "Strážce plamene"],
+      [6000, "Nositel světla"],
+      [10000, "Věčný plamen"],
+      [20000, "Maják Světlonošů"]
     ];
 
     let current =

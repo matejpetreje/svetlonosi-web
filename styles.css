@@ -2236,3 +2236,60 @@ body:not(.stream-overlay-page) > footer{
     padding:8px 12px;
   }
 }
+
+
+/* ============================================================
+   JISKRY — OFICIÁLNÍ HODNOSTNÍ ODZNAKY V1
+   Jedna sada obrázků pro postup, profil, Síň slávy i chat.
+   ============================================================ */
+
+.spark-level-track > .spark-rank-card{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  min-height:154px;
+  padding:12px 10px 16px;
+}
+
+.spark-rank-badge{
+  display:block;
+  width:68px;
+  height:68px;
+  object-fit:contain;
+  margin:0 auto 7px;
+  border-radius:15px;
+  filter:drop-shadow(0 4px 10px rgba(0,0,0,.28));
+}
+
+.spark-level-track .spark-rank-card span{
+  margin-bottom:4px;
+}
+
+.spark-level-track .spark-rank-card strong{
+  line-height:1.18;
+}
+
+@media (max-width: 760px){
+  .spark-level-track > .spark-rank-card{
+    min-height:0;
+    display:grid;
+    grid-template-columns:54px 78px 1fr;
+    column-gap:12px;
+    align-items:center;
+    text-align:left;
+    padding:10px 12px;
+  }
+
+  .spark-rank-badge{
+    width:48px;
+    height:48px;
+    margin:0;
+    border-radius:11px;
+  }
+
+  .spark-level-track .spark-rank-card span,
+  .spark-level-track .spark-rank-card strong{
+    margin:0;
+  }
+}
