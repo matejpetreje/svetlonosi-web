@@ -26,6 +26,33 @@
       window.location.search
     );
 
+  /*
+   * KLASICKÝ CHAT:
+   * - zprávy po zobrazení samy nemizí
+   * - nové zprávy přicházejí přes Supabase Realtime
+   * - po reloadu Browser Source se NEnačítá celá historie databáze
+   * - načte se pouze krátká aktuální historie (default 15 minut)
+   *
+   * history=0  -> po načtení žádná stará zpráva, jen nové realtime zprávy
+   * history=15 -> posledních 15 minut
+   * history=30 -> posledních 30 minut
+   */
+
+  const HISTORY_MINUTES =
+    Math.min(
+      180,
+      Math.max(
+        0,
+        Number(
+          params.get("history")
+          ??
+          15
+        )
+      )
+    );
+
+  // Pouze technická ochrana paměti Browser Source.
+  // Neurčuje počet zpráv, které jsou vidět v pergamenu.
   const DOM_LIMIT =
     Math.min(
       500,
@@ -51,18 +78,6 @@
 
   const seen =
     new Set();
-
-  const RANK_BADGE_ASSETS = {
-    "Zbloudilá jiskra": "../assets/jiskry/badges/zbloudila-jiskra.png",
-    "Jiskra": "../assets/jiskry/badges/jiskra.png",
-    "Plamínek": "../assets/jiskry/badges/plaminek.png",
-    "Pochodeň": "../assets/jiskry/badges/pochoden.png",
-    "Světlonoš": "../assets/jiskry/badges/svetlonos.png",
-    "Strážce plamene": "../assets/jiskry/badges/strazce-plamene.png",
-    "Nositel světla": "../assets/jiskry/badges/nositel-svetla.png",
-    "Věčný plamen": "../assets/jiskry/badges/vecny-plamen.png",
-    "Maják Světlonošů": "../assets/jiskry/badges/majak-svetlonosu.png"
-  };
 
   const esc =
     value =>
@@ -92,6 +107,35 @@
           "&#039;"
         );
 
+  const rankBadgeFallback = {
+    "Zbloudilá jiskra":
+      "/assets/jiskry/badges/zbloudila-jiskra.png",
+
+    "Jiskra":
+      "/assets/jiskry/badges/jiskra.png",
+
+    "Plamínek":
+      "/assets/jiskry/badges/plaminek.png",
+
+    "Pochodeň":
+      "/assets/jiskry/badges/pochoden.png",
+
+    "Světlonoš":
+      "/assets/jiskry/badges/svetlonos.png",
+
+    "Strážce plamene":
+      "/assets/jiskry/badges/strazce-plamene.png",
+
+    "Nositel světla":
+      "/assets/jiskry/badges/nositel-svetla.png",
+
+    "Věčný plamen":
+      "/assets/jiskry/badges/vecny-plamen.png",
+
+    "Maják Světlonošů":
+      "/assets/jiskry/badges/majak-svetlonosu.png"
+  };
+
   function badgeMarkup(
     message
   ) {
@@ -113,21 +157,23 @@
         "gold"
       );
 
-    const badgeImageUrl =
+    const imageUrl =
       message.jiskry_badge_static_url
       ||
-      RANK_BADGE_ASSETS[message.jiskry_badge_name]
+      rankBadgeFallback[
+        message.jiskry_badge_name
+      ]
       ||
-      "";
+      null;
 
-    if (badgeImageUrl) {
+    if (imageUrl) {
       return `
         <span
           class="chat-jiskry-badge"
           title="${title}"
         >
           <img
-            src="${esc(badgeImageUrl)}"
+            src="${esc(imageUrl)}"
             alt=""
           >
         </span>
@@ -161,6 +207,8 @@
         message.kick_message_id
         ||
         message.event_message_id
+        ||
+        ""
       );
 
     if (
@@ -272,6 +320,26 @@
   }
 
   async function loadInitial() {
+    // history=0 znamená čistý start:
+    // žádná stará zpráva, pouze nové Realtime INSERTy.
+    if (
+      HISTORY_MINUTES <= 0
+    ) {
+      return;
+    }
+
+    const cutoff =
+      new Date(
+        Date.now()
+        -
+        HISTORY_MINUTES
+        *
+        60
+        *
+        1000
+      )
+      .toISOString();
+
     const {
       data,
       error
@@ -281,11 +349,15 @@
           "kick_chat_overlay_messages"
         )
         .select("*")
+        .gte(
+          "received_at",
+          cutoff
+        )
         .order(
           "received_at",
           {
             ascending:
-              false
+              true
           }
         )
         .limit(
@@ -301,12 +373,11 @@
       return;
     }
 
-    [...(
+    (
       data
       ||
       []
-    )]
-      .reverse()
+    )
       .forEach(
         message =>
           renderMessage(
@@ -318,7 +389,7 @@
 
   db
     .channel(
-      "kick-chat-overlay-v4"
+      "kick-chat-overlay-live"
     )
     .on(
       "postgres_changes",
