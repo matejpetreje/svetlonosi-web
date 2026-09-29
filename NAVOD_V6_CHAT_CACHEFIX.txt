@@ -1,0 +1,28 @@
+SVĚTLONOŠI – CHAT V6 CACHE FIX
+================================
+
+Proč předchozí oprava nebyla vidět:
+- HTML stále načítalo /js/chat-overlay.js pod stejnou URL.
+- Prohlížeč/OBS Browser Source mohl dál používat starou cachovanou verzi.
+- To přesně odpovídá tomu, že se nezměnily ANI barvy, ANI parsování emotes.
+
+V6:
+- používá nový soubor /js/chat-overlay-v8-cachefix.js
+- HTML načítá ...?v=20260929-0058
+- takže starý JS cache už nelze použít
+- nickname barvy jsou výrazně tmavší pro pergamen
+- [emote:ID:NAME] -> https://files.kick.com/emotes/{ID}/fullsize
+- přidán JS marker:
+  window.SVETLONOSI_CHAT_OVERLAY_VERSION = "2026-09-29-v8-cachefix"
+
+Po nahrání na GitHub:
+1. Ověř:
+   https://svetlonosi.cz/js/chat-overlay-v8-cachefix.js
+2. Otevři:
+   https://svetlonosi.cz/chat-overlay/?history=15
+3. Ctrl+F5.
+4. V OBS Browser Source klikni na Obnovit cache aktuální stránky / Refresh browser source
+   nebo zdroj jednou vypni/zapni.
+
+Pro čistý test:
+https://svetlonosi.cz/chat-overlay/?history=0&v=8
