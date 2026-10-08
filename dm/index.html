@@ -1,23 +1,4 @@
 
-<section class="live-panel" id="kickSubscriptionsPanel">
-  <div class="live-kicker">Jiskry – propojení s Kickem</div>
-  <h2>Události streamu</h2>
-  <p class="muted">
-    Aktivuje odběr zpráv a začátku či konce streamu
-    přes aplikaci SvetlonosiJiskry.
-  </p>
-  <div class="live-actions">
-    <button class="btn primary" type="button"
-            id="kickSubscriptionsButton">
-      Aktivovat Kick události
-    </button>
-  </div>
-  <div id="kickSubscriptionsMessage"
-       class="live-message"
-       role="status"
-       aria-live="polite"></div>
-</section>
-
 <!doctype html>
 <html lang="cs">
 <head>
@@ -93,6 +74,25 @@
           <div id="kickMessage" class="live-message"></div>
         </section>
 
+        <section class="live-panel" id="kickSubscriptionsPanel">
+          <div class="live-kicker">Jiskry – propojení s Kickem</div>
+          <h2>Události streamu</h2>
+          <p class="muted">
+            Aktivuje odběr zpráv a začátku či konce streamu
+            přes aplikaci SvetlonosiJiskry.
+          </p>
+          <div class="live-actions">
+            <button class="btn primary" type="button"
+                    id="kickSubscriptionsButton">
+              Aktivovat Kick události
+            </button>
+          </div>
+          <div id="kickSubscriptionsMessage"
+               class="live-message"
+               role="status"
+               aria-live="polite"></div>
+        </section>
+
         <section class="live-panel sparks-admin-panel">
           <div class="live-kicker">Jiskry</div>
           <div class="sparks-admin-heading">
@@ -161,5 +161,5 @@
     <div class="live-actions"><button class="btn primary" id="saveSparkRewardButton">Uložit odměnu</button><button class="btn" id="cancelSparkRewardButton">Zavřít</button></div>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../js/supabase-config.js"></script><script src="../js/dm.js"></script><script src="../js/sparks-admin.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../js/supabase-config.js"></script><script src="../js/dm.js"></script><script src="../js/sparks-admin.js"></script><script src="../js/kick-subscriptions-admin.js"></script>
 </body></html>
