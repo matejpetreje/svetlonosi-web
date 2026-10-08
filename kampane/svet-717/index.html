@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Svět 717 — Světlonoši</title>
+  <meta name="description" content="Kampaň Světlonošů ve světě 717 a interaktivní kalendář planetárních sfér.">
+  <link rel="icon" type="image/png" href="../../assets/favicon.png">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="../../kampane/kampane.css">
+</head>
+<body class="campaign-page">
+<header><div class="container nav">
+  <a class="brand" href="../../index.html"><img class="brand-logo" src="../../assets/logo_svetlonosi.png" alt="Světlonoši"><span class="brand-wordmark">SVĚTLO<span>NOŠI</span></span></a>
+  <nav aria-label="Hlavní navigace">
+    <a href="../../index.html">Domů</a>
+    <a href="../../live/">Hlasování</a>
+    <a href="../../kampane/" class="nav-active" aria-current="true">Kampaně</a>
+    <a href="../../jiskry/">Jiskry</a>
+    <a href="../../jiskry/sin-slavy/">Síň slávy</a>
+  </nav>
+</div></header>
+<main>
+<section class="campaign-hero"><div class="container">
+  <a class="campaign-back" href="../">← Všechny kampaně</a>
+  <div class="eyebrow">Kampaň Světlonošů • Dračí Hlídka</div>
+  <h1>Svět <span class="campaign-gold">717</span></h1>
+  <p>Svět, který poznáváme jednu výpravu po druhé. Hrdinové mají své plány. Kostky mají vlastní. A příběh vzniká někde mezi tím.</p>
+  <div class="cta"><a class="btn primary" href="#sfery">Prozkoumat sféry</a><a class="btn" href="../../index.html#stream">Sledovat naši kampaň</a></div>
+</div></section>
+<section class="section"><div class="container campaign-story">
+  <div><div class="eyebrow">O naší kampani</div><h2>U jednoho stolu. V jiném světě.</h2></div>
+  <div><p>Ve světě 717 hrajeme Dračí Hlídku. Společně objevujeme nová místa, potkáváme spojence i protivníky a zjišťujeme, kam nás zavedou vlastní rozhodnutí.</p>
+  <p>Na streamu můžeš být u toho: sledovat výpravu, zapojit se do chatu a při otevřeném hlasování pomoct rozhodnout, co se bude dít dál. Tady má naše kampaň své místo i mezi jednotlivými díly.</p></div>
+</div></section>
+<section class="section" id="sfery"><div class="container">
+  <div class="eyebrow">Kalendář a planetární sféry</div><h2>Jak se otáčí svět 717?</h2>
+  <p class="lead">Vyber datum a čas nebo přepni na číselnou pozici. Prozkoumej pohyb sfér a jejich vzájemné vazby v interaktivním modelu.</p>
+  <div class="sphere-shell" id="sphereShell">
+    <div class="sphere-toolbar"><span id="sphereStatus" role="status">Načítám sféry…</span><div class="sphere-actions">
+      <button class="btn" type="button" id="sphereReload">Obnovit</button>
+      <button class="btn" type="button" id="sphereFullscreen">Celá obrazovka</button>
+    </div></div>
+    <iframe id="sphereFrame" title="Interaktivní kalendář a planetární sféry světa 717" sandbox="allow-scripts" allow="fullscreen" referrerpolicy="no-referrer"></iframe>
+    <noscript><p>Pro ovládání sfér zapni JavaScript nebo <a href="https://vaclavjavornicky-crypto.github.io/Projekt_sfery/">otevři původní model</a>.</p></noscript>
+  </div>
+  <p class="sphere-credit">Mechanika: <a href="https://github.com/vaclavjavornicky-crypto/Projekt_sfery" target="_blank" rel="noopener noreferrer">Václav Javornický</a> · <a href="https://vaclavjavornicky-crypto.github.io/Projekt_sfery/" target="_blank" rel="noopener noreferrer">Otevřít původní model</a></p>
+</div></section>
+</main>
+<footer><div class="container footer"><div>© 2026 Světlonoši</div><div><a href="../../privacy.html">Privacy Policy</a><a href="../../terms.html">Terms of Service</a></div></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../js/supabase-config.js"></script>
+<script src="../../js/account.js?v=20260929-login-gate"></script>
+<script src="../../js/campaign-spheres.js"></script>
+</body>
+</html>

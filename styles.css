@@ -2331,3 +2331,10 @@ body:not(.stream-overlay-page) > footer{
 .spark-rank-badge{
   border-radius:34%;
 }
+
+/* Navigation to campaigns must also remain reachable on narrow screens. */
+@media(max-width:760px){
+  header .nav{flex-wrap:wrap;padding-top:12px;padding-bottom:12px;gap:12px}
+  header .nav>nav{display:flex;flex-basis:100%;gap:12px;order:3}
+  header .nav-account-mobile{display:none}
+}

@@ -1,0 +1,26 @@
+.campaign-hero{padding:76px 0 60px;text-align:center;background:radial-gradient(ellipse at 50% 0,rgba(197,139,36,.17),transparent 65%)}
+.campaign-hero h1{font-size:clamp(2.7rem,7vw,5.2rem);line-height:1.06;margin:22px auto}
+.campaign-hero p{max-width:740px;margin:24px auto;color:var(--muted);font-size:1.12rem}
+.campaign-gold,.campaign-link{color:#e7b95c}
+.campaign-back{display:block;margin-bottom:30px;color:var(--muted);text-decoration:none}
+.campaign-card{display:grid;grid-template-columns:1fr 1.35fr;overflow:hidden;border:1px solid var(--line);border-radius:20px;background:var(--panel);text-decoration:none;transition:border-color .2s,transform .2s}
+.campaign-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.campaign-card-art{position:relative;display:grid;place-items:center;min-height:310px;background:radial-gradient(circle,rgba(197,139,36,.23),transparent 70%),#11141a;overflow:hidden}
+.campaign-card-art>span:first-child{font-size:7rem;color:#e7b95c;font-weight:800;letter-spacing:-.08em;z-index:1}
+.campaign-orbit{position:absolute;width:240px;height:240px;border:1px solid #715022;border-radius:50%;transform:rotate(-30deg) scaleY(.7);box-shadow:0 0 0 35px #c58b2410,0 0 0 70px #c58b2408}
+.campaign-card-copy{padding:40px}.campaign-card-copy h2{margin:16px 0}.campaign-card-copy p{color:var(--muted)}
+.campaign-link{display:block;margin-top:24px;font-weight:700}
+.campaign-story{display:grid;grid-template-columns:1fr 1.3fr;gap:50px}.campaign-story p{color:var(--muted);margin-top:0}
+.sphere-shell{margin-top:28px;border:1px solid #6b4d24;border-radius:18px;overflow:hidden;background:var(--panel);box-shadow:0 16px 50px #0003}
+.sphere-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 20px;border-bottom:1px solid var(--line);color:var(--muted);font-size:.9rem}
+.sphere-actions{display:flex;gap:8px;flex-wrap:wrap}.sphere-actions .btn{font:inherit;color:var(--text);padding:8px 12px;cursor:pointer}
+.sphere-shell iframe{display:block;width:100%;height:760px;border:0;background:#0f1115}
+.sphere-shell:fullscreen{border:0;border-radius:0;display:flex;flex-direction:column}.sphere-shell:fullscreen iframe{flex:1;height:0;min-height:0}
+.sphere-credit{color:var(--muted);font-size:.85rem;margin-top:16px}.sphere-credit a{color:#e7b95c}
+@media(max-width:760px){
+  .campaign-page .nav{flex-wrap:wrap;padding:14px 0;gap:14px}
+  .campaign-page nav{display:flex;gap:12px;flex-wrap:wrap;width:100%}
+  .campaign-hero{padding:44px 0}.campaign-card,.campaign-story{grid-template-columns:1fr;gap:0}
+  .campaign-card-art{min-height:220px}.campaign-card-copy{padding:26px}.campaign-story{gap:20px}
+  .sphere-toolbar{align-items:flex-start;flex-direction:column;padding:14px}.sphere-shell iframe{height:1080px}
+}
