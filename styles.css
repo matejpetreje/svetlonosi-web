@@ -64,7 +64,13 @@ h1{font-size:clamp(2.5rem,7vw,5.8rem);line-height:.96;margin:18px auto;max-width
   display:flex;justify-content:space-between;gap:16px;align-items:center;
   padding:24px;border:1px solid var(--line);border-radius:14px;background:var(--panel)
 }
-.home-media{scroll-margin-top:100px}
+#stream,.home-media{scroll-margin-top:100px}
+.home-stream-copy .badge{margin-inline-start:8px;vertical-align:middle}
+.home-stream-link{width:min(100%, 320px);flex:none}
+.home-channel-link{display:block;border-radius:6px}
+.home-channel-link:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.home-channel-link:hover img{filter:brightness(1.13)}
+.home-channel-link img{display:block;width:100%;height:auto}
 .home-media-grid{
   display:grid;
   grid-template-columns:minmax(0, 1.8fr) minmax(240px, 1fr);
@@ -80,12 +86,8 @@ h1{font-size:clamp(2.5rem,7vw,5.8rem);line-height:.96;margin:18px auto;max-width
   border-radius:14px;
   background:#0d0f13;
 }
-.home-media-channels{display:grid;gap:12px}
-.home-media-channels h3{margin:0;font-size:1.4rem}
-.home-media-channels a{display:block;border-radius:6px}
-.home-media-channels a:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
-.home-media-channels a:hover img{filter:brightness(1.13)}
-.home-media-channels img{display:block;width:100%;height:auto}
+.home-video-channel{display:grid;gap:12px}
+.home-video-channel h3{margin:0;font-size:1.4rem}
 .muted{color:var(--muted)}
 footer{border-top:1px solid var(--line);padding:34px 0;color:var(--muted);font-size:.9rem}
 .footer{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
@@ -104,9 +106,9 @@ code{background:#0b0d10;border:1px solid var(--line);padding:2px 6px;border-radi
 @media(max-width:760px){
   nav{display:none}
   .grid{grid-template-columns:1fr}
-  .home-media{scroll-margin-top:130px}
+  #stream,.home-media{scroll-margin-top:130px}
   .home-media-grid{grid-template-columns:1fr}
-  .home-media-channels{width:100%;max-width:420px}
+  .home-video-channel{width:100%;max-width:420px}
   .hero{padding-top:70px}
   .schedule{align-items:flex-start;flex-direction:column}
   .app{grid-template-columns:1fr}
