@@ -5,10 +5,9 @@
 .campaign-back{display:block;margin-bottom:30px;color:var(--muted);text-decoration:none}
 .campaign-card{display:grid;grid-template-columns:1fr 1.35fr;overflow:hidden;border:1px solid var(--line);border-radius:20px;background:var(--panel);text-decoration:none;transition:border-color .2s,transform .2s}
 .campaign-card:hover{border-color:var(--accent);transform:translateY(-3px)}
-.campaign-card-art{position:relative;display:grid;place-items:center;min-height:310px;background:radial-gradient(circle,rgba(197,139,36,.23),transparent 70%),#11141a;overflow:hidden}
-.campaign-card-art>span:first-child{font-size:7rem;color:#e7b95c;font-weight:800;letter-spacing:-.08em;z-index:1}
-.campaign-orbit{position:absolute;width:240px;height:240px;border:1px solid #715022;border-radius:50%;transform:rotate(-30deg) scaleY(.7);box-shadow:0 0 0 35px #c58b2410,0 0 0 70px #c58b2408}
-.campaign-card-copy{padding:40px}.campaign-card-copy h2{margin:16px 0}.campaign-card-copy p{color:var(--muted)}
+.campaign-card-art{display:grid;min-width:0;place-items:center;background:#17262b}
+.campaign-card-art img{display:block;width:100%;height:auto}
+.campaign-card-copy{align-self:center;padding:40px}.campaign-card-copy h2{margin:16px 0}.campaign-card-copy p{color:var(--muted)}
 .campaign-link{display:block;margin-top:24px;font-weight:700}
 .campaign-story{display:grid;grid-template-columns:1fr 1.3fr;gap:50px}.campaign-story p{color:var(--muted);margin-top:0}
 .campaign-party{scroll-margin-top:100px}
@@ -72,7 +71,7 @@
   .campaign-page .nav{flex-wrap:wrap;padding:14px 0;gap:14px}
   .campaign-page nav{display:flex;gap:12px;flex-wrap:wrap;width:100%}
   .campaign-hero{padding:44px 0}.campaign-card,.campaign-story{grid-template-columns:1fr;gap:0}
-  .campaign-card-art{min-height:220px}.campaign-card-copy{padding:26px}.campaign-story{gap:20px}
+  .campaign-card-copy{padding:26px}.campaign-story{gap:20px}
   .campaign-party{scroll-margin-top:140px}
   .sphere-toolbar{align-items:flex-start;flex-direction:column;padding:14px}.sphere-shell iframe{height:1080px}
 }
