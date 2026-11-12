@@ -15,7 +15,7 @@
     content="Světlonoši jsou český streamový projekt zaměřený na stolní RPG, příběhy a společné hraní."
   >
 
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20261112-home-video">
 </head>
 
 <body>
@@ -49,6 +49,10 @@
 
         <a href="#stream">
           Stream
+        </a>
+
+        <a href="#videa">
+          Videa
         </a>
 
         <a href="#obsah">
@@ -258,6 +262,35 @@
 
       </div>
 
+    </section>
+
+
+    <section class="section home-media" id="videa" aria-labelledby="latest-video-title">
+      <div class="container home-media-grid">
+        <div>
+          <h2 id="latest-video-title">Nejnovější video</h2>
+          <!-- Playlist nahraných videí kanálu řadí nová videa na začátek. -->
+          <iframe
+            class="home-video-player"
+            src="https://www.youtube-nocookie.com/embed/videoseries?listType=playlist&amp;list=UUKICA1tmhzzR5WtU_FUESRg"
+            title="Nejnovější video Světlonošů na YouTube"
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allow="autoplay; encrypted-media; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+
+        <div class="card home-media-channels">
+          <h3>Sleduj nás</h3>
+          <a href="https://www.youtube.com/channel/UCKICA1tmhzzR5WtU_FUESRg" target="_blank" rel="noopener noreferrer">
+            <img src="assets/youtube-deska.webp" width="1024" height="236" alt="Světlonoši na YouTube" loading="lazy">
+          </a>
+          <a href="https://kick.com/svetlonosi" target="_blank" rel="noopener noreferrer">
+            <img src="assets/kick-deska.webp" width="1024" height="236" alt="Světlonoši na Kicku" loading="lazy">
+          </a>
+        </div>
+      </div>
     </section>
 
 
