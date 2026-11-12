@@ -3,6 +3,7 @@
   const db = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
   const pollHistory = window.SVETLONOSI_POLL_HISTORY;
   const $ = id => document.getElementById(id);
+  const overlayCard = $('overlayCard');
   const esc = s => String(s ?? '')
     .replaceAll('&','&amp;')
     .replaceAll('<','&lt;')
@@ -13,7 +14,16 @@
   let timer = null;
   let resultModeUntil = 0;
   let openPollRequest = 0;
-  let lastClosedId = sessionStorage.getItem('svetlonosi_overlay_last_closed') || '';
+  let lastClosedId = '';
+
+  function fitClosedResult() {
+    if (!overlayCard.classList.contains('stream-overlay-closed')) return;
+    const scale = Math.min(1, window.innerHeight / (overlayCard.offsetHeight + 1));
+    overlayCard.style.setProperty('--stream-overlay-scale', scale);
+  }
+
+  window.addEventListener('resize', fitClosedResult);
+  new ResizeObserver(fitClosedResult).observe(overlayCard);
 
   function startTimer() {
     clearInterval(timer);
@@ -71,7 +81,8 @@
     $('overlayQuestion').textContent = poll.question;
     $('overlayWinner').textContent = '';
     $('overlaySub').textContent = '';
-    $('overlayCard').classList.remove('stream-overlay-closed');
+    overlayCard.classList.remove('stream-overlay-closed');
+    overlayCard.style.removeProperty('--stream-overlay-scale');
 
     const total = opts.reduce((sum, o) => sum + (o.votes ?? 0), 0);
 
@@ -180,10 +191,6 @@
     if (until <= Date.now()) return;
 
     lastClosedId = data.id;
-    sessionStorage.setItem(
-      'svetlonosi_overlay_last_closed',
-      data.id
-    );
 
     poll = null;
     opts = [];
@@ -193,12 +200,13 @@
     $('overlayTitle').textContent = 'ROZHODNUTÍ SBORU';
     $('overlayQuestion').textContent = data.question;
     $('overlayResults').innerHTML = '';
-    $('overlayCard').classList.add('stream-overlay-closed');
+    overlayCard.classList.add('stream-overlay-closed');
     $('overlayTimer').textContent = '';
     $('overlayWinner').textContent = pollHistory.winnerLabel(data);
     $('overlaySub').textContent = pollHistory.summary(data, true);
 
-    $('overlayCard').classList.remove('stream-overlay-hidden');
+    fitClosedResult();
+    overlayCard.classList.remove('stream-overlay-hidden');
 
     setTimeout(() => {
       if (lastClosedId !== data.id || resultModeUntil !== until) return;
@@ -209,6 +217,7 @@
     const results = await pollHistory.loadOptions(db, [data]);
     if (lastClosedId === data.id && resultModeUntil === until && Date.now() < until) {
       $('overlayResults').innerHTML = pollHistory.renderOptions(results.get(data.id), 'stream-overlay-result');
+      fitClosedResult();
     }
   }
 

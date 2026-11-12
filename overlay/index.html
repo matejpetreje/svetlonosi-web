@@ -18,7 +18,7 @@
 
   <link
     rel="stylesheet"
-    href="../styles.css?v=20261112-poll-history"
+    href="../styles.css?v=20261112-obs-results"
   >
 
 
@@ -102,7 +102,7 @@
 
 
       transform:
-        translateX(-50%) !important;
+        translateX(-50%) scale(var(--stream-overlay-scale, 1)) !important;
 
 
       transform-origin:
@@ -190,7 +190,8 @@
 
       transform:
         translateX(-50%)
-        translateY(-15px) !important;
+        translateY(-15px)
+        scale(var(--stream-overlay-scale, 1)) !important;
 
       pointer-events:
         none !important;
@@ -431,6 +432,7 @@
 
     body.stream-overlay-page .stream-overlay-card.stream-overlay-closed {
       padding: 14px 18px !important;
+      transition: opacity 0.25s ease !important;
     }
 
 
@@ -455,6 +457,57 @@
     @media (max-width: 420px) {
       .stream-overlay-closed .stream-overlay-results {
         grid-template-columns: 1fr !important;
+      }
+    }
+
+    @media (max-height: 400px) {
+      body.stream-overlay-page .stream-overlay-card.stream-overlay-closed {
+        padding: 7px 12px !important;
+      }
+
+      .stream-overlay-closed .stream-overlay-kicker {
+        font-size: 0.7rem;
+        line-height: 1.15;
+      }
+
+      .stream-overlay-closed .stream-overlay-question {
+        font-size: 1.1rem;
+        line-height: 1.15;
+        margin: 3px 0 4px !important;
+      }
+
+      .stream-overlay-closed .stream-overlay-summary {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 2px 12px;
+      }
+
+      .stream-overlay-closed .stream-overlay-winner {
+        font-size: 0.95rem;
+        line-height: 1.15;
+      }
+
+      .stream-overlay-closed .stream-overlay-sub {
+        font-size: 0.75rem;
+        line-height: 1.15;
+        margin-top: 0;
+      }
+
+      .stream-overlay-closed .stream-overlay-results {
+        gap: 4px !important;
+        margin-top: 5px;
+      }
+
+      .stream-overlay-closed .stream-overlay-result {
+        padding: 3px 6px;
+        font-size: 0.8rem;
+        line-height: 1.15;
+      }
+
+      .stream-overlay-closed .poll-option-time {
+        font-size: 0.69rem;
       }
     }
 
@@ -492,16 +545,10 @@
     ></div>
 
 
-    <div
-      id="overlayWinner"
-      class="stream-overlay-winner"
-    ></div>
-
-
-    <div
-      id="overlaySub"
-      class="stream-overlay-sub"
-    ></div>
+    <div class="stream-overlay-summary">
+      <div id="overlayWinner" class="stream-overlay-winner"></div>
+      <div id="overlaySub" class="stream-overlay-sub"></div>
+    </div>
 
 
     <ul
@@ -525,12 +572,12 @@
 
 
   <script
-    src="../js/poll-history.js?v=20261112-poll-history"
+    src="../js/poll-history.js?v=20261112-obs-results"
   ></script>
 
 
   <script
-    src="../js/overlay.js?v=20261112-poll-history"
+    src="../js/overlay.js?v=20261112-obs-results"
   ></script>
 
 
