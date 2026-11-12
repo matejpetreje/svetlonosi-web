@@ -168,6 +168,14 @@ code{background:#0b0d10;border:1px solid var(--line);padding:2px 6px;border-radi
 .live-history-item{padding:14px 0;border-top:1px solid var(--line)}
 .live-history-item:first-child{border-top:0;padding-top:4px}
 .live-history-item strong{display:block;margin-bottom:4px}
+.poll-history-winner{color:#e7b95c;font-weight:800;overflow-wrap:anywhere}
+.poll-history-options{display:grid;gap:6px;list-style:none;margin:10px 0 0;padding:0}
+.poll-history-option{border:1px solid var(--line);border-radius:8px;padding:8px 11px}
+.poll-option-title{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.poll-option-title span{min-width:0;overflow-wrap:anywhere}
+.poll-option-title b,.poll-option-time{font-variant-numeric:tabular-nums}
+.poll-option-title b{white-space:nowrap}
+.poll-option-time{color:var(--muted);font-size:.82rem}
 .live-history-manage{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
 .live-mini-actions,.live-actions{display:flex;gap:10px;flex-wrap:wrap}
 .live-actions{margin-top:16px}
@@ -320,6 +328,10 @@ code{background:#0b0d10;border:1px solid var(--line);padding:2px 6px;border-radi
 */
 .live-history-manage .live-mini-actions{
   flex:0 0 auto!important;
+}
+
+@media(max-width:760px){
+  .live-history-manage > div:first-child{width:100%}
 }
 
 /*

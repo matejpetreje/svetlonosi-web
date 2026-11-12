@@ -1,6 +1,7 @@
 (() => {
   const cfg = window.SVETLONOSI_CONFIG;
   const db = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+  const pollHistory = window.SVETLONOSI_POLL_HISTORY;
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? '')
     .replaceAll('&','&amp;')
@@ -11,6 +12,7 @@
   let opts = [];
   let timer = null;
   let resultModeUntil = 0;
+  let openPollRequest = 0;
   let lastClosedId = sessionStorage.getItem('svetlonosi_overlay_last_closed') || '';
 
   function startTimer() {
@@ -35,10 +37,12 @@
 
   async function refreshResults() {
     if (!poll) return;
+    const pollId = poll.id;
 
     const { data, error } = await db.rpc('get_poll_results', {
-      p_poll_id: poll.id
+      p_poll_id: pollId
     });
+    if (poll?.id !== pollId) return;
 
     if (error) {
       console.error('Overlay results:', error);
@@ -67,6 +71,7 @@
     $('overlayQuestion').textContent = poll.question;
     $('overlayWinner').textContent = '';
     $('overlaySub').textContent = '';
+    $('overlayCard').classList.remove('stream-overlay-closed');
 
     const total = opts.reduce((sum, o) => sum + (o.votes ?? 0), 0);
 
@@ -79,14 +84,14 @@
       // Pouze se nezobrazí procenta a progress bar.
       if (!poll.show_results) {
         return `
-          <div class="stream-overlay-result">
+          <li class="stream-overlay-result">
             <strong><span>${esc(o.label)}</span></strong>
-          </div>
+          </li>
         `;
       }
 
       return `
-        <div class="stream-overlay-result">
+        <li class="stream-overlay-result">
           <strong>
             <span>${esc(o.label)}</span>
             <span>${pct}%</span>
@@ -94,7 +99,7 @@
           <div class="stream-overlay-bar">
             <div style="width:${pct}%"></div>
           </div>
-        </div>
+        </li>
       `;
     }).join('');
 
@@ -103,6 +108,7 @@
   }
 
   async function loadOpenPoll() {
+    const request = ++openPollRequest;
     const { data, error } = await db
       .from('polls')
       .select('*')
@@ -111,6 +117,7 @@
       .limit(1)
       .maybeSingle();
 
+    if (request !== openPollRequest) return;
     if (error) {
       console.error('Overlay poll:', error);
       return;
@@ -128,14 +135,16 @@
       return;
     }
 
+    if (Date.now() < resultModeUntil && data.id === lastClosedId) return;
     poll = data;
 
     const { data: optionData, error: optionError } = await db
       .from('poll_options')
       .select('*')
-      .eq('poll_id', poll.id)
+      .eq('poll_id', data.id)
       .order('sort_order');
 
+    if (poll?.id !== data.id) return;
     if (optionError) {
       console.error('Overlay options:', optionError);
       return;
@@ -143,7 +152,7 @@
 
     opts = optionData ?? [];
     await refreshResults();
-    renderOpenPoll();
+    if (poll?.id === data.id) renderOpenPoll();
   }
 
   async function showLatestClosed() {
@@ -163,7 +172,8 @@
     if (
       !data ||
       data.id === lastClosedId ||
-      !data.overlay_result_until
+      !data.overlay_result_until ||
+      (poll && new Date(poll.created_at) >= new Date(data.closed_at))
     ) return;
 
     const until = new Date(data.overlay_result_until).getTime();
@@ -183,17 +193,23 @@
     $('overlayTitle').textContent = 'ROZHODNUTÍ SBORU';
     $('overlayQuestion').textContent = data.question;
     $('overlayResults').innerHTML = '';
+    $('overlayCard').classList.add('stream-overlay-closed');
     $('overlayTimer').textContent = '';
-    $('overlayWinner').textContent = data.winner_label || 'Bez výsledku';
-    $('overlaySub').textContent =
-      data.total_votes != null ? `${data.total_votes} hlasů` : '';
+    $('overlayWinner').textContent = pollHistory.winnerLabel(data);
+    $('overlaySub').textContent = pollHistory.summary(data, true);
 
     $('overlayCard').classList.remove('stream-overlay-hidden');
 
     setTimeout(() => {
+      if (lastClosedId !== data.id || resultModeUntil !== until) return;
       resultModeUntil = 0;
       $('overlayCard').classList.add('stream-overlay-hidden');
-    }, Math.max(1000, until - Date.now()));
+    }, until - Date.now());
+
+    const results = await pollHistory.loadOptions(db, [data]);
+    if (lastClosedId === data.id && resultModeUntil === until && Date.now() < until) {
+      $('overlayResults').innerHTML = pollHistory.renderOptions(results.get(data.id), 'stream-overlay-result');
+    }
   }
 
   // Realtime.
@@ -220,8 +236,9 @@
           await loadOpenPoll();
           return;
         }
+        const pollId = poll.id;
         await refreshResults();
-        renderOpenPoll();
+        if (poll?.id === pollId) renderOpenPoll();
       }
     )
     .subscribe();
@@ -234,6 +251,8 @@
   // i když ještě nikdo nehlasoval.
   setInterval(async () => {
     if (Date.now() < resultModeUntil) return;
+    const hadOpenPoll = poll !== null;
     await loadOpenPoll();
+    if (hadOpenPoll && !poll) await showLatestClosed();
   }, 2000);
 })();

@@ -1,6 +1,7 @@
 (() => {
   const cfg = window.SVETLONOSI_CONFIG;
   const db = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+  const pollHistory = window.SVETLONOSI_POLL_HISTORY;
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
   let activePoll=null, activeOptions=[], timerHandle=null, editingId=null, currentUser=null, kickConnected=false;
@@ -196,10 +197,24 @@
   async function cancelPoll(){if(!activePoll||!confirm('Opravdu zrušit hlasování bez zápisu do Kroniky?'))return;const {error}=await db.rpc('cancel_poll_v2',{p_poll_id:activePoll.id});if(error){alert(error.message);return;}$('formMessage').textContent='Hlasování zrušeno.';await loadActive();}
   async function hideOverlay(){if(!activePoll)return;const {error}=await db.rpc('set_poll_overlay_visible',{p_poll_id:activePoll.id,p_visible:false});if(error){alert(error.message);return;}$('formMessage').textContent='Overlay skryt.';await loadActive();}
 
+  let historyRequest = 0;
   async function loadHistory(){
     if(!currentUser)return;
-    const {data,error}=await db.from('polls').select('id,question,winner_label,total_votes,closed_at').eq('status','closed').order('closed_at',{ascending:false}).limit(30);if(error){console.error(error);return;}
-    $('dmHistory').innerHTML=(data??[]).length?data.map(p=>`<div class="live-history-item live-history-manage"><div><strong>${esc(p.question)}</strong><div class="muted">${esc(p.winner_label||'Bez výsledku')}${p.total_votes!=null?` · ${p.total_votes} hlasů`:''}</div></div><div class="live-mini-actions"><button class="btn" data-edit="${p.id}" data-q="${encodeURIComponent(p.question||'')}" data-w="${encodeURIComponent(p.winner_label||'')}">Upravit</button><button class="btn live-danger-outline" data-del="${p.id}">Smazat</button></div></div>`).join(''):'<div class="muted">Kronika je zatím prázdná.</div>';
+    const request = ++historyRequest;
+    const {data,error}=await db.from('polls').select('id,question,winner_label,total_votes,closed_at').eq('status','closed').order('closed_at',{ascending:false}).limit(30);
+    if(request !== historyRequest) return;
+    if(error){console.error(error);$('dmHistory').textContent='Kroniku se nepodařilo načíst.';return;}
+    const polls = data ?? [];
+    const results = await pollHistory.loadOptions(db, polls);
+    if(request !== historyRequest) return;
+    $('dmHistory').innerHTML = polls.length ? polls.map(p => `
+      <div class="live-history-item live-history-manage">
+        <div>${pollHistory.renderEntry(p, results.get(p.id))}</div>
+        <div class="live-mini-actions">
+          <button class="btn" data-edit="${p.id}" data-q="${encodeURIComponent(p.question||'')}" data-w="${encodeURIComponent(p.winner_label||'')}">Upravit</button>
+          <button class="btn live-danger-outline" data-del="${p.id}">Smazat</button>
+        </div>
+      </div>`).join('') : '<div class="muted">Kronika je zatím prázdná.</div>';
     $('dmHistory').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{editingId=b.dataset.edit;$('editQuestion').value=decodeURIComponent(b.dataset.q);$('editWinner').value=decodeURIComponent(b.dataset.w);$('editModal').hidden=false;});
     $('dmHistory').querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Opravdu chceš tento záznam z Kroniky smazat?'))return;const {error}=await db.rpc('delete_history_entry',{p_poll_id:b.dataset.del});if(error){alert(error.message);return;}await loadHistory();});
   }

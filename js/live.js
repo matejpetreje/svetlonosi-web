@@ -1,9 +1,11 @@
 (() => {
   const cfg = window.SVETLONOSI_CONFIG;
   const db = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+  const pollHistory = window.SVETLONOSI_POLL_HISTORY;
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
   let poll = null, opts = [], mine = null, timer = null;
+  let historyRequest = 0;
 
   function voterId(){
     let id = localStorage.getItem('svetlonosi_voter_id');
@@ -81,9 +83,16 @@
   }
 
   async function loadHistory(){
-    const {data,error}=await db.from('polls').select('question,winner_label,total_votes,closed_at').eq('status','closed').order('closed_at',{ascending:false}).limit(10);
-    if(error){ console.error(error); return; }
-    $('history').innerHTML=(data??[]).length ? data.map(p=>`<div class="live-history-item"><strong>${esc(p.question)}</strong><div class="muted">${esc(p.winner_label||'Bez výsledku')}${p.total_votes!=null?` · ${p.total_votes} hlasů`:''}</div></div>`).join('') : '<div class="muted">Kronika je zatím prázdná.</div>';
+    const request = ++historyRequest;
+    const {data,error}=await db.from('polls').select('id,question,winner_label,total_votes,closed_at').eq('status','closed').order('closed_at',{ascending:false}).limit(10);
+    if(request !== historyRequest) return;
+    if(error){ console.error(error); $('history').textContent='Kroniku se nepodařilo načíst.'; return; }
+    const polls = data ?? [];
+    const results = await pollHistory.loadOptions(db, polls);
+    if(request !== historyRequest) return;
+    $('history').innerHTML = polls.length
+      ? polls.map(p => `<div class="live-history-item">${pollHistory.renderEntry(p, results.get(p.id))}</div>`).join('')
+      : '<div class="muted">Kronika je zatím prázdná.</div>';
   }
 
   db.channel('public-live-web')
